@@ -19,7 +19,7 @@ services:
       - mysqldata:/var/lib/mysql
     ports:
       - 3306:3306
-  adminer:
+  db-admin:
     image: adminer:latest
     ports:
       - "8080:8080"
