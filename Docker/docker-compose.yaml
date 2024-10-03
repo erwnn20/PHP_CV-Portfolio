@@ -1,0 +1,28 @@
+#version: "3"
+
+services:
+  webserver:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./services/nginx/nginx.conf:/etc/nginx/conf.d/nginx.conf
+      - ../app:/app
+  app:
+    build: services/php
+    volumes:
+      - ../app:/app
+  db:
+    image: mariadb:latest
+    env_file: ../.env
+    volumes:
+      - mysqldata:/var/lib/mysql
+    ports:
+      - 3306:3306
+  adminer:
+    image: adminer:latest
+    ports:
+      - "8080:8080"
+
+volumes:
+  mysqldata: {}
