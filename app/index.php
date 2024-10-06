@@ -31,25 +31,24 @@
 </head>
 
 <body class="bg-secondary">
-
     <header class="navbar fixed-top navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 <img src="https://cdn-icons-png.flaticon.com/512/8347/8347432.png" alt="Logo" width="30" class="d-inline-block align-text-top">
                 Ynov-PHP
             </a>
             <div class="nav me-auto">
-                <a class="nav-link link-secondary fw-semibold" href="#">CV</a>
-                <a class="nav-link link-secondary fw-semibold" href="#">Portfolio</a>
+                <a class="nav-link link-secondary fw-semibold" href="cv.php">CV</a>
+                <a class="nav-link link-secondary fw-semibold" href="portfolio.php">Portfolio</a>
             </div>
             <div class="navbar-text">
-                <a class="link-light link-underline link-underline-opacity-0 link-offset-1-hover link-underline-opacity-75-hover me-2 fw-semibold" href="#">
+                <a class="link-light link-underline link-underline-opacity-0 link-offset-1-hover link-underline-opacity-75-hover me-2 fw-semibold" href="profile.php">
                   Guest
                 </a>
-                <a href="#" class="link-underline link-underline-opacity-0">
+                <a href="login.php" class="link-underline link-underline-opacity-0">
                   <button type="button" class="btn btn-outline-light btn-sm">Login</button>
                 </a>
-                <a href="#" class="link-underline link-underline-opacity-0 hidden">
+                <a href="logout.php" class="link-underline link-underline-opacity-0 hidden">
                   <button type="button" class="btn btn-outline-light btn-sm">Logout</button>
                 </a>
             </div>
@@ -71,7 +70,7 @@
                     <h5 class="card-title">Create your CV</h5>
                     <p class="card-text">Create a professional CV quickly and stand out from the crowd in just a few
                         clicks!</p>
-                    <a href="#" class="btn btn-primary">Create CV</a>
+                    <a href="cv.php" class="btn btn-primary">Create CV</a>
                 </div>
             </div>
         </div>
@@ -85,14 +84,14 @@
                     <p class="card-text">Quickly create a professional portfolio and showcase your talents in just a few
                         clicks!
                     </p>
-                    <a href="#" class="btn btn-primary">Create Portfolio</a>
+                    <a href="portfolio.php" class="btn btn-primary">Create Portfolio</a>
                 </div>
             </div>
         </div>
     </div>
 
     <nav class="nav fixed-bottom navbar-dark bg-dark">
-        <a class="nav-link link-secondary" href="#">Contact</a>
+        <a class="nav-link link-secondary" href="contact.php">Contact</a>
         <a class="nav-link link-secondary" href="#">About us</a>
     </nav>
 </body>
