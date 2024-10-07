@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 ?>
 
 <!DOCTYPE html>
@@ -9,6 +9,6 @@
     <title>Document</title>
 </head>
 <body>
-<?php echo "profile" ?>
+<?php echo "cv modif" ?>
 </body>
 </html>

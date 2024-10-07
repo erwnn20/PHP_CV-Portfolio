@@ -9,6 +9,6 @@
     <title>Document</title>
 </head>
 <body>
-<? echo "test" ?>
+<?php echo "portfolio" ?>
 </body>
 </html>

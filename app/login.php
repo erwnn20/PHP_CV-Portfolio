@@ -9,6 +9,6 @@
     <title>Document</title>
 </head>
 <body>
-<? echo "test" ?>
+<? echo "login" ?>
 </body>
 </html>
