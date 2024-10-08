@@ -132,6 +132,15 @@ $userInfo = getUserInfo();
     </header>
 
     <section id="cv" class="py-5">
+        <?php
+        $cv_data = [];
+        if ($_SESSION['user_id']) {
+            $stmt = $pdo->prepare('SELECT * FROM cv WHERE creator_id = ?');
+            $stmt->execute([$_SESSION['user_id']]);
+            $cv_data = $stmt->fetchAll();
+        }
+        ?>
+
         <div class="container">
             <h2 class="text-center mb-4">Mon CV</h2>
             <div class="row">
