@@ -103,14 +103,21 @@ $userInfo = getUserInfo();
                     <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.php">
-                            <button type="button" class="btn btn-success btn-sm">Connexion</button>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-bold ms-2" href="profile.php">Guest</a>
-                    </li>
+                    <?php
+                    if ($_SESSION['user_id']) {
+                        echo "<li class=\"nav-item\">
+                                    <a class=\"nav-link fw-bold ms-2\" href=\"profile.php\">
+                                        {$userInfo['first_name']} {$userInfo['last_name']}
+                                    </a>
+                                </li>";
+                    } else {
+                        echo "<li class=\"nav-item\">
+                                    <a class=\"nav-link\" href=\"login.php\">
+                                        <button type=\"button\" class=\"btn btn-success btn-sm\">Connexion</button>
+                                    </a>
+                                </li>";
+                    }
+                    ?>
                 </ul>
             </div>
         </div>
