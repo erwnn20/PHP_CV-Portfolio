@@ -144,7 +144,7 @@ $userInfo = getUserInfo();
         <div class="container">
             <h2 class="text-center mb-4">Mon CV</h2>
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-3 text-end">
                     <h3>Compétences</h3>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item bg-dark text-light">PHP</li>
@@ -153,7 +153,7 @@ $userInfo = getUserInfo();
                         <li class="list-group-item bg-dark text-light">MySQL</li>
                     </ul>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6 text-center">
                     <h3>Expériences</h3>
                     <div class="card mb-3 text-light">
                         <div class="card-body">
@@ -169,6 +169,9 @@ $userInfo = getUserInfo();
                             <p class="card-text">2019 - 2020</p>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-3 text-start diplomes">
+                    <h3>Diplomes</h3>
                 </div>
             </div>
             <div class="text-center mt-4">
