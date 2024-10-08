@@ -147,31 +147,76 @@ $userInfo = getUserInfo();
                 <div class="col-md-3 text-end">
                     <h3>Compétences</h3>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item bg-dark text-light">PHP</li>
-                        <li class="list-group-item bg-dark text-light">HTML/CSS</li>
-                        <li class="list-group-item bg-dark text-light">JavaScript</li>
-                        <li class="list-group-item bg-dark text-light">MySQL</li>
+                        <?php
+                        if ($cv_data) {
+                            $skills = [];
+                            foreach ($cv_data as $cv)
+                                if ($cv['skills'])
+                                    foreach (json_decode($cv['skills'], true) as $skill)
+                                        if (!in_array($skill, $skills)) $skills[] = $skill;
+                            for ($i = 0; $i < min(6, count($skills)); $i++)
+                                echo "<li class=\"list-group-item text-bg-dark\">$skills[$i]</li>";
+                        } else echo "<li class=\"list-group-item text-bg-dark\">Pas de compétence enregistrée</li>";
+                        ?>
                     </ul>
                 </div>
                 <div class="col-md-6 text-center">
                     <h3>Expériences</h3>
-                    <div class="card mb-3 text-light">
-                        <div class="card-body">
-                            <h5 class="card-title">Développeur Web</h5>
-                            <h6 class="card-subtitle mb-2">Entreprise XYZ</h6>
-                            <p class="card-text">2020 - Présent</p>
-                        </div>
-                    </div>
-                    <div class="card text-light">
-                        <div class="card-body">
-                            <h5 class="card-title">Stagiaire en développement</h5>
-                            <h6 class="card-subtitle mb-2">Entreprise ABC</h6>
-                            <p class="card-text">2019 - 2020</p>
-                        </div>
-                    </div>
+                    <?php
+                    function displayExpCard($title, $subtitle, $start_year, $end_year, bool $margin)
+                    {
+                        $class = "card text-light" . ($margin ? " mb-3" : "");
+
+                        echo "<div class=\"$class\">
+                                    <div class=\"card-body\">
+                                        <h5 class=\"card-title\">$title</h5>
+                                        <h6 class=\"card-subtitle mb-2\">$subtitle</h6>";
+                        if ($start_year && $end_year)
+                            echo "<p class=\"card-text\">$start_year - $end_year</p>";
+                        echo "    </div>
+                              </div>";
+                    }
+
+                    if ($cv_data) {
+                        $experiences = [];
+                        foreach ($cv_data as $cv)
+                            $experiences = array_merge($experiences, json_decode($cv["experiences"], true));
+                        $limit = min(3, count($experiences));
+                        for ($i = 0; $i < $limit; $i++)
+                            displayExpCard($experiences[$i]['post'], $experiences[$i]['company'], $experiences[$i]['start_date'], $experiences[$i]['end_date'], $i != $limit - 1);
+                    } else displayExpCard('Pas d\'expérience enregistrée',
+                        $_SESSION['user_id'] ? "Modifiez votre CV pour ajouter vos experiances professionnelles" : "Connectez vous pour afficher vos experiences professionnelles",
+                        0, 0, false);
+                    ?>
                 </div>
                 <div class="col-md-3 text-start diplomes">
                     <h3>Diplomes</h3>
+                    <?php
+                    function displayCertifCard($title, $subtitle, $year, bool $margin)
+                    {
+                        $class = "card text-light" . ($margin ? " mb-3" : "");
+
+                        echo "<div class=\"$class\">
+                                    <div class=\"card-body\">
+                                        <h5 class=\"card-title\">$title</h5>
+                                        <h6 class=\"card-subtitle mb-2\">$subtitle</h6>";
+                        if ($year)
+                            echo "<p class=\"card-text\">$year</p>";
+                        echo "    </div>
+                              </div>";
+                    }
+
+                    if ($cv_data) {
+                        $certificates = [];
+                        foreach ($cv_data as $cv)
+                            $certificates = array_merge($certificates, json_decode($cv["certificates"], true));
+                        $limit = min(3, count($certificates));
+                        for ($i = 0; $i < $limit; $i++)
+                            displayCertifCard($certificates[$i]['level'], $certificates[$i]['school'], $certificates[$i]['date'], $i != $limit - 1);
+                    } else displayCertifCard('Pas de diplome enregistrée',
+                        $_SESSION['user_id'] ? "Modifiez votre CV pour ajouter vos diplomes et certifications" : "Connectez vous pour afficher vos diplomes et certifications",
+                        0, false);
+                    ?>
                 </div>
             </div>
             <div class="text-center mt-4">
