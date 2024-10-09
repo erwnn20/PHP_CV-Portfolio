@@ -181,8 +181,10 @@ $userInfo = getUserInfo();
                         foreach ($cv_data as $cv)
                             $experiences = array_merge($experiences, json_decode($cv['experiences'], true));
                         foreach ($experiences as $experience_i => $experience)
-                            displayExpCard($experience['post'], $experience['company'], $experience['start_date'], $experience['end_date'], $experience_i < min(3, count($experiences)) -1);
-                    } else displayExpCard('Pas d\'expérience enregistrée',
+                            if ($experience_i < 3)
+                                displayExpCard($experience['post'], $experience['company'], $experience['start_date'], $experience['end_date'], $experience_i < min(3, count($experiences)) - 1);
+                    } else displayExpCard(
+                        'Pas d\'expérience enregistrée',
                         $_SESSION['user_id'] ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
                         0, 0, false);
                     ?>
@@ -208,8 +210,10 @@ $userInfo = getUserInfo();
                         foreach ($cv_data as $cv)
                             $certificates = array_merge($certificates, json_decode($cv['certificates'], true));
                         foreach ($certificates as $certificate_i => $certificate)
-                            displayCertifCard($certificate['level'], $certificate['school'], $certificate['date'], $certificate_i != min(3, count($certificates)) - 1);
-                    } else displayCertifCard('Pas de diplome enregistrée',
+                            if ($certificate_i < 3)
+                                displayCertifCard($certificate['level'], $certificate['school'], $certificate['date'], $certificate_i != min(3, count($certificates)) - 1);
+                    } else displayCertifCard(
+                        'Pas de diplome enregistrée',
                         $_SESSION['user_id'] ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
                         0, false);
                     ?>
