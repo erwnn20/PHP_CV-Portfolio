@@ -281,7 +281,7 @@ $userInfo = getUserInfo();
                                 <h5 class="card-title p-2">' . $title . '</h5>' .
                         ($theme ? '<span class="badge text-light bg-primary ms-2">' . $theme . '</span>' : '') .
                         /*($link ? '<a href="'.$link.'" class="btn btn-sm btn-custom ms-auto">Voir le projet</a>' : '').*/
-                        '<a href="' . $link . '" class="btn btn-sm btn-custom ms-auto' . ($link ? ' disabled' : '') . '">Voir le projet</a>' .
+                        '<a href="' . $link . '" class="btn btn-sm btn-custom ms-auto' . (!$link ? ' disabled' : '') . '">Voir le projet</a>' .
                         '</div>
                             <p class="card-text mb-0">' . $description . '</p>
                             <div class="d-flex mt-2">' .
