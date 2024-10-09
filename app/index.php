@@ -297,12 +297,11 @@ $userInfo = getUserInfo();
                     <form method="POST" data-bs-theme="dark">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nom</label>
-                            <input type="text" class="form-control" id="name" placeholder="John Doe" required>
+                            <?php echo "<input type=\"text\" class=\"form-control\" id=\"name\" placeholder=\"John Doe\" value=\"" . ($_SESSION['user_id'] ? $userInfo['first_name'] . " " . $userInfo['last_name'] : "") . "\" required>"; ?>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com"
-                                required>
+                            <?php echo "<input type=\"email\" class=\"form-control\" id=\"email\" placeholder=\"john_doe@exemple.com\" value=\"" . ($_SESSION['user_id'] ? $userInfo['email'] : "") . "\" required>"; ?>
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Message</label>
