@@ -81,6 +81,11 @@ $userInfo = getUserInfo();
         .diplomes .card-text {
             font-size: .8rem;
         }
+
+        #projets .card img {
+            border-top-left-radius: .375rem;
+            border-top-right-radius: .375rem;
+        }
     </style>
 </head>
 
