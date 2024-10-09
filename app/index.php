@@ -115,19 +115,17 @@ $userInfo = getUserInfo();
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
                     <?php
-                    if ($_SESSION['user_id']) {
-                        echo "<li class=\"nav-item\">
-                                    <a class=\"nav-link fw-bold ms-2\" href=\"profile.php\">
-                                        {$userInfo['first_name']} {$userInfo['last_name']}
+                    if ($_SESSION['user_id'])
+                        echo '<li class="nav-item">
+                                    <a class="nav-link fw-bold ms-2" href="profile.php">' .
+                                        $userInfo["first_name"] ." ". $userInfo["last_name"] .
+                                    '</a>
+                                </li>';
+                    else echo '<li class="nav-item">
+                                    <a class="nav-link" href="login.php">
+                                        <button type="button" class="btn btn-success btn-sm">Connexion</button>
                                     </a>
-                                </li>";
-                    } else {
-                        echo "<li class=\"nav-item\">
-                                    <a class=\"nav-link\" href=\"login.php\">
-                                        <button type=\"button\" class=\"btn btn-success btn-sm\">Connexion</button>
-                                    </a>
-                                </li>";
-                    }
+                                </li>';
                     ?>
                 </ul>
             </div>
@@ -165,9 +163,9 @@ $userInfo = getUserInfo();
                                 if ($cv['skills'])
                                     foreach (json_decode($cv['skills'], true) as $skill)
                                         if (!in_array($skill, $skills)) $skills[] = $skill;
-                            for ($i = 0; $i < min(6, count($skills)); $i++)
-                                echo "<li class=\"list-group-item text-bg-dark\">$skills[$i]</li>";
-                        } else echo "<li class=\"list-group-item text-bg-dark\">Pas de compétence enregistrée</li>";
+                            for ($skill_i = 0; $skill_i < min(6, count($skills)); $skill_i++)
+                                echo '<li class="list-group-item text-bg-dark">'.$skills[$skill_i].'</li>';
+                        } else echo '<li class="list-group-item text-bg-dark">Pas de compétence enregistrée</li>';
                         ?>
                     </ul>
                 </div>
@@ -176,27 +174,24 @@ $userInfo = getUserInfo();
                     <?php
                     function displayExpCard($title, $subtitle, $start_year, $end_year, bool $margin)
                     {
-                        $class = "card text-light" . ($margin ? " mb-3" : "");
-
-                        echo "<div class=\"$class\">
-                                    <div class=\"card-body\">
-                                        <h5 class=\"card-title\">$title</h5>
-                                        <h6 class=\"card-subtitle mb-2\">$subtitle</h6>";
+                        echo '<div class="card text-light' . ($margin ? ' mb-3' : '').'">
+                                    <div class="card-body">
+                                        <h5 class="card-title">'.$title.'</h5>
+                                        <h6 class="card-subtitle mb-2">'.$subtitle.'</h6>';
                         if ($start_year && $end_year)
-                            echo "<p class=\"card-text\">$start_year - $end_year</p>";
-                        echo "    </div>
-                              </div>";
+                            echo '<p class="card-text">'.$start_year.' - '.$end_year.'</p>';
+                        echo '    </div>
+                              </div>';
                     }
 
                     if ($cv_data) {
                         $experiences = [];
                         foreach ($cv_data as $cv)
-                            $experiences = array_merge($experiences, json_decode($cv["experiences"], true));
-                        $limit = min(3, count($experiences));
-                        for ($i = 0; $i < $limit; $i++)
-                            displayExpCard($experiences[$i]['post'], $experiences[$i]['company'], $experiences[$i]['start_date'], $experiences[$i]['end_date'], $i != $limit - 1);
+                            $experiences = array_merge($experiences, json_decode($cv['experiences'], true));
+                        foreach ($experiences as $experience_i => $experience)
+                            displayExpCard($experience['post'], $experience['company'], $experience['start_date'], $experience['end_date'], $experience_i < min(3, count($experiences)) -1);
                     } else displayExpCard('Pas d\'expérience enregistrée',
-                        $_SESSION['user_id'] ? "Modifiez votre CV pour ajouter vos experiances professionnelles" : "Connectez vous pour afficher vos experiences professionnelles",
+                        $_SESSION['user_id'] ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
                         0, 0, false);
                     ?>
                 </div>
@@ -205,27 +200,25 @@ $userInfo = getUserInfo();
                     <?php
                     function displayCertifCard($title, $subtitle, $year, bool $margin)
                     {
-                        $class = "card text-light" . ($margin ? " mb-3" : "");
 
-                        echo "<div class=\"$class\">
-                                    <div class=\"card-body\">
-                                        <h5 class=\"card-title\">$title</h5>
-                                        <h6 class=\"card-subtitle mb-2\">$subtitle</h6>";
+                        echo '<div class="card text-light'.($margin ? ' mb-3' : '').'">
+                                    <div class="card-body">
+                                        <h5 class="card-title">$title</h5>
+                                        <h6 class="card-subtitle mb-2">$subtitle</h6>';
                         if ($year)
-                            echo "<p class=\"card-text\">$year</p>";
-                        echo "    </div>
-                              </div>";
+                            echo '<p class="card-text">'.$year.'</p>';
+                        echo     '</div>
+                              </div>';
                     }
 
                     if ($cv_data) {
                         $certificates = [];
                         foreach ($cv_data as $cv)
-                            $certificates = array_merge($certificates, json_decode($cv["certificates"], true));
-                        $limit = min(3, count($certificates));
-                        for ($i = 0; $i < $limit; $i++)
-                            displayCertifCard($certificates[$i]['level'], $certificates[$i]['school'], $certificates[$i]['date'], $i != $limit - 1);
+                            $certificates = array_merge($certificates, json_decode($cv['certificates'], true));
+                        foreach ($certificates as $certificate_i => $certificate)
+                            displayCertifCard($certificate['level'], $certificate['school'], $certificate['date'], $certificate_i != min(3, count($certificates)) - 1);
                     } else displayCertifCard('Pas de diplome enregistrée',
-                        $_SESSION['user_id'] ? "Modifiez votre CV pour ajouter vos diplomes et certifications" : "Connectez vous pour afficher vos diplomes et certifications",
+                        $_SESSION['user_id'] ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
                         0, false);
                     ?>
                 </div>
@@ -254,36 +247,36 @@ $userInfo = getUserInfo();
                 <?php
                 function displayProjectCard($title, $description, array $images, int $index)
                 {
-                    echo "<div class=\"col-md-4 mb-4\">
-                    <div class=\"card h-100 text-light\">";
+                    echo '<div class="col-md-4 mb-4">
+                    <div class="card h-100 text-light">';
                     if ($images) {
-                        echo "<div id=\"carouselProject$index\" class=\"carousel slide\" data-bs-ride=\"carousel\">
-                                <div class=\"carousel-indicators\">";
+                        echo '<div id="carouselProject$index" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">';
                         for ($img_i = 0; $img_i < count($images); $img_i++)
-                            echo  "<button type=\"button\" data-bs-target=\"#carouselProject$index\" data-bs-slide-to=\"$img_i\"" . ($img_i == 0 ? "class=\"active\" aria-current=\"true\"" : "") . "></button>";
-                        echo   "</div>
-                            <div class=\"carousel-inner\">";
+                            echo  '<button type="button" data-bs-target="#carouselProject$index" data-bs-slide-to="'.$img_i.'"'.($img_i == 0 ? 'class="active" aria-current="true"' : '') . '></button>';
+                        echo   '</div>
+                            <div class="carousel-inner">';
                         foreach ($images as $i => $img)
-                            echo "<div class=\"carousel-item " . ($i == 0 ? "active" : "") . "\">
-                                    <img src=\"img/$img\" class=\"bd-placeholder-img bd-placeholder-img-lg d-block w-100\" alt=\"projet_image\">
-                                </div>";
-                        echo "</div>
-                            <button class=\"carousel-control-prev\" type=\"button\" data-bs-target=\"#carouselProject$index\" data-bs-slide=\"prev\">
-                                <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>
-                                <span class=\"visually-hidden\">Previous</span>
+                            echo '<div class="carousel-item'.($i == 0 ? ' active' : '').'">
+                                    <img src="img/'.$img.'" class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" alt="projet_image">
+                                </div>';
+                        echo '</div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject$index" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
                             </button>
-                            <button class=\"carousel-control-next\" type=\"button\" data-bs-target=\"#carouselProject$index\" data-bs-slide=\"next\">
-                                <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>
-                                <span class=\"visually-hidden\">Next</span>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselProject$index" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
                             </button>
-                        </div>";
+                        </div>';
                     }
-                    echo "<div class=\"card-body\">
-                            <h5 class=\"card-title\">$title</h5>
-                            <p class=\"card-text\">$description</p>
+                    echo '<div class="card-body">
+                            <h5 class="card-title">'.$title.'</h5>
+                            <p class="card-text">'.$description.'</p>
                         </div>
                     </div>
-                </div>";
+                </div>';
                 }
 
                 if ($project_data) {
@@ -308,11 +301,11 @@ $userInfo = getUserInfo();
                     <form method="POST" data-bs-theme="dark">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nom</label>
-                            <?php echo "<input type=\"text\" class=\"form-control\" id=\"name\" placeholder=\"John Doe\" value=\"" . ($_SESSION['user_id'] ? $userInfo['first_name'] . " " . $userInfo['last_name'] : "") . "\" required>"; ?>
+                            <?php echo '<input type="text" class="form-control" id="name" placeholder="John Doe" value="'.($_SESSION['user_id'] ? $userInfo['first_name'].' '.$userInfo['last_name'] : '').'" required>'; ?>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <?php echo "<input type=\"email\" class=\"form-control\" id=\"email\" placeholder=\"john_doe@exemple.com\" value=\"" . ($_SESSION['user_id'] ? $userInfo['email'] : "") . "\" required>"; ?>
+                            <?php echo '<input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="'.($_SESSION['user_id'] ? $userInfo['email'] : '').'" required>'; ?>
                         </div>
                         <div class="mb-3">
                             <label for="message" class="form-label">Message</label>
@@ -346,6 +339,7 @@ $userInfo = getUserInfo();
                 <a href="https://github.com/erwnn20/PHP-TP" class="text-light me-3"><i class="fab bi-folder2"></i></a>
                 <a href="https://github.com/erwnn20/PHP-TP" class="text-light me-3"><i class="fab bi-copy"></i></a>
                 <a href="https://github.com/erwnn20/PHP-TP" class="text-light me-3"><i class="fab bi-download"></i></a>
+                <?php if ($userInfo['admin']) echo '<a href="admin.php" class="text-light me-3"><i class="fab bi-gear-fill"></i></a>'; ?>
             </div>
         </div>
     </footer>
