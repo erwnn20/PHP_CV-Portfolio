@@ -78,6 +78,17 @@ $userInfo = getUserInfo();
         .card {
             background-color: #1e1e1e;
         }
+
+        .diplomes .card-title {
+            font-size: 1rem;
+        }
+        .diplomes .card-subtitle {
+            font-size: .875rem;
+        }
+
+        .diplomes .card-text {
+            font-size: .8rem;
+        }
     </style>
 </head>
 
