@@ -239,9 +239,8 @@ $userInfo = getUserInfo();
         <div class="container">
             <h2 class="text-center mb-4">Mes Projets</h2>
             <div class="row" style="justify-content: center;">
-                <!-- add link to project (optional link) -->
                 <?php
-                function displayProjectCard($title, $description, array $images, int $index)
+                function displayProjectCard($title, $theme, $link, $description, array $images, int $index)
                 {
                     echo '<div class="col-md-4 mb-4">
                     <div class="card h-100 text-light">';
@@ -268,8 +267,15 @@ $userInfo = getUserInfo();
                         </div>';
                     }
                     echo '<div class="card-body">
-                            <h5 class="card-title">'.$title.'</h5>
-                            <p class="card-text">'.$description.'</p>
+                            <div class="d-flex flex-row align-items-center">
+                                <h5 class="card-title p-2">' . $title . '</h5>' .
+                        ($theme ? '<span class="badge text-light bg-primary ms-2">' . $theme . '</span>' : '') .
+                        /*($link ? '<a href="'.$link.'" class="btn btn-sm btn-custom ms-auto">Voir le projet</a>' : '').*/
+                        '<a href="' . $link . '" class="btn btn-sm btn-custom ms-auto' . ($link ? ' disabled' : '') . '">Voir le projet</a>' .
+                        '</div>
+                            <p class="card-text mb-0">' . $description . '</p>
+                            <div class="d-flex mt-2">' .
+                        '</div>
                         </div>
                     </div>
                 </div>';
@@ -277,9 +283,12 @@ $userInfo = getUserInfo();
 
                 if ($project_data) {
                     foreach ($project_data as $project_i => $project)
-                        if ($project_i < 6)
-                            displayProjectCard($project['title'], $project['description'], json_decode($project['images'], true), $project_i);
-                } else displayProjectCard('Pas de projet enregistrée',
+                        if ($project_i < 3)
+                            displayProjectCard($project['title'], $project['theme'], $project['link'], $project['description'], json_decode($project['images'], true), $project_i);
+                } else displayProjectCard(
+                    'Pas de projet enregistrée',
+                    '',
+                    '',
                     $_SESSION['user_id'] ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
                     [], 0);
                 ?>
