@@ -227,106 +227,62 @@ $userInfo = getUserInfo();
     </section>
 
     <section id="projets" class="py-5 bg-dark">
+        <?php
+        $project_data = [];
+        if ($_SESSION['user_id']) {
+            $stmt = $pdo->prepare('SELECT * FROM project WHERE creator_id = ?');
+            $stmt->execute([$_SESSION['user_id']]);
+            $project_data = $stmt->fetchAll();
+        }
+        ?>
+
         <div class="container">
             <h2 class="text-center mb-4">Mes Projets</h2>
-            <div class="row">
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 text-light">
-                        <div id="carouselProject1" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#carouselProject1" data-bs-slide-to="0" class="active" aria-current="true"></button>
-                                <button type="button" data-bs-target="#carouselProject1" data-bs-slide-to="1"></button>
-                                <button type="button" data-bs-target="#carouselProject1" data-bs-slide-to="2"></button>
-                            </div>
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="500" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: First slide" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                        <title>Placeholder</title>
-                                        <rect width="100%" height="100%" fill="#777"></rect><text x="50%" y="50%" fill="#555" dy=".3em">First slide</text>
-                                    </svg>
-                                </div>
-                                <div class="carousel-item">
-                                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="500" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Second slide" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                        <title>Placeholder</title>
-                                        <rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">Second slide</text>
-                                    </svg>
-                                </div>
-                                <div class="carousel-item">
-                                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="500" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Third slide" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                        <title>Placeholder</title>
-                                        <rect width="100%" height="100%" fill="#555"></rect><text x="50%" y="50%" fill="#333" dy=".3em">Third slide</text>
-                                    </svg>
-                                </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject1" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
+            <div class="row" style="justify-content: center;">
+                <!-- add link to project (optional link) -->
+                <?php
+                function displayProjectCard($title, $description, array $images, int $index)
+                {
+                    echo "<div class=\"col-md-4 mb-4\">
+                    <div class=\"card h-100 text-light\">";
+                    if ($images) {
+                        echo "<div id=\"carouselProject$index\" class=\"carousel slide\" data-bs-ride=\"carousel\">
+                                <div class=\"carousel-indicators\">";
+                        for ($img_i = 0; $img_i < count($images); $img_i++)
+                            echo  "<button type=\"button\" data-bs-target=\"#carouselProject$index\" data-bs-slide-to=\"$img_i\"" . ($img_i == 0 ? "class=\"active\" aria-current=\"true\"" : "") . "></button>";
+                        echo   "</div>
+                            <div class=\"carousel-inner\">";
+                        foreach ($images as $i => $img)
+                            echo "<div class=\"carousel-item " . ($i == 0 ? "active" : "") . "\">
+                                    <img src=\"img/$img\" class=\"bd-placeholder-img bd-placeholder-img-lg d-block w-100\" alt=\"projet_image\">
+                                </div>";
+                        echo "</div>
+                            <button class=\"carousel-control-prev\" type=\"button\" data-bs-target=\"#carouselProject$index\" data-bs-slide=\"prev\">
+                                <span class=\"carousel-control-prev-icon\" aria-hidden=\"true\"></span>
+                                <span class=\"visually-hidden\">Previous</span>
                             </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselProject1" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
+                            <button class=\"carousel-control-next\" type=\"button\" data-bs-target=\"#carouselProject$index\" data-bs-slide=\"next\">
+                                <span class=\"carousel-control-next-icon\" aria-hidden=\"true\"></span>
+                                <span class=\"visually-hidden\">Next</span>
                             </button>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Projet 1</h5>
-                            <p class="card-text">Description du projet 1</p>
+                        </div>";
+                    }
+                    echo "<div class=\"card-body\">
+                            <h5 class=\"card-title\">$title</h5>
+                            <p class=\"card-text\">$description</p>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 text-light">
-                        <div id="carouselProject2" class="carousel slide" data-bs-ride="carousel">
-                            <div class="carousel-indicators">
-                                <button type="button" data-bs-target="#carouselProject2" data-bs-slide-to="0" class="active" aria-current="true"></button>
-                                <button type="button" data-bs-target="#carouselProject2" data-bs-slide-to="1"></button>
-                                <button type="button" data-bs-target="#carouselProject2" data-bs-slide-to="2"></button>
-                            </div>
-                            <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="500" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: First slide" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                        <title>Placeholder</title>
-                                        <rect width="100%" height="100%" fill="#777"></rect><text x="50%" y="50%" fill="#555" dy=".3em">First slide</text>
-                                    </svg>
-                                </div>
-                                <div class="carousel-item">
-                                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="500" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Second slide" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                        <title>Placeholder</title>
-                                        <rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">Second slide</text>
-                                    </svg>
-                                </div>
-                                <div class="carousel-item">
-                                    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="500" height="300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Third slide" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                        <title>Placeholder</title>
-                                        <rect width="100%" height="100%" fill="#555"></rect><text x="50%" y="50%" fill="#333" dy=".3em">Third slide</text>
-                                    </svg>
-                                </div>
-                            </div>
-                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject2" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" type="button" data-bs-target="#carouselProject2" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
-                        </div>
-                        <div class="card-body">
-                            <h5 class="card-title">Projet 2</h5>
-                            <p class="card-text">Description du projet 2</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 text-light">
-                        <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Projet 3">
-                        <div class="card-body">
-                            <h5 class="card-title">Projet 3</h5>
-                            <p class="card-text">Description du projet 3</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </div>";
+                }
 
+                if ($project_data) {
+                    foreach ($project_data as $project_i => $project)
+                        if ($project_i < 6)
+                            displayProjectCard($project['title'], $project['description'], json_decode($project['images'], true), $project_i);
+                } else displayProjectCard('Pas de projet enregistrée',
+                    $_SESSION['user_id'] ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
+                    [], 0);
+                ?>
             <div class="text-center mt-4">
                 <a href="portfolio.php" class="btn btn-primary">Gérer mes Projets</a>
             </div>
