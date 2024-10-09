@@ -84,7 +84,7 @@ $userInfo = getUserInfo();
     </style>
 </head>
 
-<body>
+<body data-bs-theme="dark">
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/">Mon CV/Portfolio</a>
@@ -310,7 +310,7 @@ $userInfo = getUserInfo();
             <h2 class="text-center mb-4">Contactez-moi</h2>
             <div class="row">
                 <div class="col-md-6">
-                    <form method="POST" data-bs-theme="dark">
+                    <form method="POST">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nom</label>
                             <?php echo '<input type="text" class="form-control" id="name" placeholder="John Doe" value="' . ($_SESSION['user_id'] ? $userInfo['first_name'] . ' ' . $userInfo['last_name'] : '') . '" required>'; ?>
