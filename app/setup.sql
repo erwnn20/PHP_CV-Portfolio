@@ -27,9 +27,9 @@ CREATE TABLE cv
     creator_id   INT          NOT NULL,
     title        VARCHAR(255) NOT NULL,
     description  TEXT,
-    skills       JSON,
-    certificates JSON,
-    experiences  JSON
+    skills       JSON COMMENT 'Structure: type string[]',
+    certificates JSON COMMENT 'Structure: level (string), school (string), date (year)',
+    experiences  JSON COMMENT 'Structure: post (string), company (string), start_date (year), end_date (year)'
 );
 
 -- Create table for project for portfolio
@@ -39,5 +39,7 @@ CREATE TABLE project
     creator_id  INT          NOT NULL,
     title       VARCHAR(255) NOT NULL,
     description TEXT,
-    images      JSON
+    theme       VARCHAR(100),
+    link        VARCHAR(255),
+    images      JSON COMMENT 'Structure: type string[]'
 );
