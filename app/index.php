@@ -54,6 +54,7 @@ $userInfo = getUserInfo();
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/style.css">
 
     <style>
         body {
@@ -65,16 +66,6 @@ $userInfo = getUserInfo();
             background-color: #1e1e1e !important;
         }
 
-        .btn-primary {
-            background-color: #9965f4;
-            border-color: #9965f4;
-        }
-
-        .btn-primary:hover {
-            background-color: #bb86fc;
-            border-color: #bb86fc;
-        }
-
         .card {
             background-color: #1e1e1e;
         }
@@ -82,6 +73,7 @@ $userInfo = getUserInfo();
         .diplomes .card-title {
             font-size: 1rem;
         }
+
         .diplomes .card-subtitle {
             font-size: .875rem;
         }
@@ -136,7 +128,7 @@ $userInfo = getUserInfo();
         <div class="container text-center">
             <h1 class="display-4 mb-4">Bienvenue sur mon CV/Portfolio</h1>
             <p class="lead">Découvrez mes compétences, expériences et projets</p>
-            <a href="cv.php" class="btn btn-primary btn-lg mt-3">Voir les CV</a>
+            <a href="cv.php" class="btn btn-custom btn-lg mt-3">Voir les CV</a>
         </div>
     </header>
 
@@ -224,8 +216,8 @@ $userInfo = getUserInfo();
                 </div>
             </div>
             <div class="text-center mt-4">
-                <a href="cv_modif.php" class="btn btn-primary me-3">Modifier mon CV</a>
-                <a href="#" class="btn btn-primary">Télécharger le CV en PDF</a>
+                <a href="cv_modif.php" class="btn btn-custom me-3">Modifier mon CV</a>
+                <a href="#" class="btn btn-custom">Télécharger le CV en PDF</a>
             </div>
         </div>
     </section>
@@ -287,10 +279,10 @@ $userInfo = getUserInfo();
                     $_SESSION['user_id'] ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
                     [], 0);
                 ?>
-            <div class="text-center mt-4">
-                <a href="portfolio.php" class="btn btn-primary">Gérer mes Projets</a>
+                <div class="text-center mt-4">
+                    <a href="portfolio.php" class="btn btn-custom">Gérer mes Projets</a>
+                </div>
             </div>
-        </div>
     </section>
 
     <section id="contact" class="py-5">
@@ -312,7 +304,7 @@ $userInfo = getUserInfo();
                             <textarea class="form-control" id="message" rows="4" placeholder="Entrez votre message..."
                                 required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">Envoyer</button>
+                        <button type="submit" class="btn btn-custom">Envoyer</button>
                     </form>
                 </div>
                 <div class="col-md-6">
