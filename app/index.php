@@ -55,37 +55,10 @@ $userInfo = getUserInfo();
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/style.css">
+    <link rel="stylesheet" href="styles/index.css">
 
     <style>
-        body {
-            background-color: #121212;
-            color: #e0e0e0;
-        }
-
-        .navbar {
-            background-color: #1e1e1e !important;
-        }
-
-        .card {
-            background-color: #1e1e1e;
-        }
-
-        .diplomes .card-title {
-            font-size: 1rem;
-        }
-
-        .diplomes .card-subtitle {
-            font-size: .875rem;
-        }
-
-        .diplomes .card-text {
-            font-size: .8rem;
-        }
-
-        #projets .card img {
-            border-top-left-radius: .375rem;
-            border-top-right-radius: .375rem;
-        }
+        
     </style>
 </head>
 
@@ -280,8 +253,7 @@ $userInfo = getUserInfo();
                             <div class="d-flex flex-row align-items-center">
                                 <h5 class="card-title p-2">' . $title . '</h5>' .
                         ($theme ? '<span class="badge text-light bg-primary ms-2">' . $theme . '</span>' : '') .
-                        /*($link ? '<a href="'.$link.'" class="btn btn-sm btn-custom ms-auto">Voir le projet</a>' : '').*/
-                        '<a href="' . $link . '" class="btn btn-sm btn-custom ms-auto' . (!$link ? ' disabled' : '') . '">Voir le projet</a>' .
+                        ($link ? '<a href="'.$link.'" class="btn btn-sm btn-custom ms-auto">Voir le projet</a>' : '').
                         '</div>
                             <p class="card-text mb-0">' . $description . '</p>
                             <div class="d-flex mt-2">' .
@@ -351,10 +323,6 @@ $userInfo = getUserInfo();
                 <a href="https://www.instagram.com/erwnn_20/" class="text-light me-3"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://github.com/erwnn20" class="text-light me-3"><i class="fab fa-github"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" class="text-light me-3"><i class="fab bi-folder"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" class="text-light me-3"><i class="fab bi-folder2-open"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" class="text-light me-3"><i class="fab bi-folder2"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" class="text-light me-3"><i class="fab bi-copy"></i></a>
                 <a href="https://github.com/erwnn20/PHP-TP" class="text-light me-3"><i class="fab bi-download"></i></a>
                 <?php if ($userInfo['admin']) echo '<a href="admin.php" class="text-light me-3"><i class="fab bi-gear-fill"></i></a>'; ?>
             </div>
