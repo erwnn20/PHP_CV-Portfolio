@@ -40,12 +40,18 @@ function getUserInfo()
 // Get infos for forms to Connect or Create and Connect user
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['loginEmail'])) {
-        $stmt = $pdo->prepare('SELECT id FROM user WHERE email = :email AND password = :password');
+        $loginEmail = $_POST['loginEmail'];
+        $stmt = $pdo->prepare('SELECT id, email, password  FROM user WHERE email = :email');
         $stmt->execute(array(
-            'email' => $_POST['loginEmail'],
-            'password' => $_POST['loginPassword']
+            'email' => $loginEmail
         ));
-        $result = $stmt->fetch();
+        $data = $stmt->fetch();
+
+        if (isset($data['password'])) {
+//            if (password_verify($_POST['password'], $data['password'])) $_SESSION['user_id'] = $data['id'];
+            if ($_POST['loginPassword'] === $data['password']) $_SESSION['user_id'] = $data['id'];
+            else $logError = array('password' => true);
+        } else $logError = array('email' => true);
     }
 
     if (isset($_POST['registerEmail'])) {
@@ -59,14 +65,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'last_name' => $_POST['registerLastName'],
             'password' => $_POST['registerPassword']
         ));
-        $result = array('id' => $uuid);
+        $_SESSION['user_id'] = $uuid;
     }
 
-    if (isset($result)) {
-        $_SESSION['user_id'] = $result['id'];
-    } else {
-        //        echo 'Aucun utilisateur trouvé avec ces informations.';
-    }
     unset($_POST);
 }
 
@@ -375,6 +376,10 @@ $userInfo = getUserInfo();
                                 <div class="form-floating mb-3">
                                     <input type="email" class="form-control" id="loginEmail" name="loginEmail" placeholder required>
                                     <label for="loginEmail" class="form-label">Email</label>
+                                    <span id="loginEmailError" class="text-danger fst-italic ms-1 d-none"
+                                          style="font-size: .9rem;" role="alert">
+                                        L'adresse email n'est associée à aucun compte.  Veuillez réessayer.
+                                    </span>
                                 </div>
                                 <div class="mb-3">
                                     <div class="input-group">
@@ -386,7 +391,7 @@ $userInfo = getUserInfo();
                                             <i id="loginPasswordToggle" class="fa fa-eye"></i>
                                         </span>
                                     </div>
-                                    <span id="loginError" class="text-danger fst-italic ms-1 d-none"
+                                    <span id="loginPasswordError" class="text-danger fst-italic ms-1 d-none"
                                         style="font-size: .9rem;" role="alert">
                                         Mot de passe incorrect. Veuillez réessayer.
                                     </span>
@@ -394,7 +399,7 @@ $userInfo = getUserInfo();
                                 <div class="d-flex gap-2 justify-content-end mt-4">
                                     <button type="button" class="btn btn-link btn-sm link-secondary" style="font-size: .8rem;" onclick="resetForm('loginForm')">Réinitialiser</button>
                                     <button type="submit" class="btn btn-custom ">Se connecter</button>
-                                    <button class="btn btn-outline-custom">
+                                    <button type="button" class="btn btn-outline-custom" disabled>
                                         <i class="fab fa-google"></i>
                                     </button>
                                 </div>
@@ -486,22 +491,10 @@ $userInfo = getUserInfo();
 
         function resetForm(formId) {
             document.forms[formId].reset();
-            document.getElementById('loginError').classList.add('d-none');
+            document.getElementById('loginEmailError').classList.add('d-none');
+            document.getElementById('loginPasswordError').classList.add('d-none');
             document.getElementById('registerError').classList.add('d-none');
         }
-
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const password = document.getElementById('loginPassword').value;
-            const errorDiv = document.getElementById('loginError');
-
-            if (password /* !== 'motdepasse123'*/ ) {
-                errorDiv.classList.add('d-none');
-                this.submit();
-            } else {
-                errorDiv.classList.remove('d-none');
-            }
-        });
 
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -517,6 +510,18 @@ $userInfo = getUserInfo();
             }
         });
     </script>
+    <?php
+    // Display login modal on email or password error
+    if (isset($logError)) {
+        echo '<script>
+                (new bootstrap.Modal(document.getElementById("loginModal"))).show();
+                document.getElementById("loginEmail").value = "' . ($loginEmail ?? '') . '";' .
+            (isset($logError['email']) ? 'document.getElementById("loginEmailError").classList.remove("d-none");' : '') .
+            (isset($logError['password']) ? 'document.getElementById("loginPasswordError").classList.remove("d-none");' : '') . '
+              </script>';
+
+    }
+    ?>
 </body>
 
 </html>
