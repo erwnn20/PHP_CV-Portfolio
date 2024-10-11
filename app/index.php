@@ -58,7 +58,12 @@ $userInfo = getUserInfo();
     <link rel="stylesheet" href="styles/index.css">
 
     <style>
-        
+        .form-floating>.form-control-plaintext~label::after,
+        .form-floating>.form-control:focus~label::after,
+        .form-floating>.form-control:not(:placeholder-shown)~label::after,
+        .form-floating>.form-select~label::after {
+            background-color: transparent;
+        }
     </style>
 </head>
 
@@ -316,6 +321,111 @@ $userInfo = getUserInfo();
         </div>
     </section>
 
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Connexion / Inscription</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login"
+                                type="button" role="tab" aria-controls="login" aria-selected="true">Connexion</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="register-tab" data-bs-toggle="tab" data-bs-target="#register"
+                                type="button" role="tab" aria-controls="register"
+                                aria-selected="false">Inscription</button>
+                        </li>
+                    </ul>
+                    <div class="tab-content" id="myTabContent">
+                        <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
+                            <form method="post" class="mt-3" id="loginForm">
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="loginEmail" name="loginEmail" placeholder required>
+                                    <label for="loginEmail" class="form-label">Email</label>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <div class="form-floating">
+                                            <input type="password" class="form-control" id="loginPassword" name="loginPassword" placeholder required>
+                                            <label for="loginPassword" class="form-label">Mot de passe</label>
+                                        </div>
+                                        <span class="input-group-text password-toggle" onclick="togglePassword('loginPassword', 'loginPasswordToggle')">
+                                            <i id="loginPasswordToggle" class="fa fa-eye"></i>
+                                        </span>
+                                    </div>
+                                    <span id="loginError" class="text-danger fst-italic ms-1 d-none"
+                                        style="font-size: .9rem;" role="alert">
+                                        Mot de passe incorrect. Veuillez réessayer.
+                                    </span>
+                                </div>
+                                <div class="d-flex gap-2 justify-content-end mt-4">
+                                    <button type="button" class="btn btn-link btn-sm link-secondary" style="font-size: .8rem;" onclick="resetForm('loginForm')">Réinitialiser</button>
+                                    <button type="submit" class="btn btn-custom ">Se connecter</button>
+                                    <button class="btn btn-outline-custom">
+                                        <i class="fab fa-google"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
+                            <form method="post" class="mt-3" id="registerForm">
+                                <div class="d-flex gap-2 mb-3">
+                                    <div class="form-floating flex-grow-1">
+                                        <input type="text" class="form-control" id="registerLastName" name="registerLastName" placeholder required>
+                                        <label for="registerLastName">Nom</label>
+                                    </div>
+
+                                    <div class="form-floating flex-grow-1">
+                                        <input type="text" class="form-control" id="registerFirstName" name="registerFirstName" placeholder required>
+                                        <label for="registerFirstName" class="form-label">Prenom</label>
+                                    </div>
+                                </div>
+                                <div class="form-floating mb-3">
+                                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder required>
+                                    <label for="registerEmail" class="form-label">Email</label>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <div class="form-floating">
+                                            <input type="password" class="form-control" id="registerPassword" name="registerPassword" placeholder required>
+                                            <label for="registerPassword" class="form-label">Mot de passe</label>
+                                        </div>
+                                        <span class="input-group-text password-toggle" onclick="togglePassword('registerPassword', 'registerPasswordToggle')">
+                                            <i id="registerPasswordToggle" class="fa fa-eye"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="input-group">
+                                        <div class="form-floating">
+                                            <input type="password" class="form-control" id="registerConfirmPassword" placeholder required>
+                                            <label for="registerConfirmPassword" class="form-label">Confirmer le mot de passe</label>
+                                        </div>
+                                        <span class="input-group-text password-toggle" onclick="togglePassword('registerConfirmPassword', 'registerConfirmPasswordToggle')">
+                                            <i id="registerConfirmPasswordToggle" class="fa fa-eye"></i>
+                                        </span>
+                                    </div>
+                                    <span id="registerError" class="text-danger fst-italic ms-1 d-none"
+                                        style="font-size: .9rem;" role="alert">
+                                        Les mots de passe ne correspondent pas.
+                                    </span>
+                                </div>
+                                <div class="d-flex">
+                                    <button type="button" class="btn btn-link link-secondary" style="font-size: .8rem;" onclick="resetForm('registerForm')">Réinitialiser</button>
+                                    <button type="submit" class="btn btn-custom ms-auto">S'inscrire</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <footer class="bg-dark text-light py-4">
         <div class="container text-center">
             <p>&copy; 2024 Mon CV/Portfolio</p>
@@ -330,6 +440,54 @@ $userInfo = getUserInfo();
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePassword(inputId, toggleId) {
+            const input = document.getElementById(inputId);
+            const toggle = document.getElementById(toggleId);
+            if (input.type === "password") {
+                input.type = "text";
+                toggle.classList.remove("fa-eye");
+                toggle.classList.add("fa-eye-slash");
+            } else {
+                input.type = "password";
+                toggle.classList.remove("fa-eye-slash");
+                toggle.classList.add("fa-eye");
+            }
+        }
+
+        function resetForm(formId) {
+            document.getElementById(formId).reset();
+            document.getElementById('loginError').classList.add('d-none');
+            document.getElementById('registerError').classList.add('d-none');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('loginPassword').value;
+            const errorDiv = document.getElementById('loginError');
+
+            if (password /* !== 'motdepasse123'*/ ) {
+                errorDiv.classList.add('d-none');
+                this.submit();
+            } else {
+                errorDiv.classList.remove('d-none');
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+            const errorDiv = document.getElementById('registerError');
+
+            if (password !== confirmPassword) {
+                errorDiv.classList.remove('d-none');
+            } else {
+                errorDiv.classList.add('d-none');
+                this.submit();
+            }
+        });
+    </script>
 </body>
 
 </html>
