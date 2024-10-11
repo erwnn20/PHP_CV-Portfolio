@@ -6,7 +6,13 @@ require 'db.php';
 // Generate uuidV4
 function uuid_v4(): string
 {
-    $data = random_bytes(16);
+    do {
+        try {
+            $data = random_bytes(16);
+        } catch (Exception $e) {
+            $data = '';
+        }
+    } while (strlen($data) < 16);
 
     $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
     $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
@@ -479,7 +485,7 @@ $userInfo = getUserInfo();
         }
 
         function resetForm(formId) {
-            document.getElementById(formId).reset();
+            document.forms[formId].reset();
             document.getElementById('loginError').classList.add('d-none');
             document.getElementById('registerError').classList.add('d-none');
         }
