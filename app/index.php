@@ -90,16 +90,15 @@ $userInfo = getUserInfo();
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
                     <?php
-                    if ($_SESSION['user_id'])
-                        echo '<li class="nav-item">
-                                    <a class="nav-link fw-bold ms-2" href="profile.php">' .
-                                        $userInfo["first_name"] ." ". $userInfo["last_name"] .
-                                    '</a>
+                    if (isset($_SESSION['user_id']))
+                        echo '<li class="nav-item d-flex">
+                                    <a class="nav-link fw-bold ms-3" href="profile.php">' .
+                            $userInfo['first_name'] . " " . $userInfo['last_name'] .
+                            '</a>
+                                    <a href="logout.php" class="nav-link align-content-center ps-0"><i class="bi bi-power"></i></a>
                                 </li>';
-                    else echo '<li class="nav-item">
-                                    <a class="nav-link" href="login.php">
-                                        <button type="button" class="btn btn-success btn-sm">Connexion</button>
-                                    </a>
+                    else echo '<li class="nav-item align-content-center ms-2">
+                                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">Connexion</button>
                                 </li>';
                     ?>
                 </ul>
