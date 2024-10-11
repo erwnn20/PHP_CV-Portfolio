@@ -3,41 +3,66 @@ global $pdo;
 session_start();
 require 'db.php';
 
-$_SESSION['user_id'] = 0;
+// Generate uuidV4
+function uuid_v4(): string
+{
+    $data = random_bytes(16);
+
+    $data[6] = chr(ord($data[6]) & 0x0f | 0x40); // set version to 0100
+    $data[8] = chr(ord($data[8]) & 0x3f | 0x80); // set bits 6-7 to 10
+
+    return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+}
 
 // Fetch user information from the database
 function getUserInfo()
 {
     global $pdo;
-    if ($_SESSION['user_id']) {
-        $stmt = $pdo->prepare('SELECT * FROM user WHERE id = ?');
-        $stmt->execute([$_SESSION['user_id']]);
+    if (isset($_SESSION['user_id'])) {
+        $stmt = $pdo->prepare('SELECT email, first_name, last_name, admin FROM user WHERE id = :id');
+        $stmt->execute(array('id' => $_SESSION['user_id']));
         return $stmt->fetch();
     }
     return array(
         'email' => '',
         'first_name' => '',
         'last_name' => '',
-        'password' => '',
         'admin' => false
     );
 }
 
-/*if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+// Get infos for forms to Connect or Create and Connect user
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['loginEmail'])) {
+        $stmt = $pdo->prepare('SELECT id FROM user WHERE email = :email AND password = :password');
+        $stmt->execute(array(
+            'email' => $_POST['loginEmail'],
+            'password' => $_POST['loginPassword']
+        ));
+        $result = $stmt->fetch();
+    }
 
-    // Update personal information in the database
-    $stmt = $pdo->prepare('SELECT id FROM user WHERE email = ? AND password = ?');
-    $stmt->execute([$email, $password]);
-    $result = $stmt->fetch();
+    if (isset($_POST['registerEmail'])) {
+        $uuid = uuid_v4();
+        $stmt = $pdo->prepare('INSERT INTO user (id, email, first_name, last_name, password) 
+                                        VALUES (:id, :email, :first_name, :last_name, :password)');
+        $stmt->execute(array(
+            'id' => $uuid,
+            'email' => $_POST['registerEmail'],
+            'first_name' => $_POST['registerFirstName'],
+            'last_name' => $_POST['registerLastName'],
+            'password' => $_POST['registerPassword']
+        ));
+        $result = array('id' => $uuid);
+    }
 
-    if ($result) {
+    if (isset($result)) {
         $_SESSION['user_id'] = $result['id'];
     } else {
         //        echo 'Aucun utilisateur trouvé avec ces informations.';
     }
-}*/
+    unset($_POST);
+}
 
 $userInfo = getUserInfo();
 ?>
