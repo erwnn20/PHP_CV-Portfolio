@@ -149,7 +149,7 @@ $userInfo = getUserInfo();
         <?php
         $cv_data = [];
         if (isset($_SESSION['user_id'])) {
-            $stmt = $pdo->prepare('SELECT * FROM cv WHERE creator_id = ?');
+            $stmt = $pdo->prepare('SELECT skills, certificates, experiences FROM cv WHERE creator_id = ?');
             $stmt->execute([$_SESSION['user_id']]);
             $cv_data = $stmt->fetchAll();
         }
@@ -248,7 +248,7 @@ $userInfo = getUserInfo();
         <?php
         $project_data = [];
         if (isset($_SESSION['user_id'])) {
-            $stmt = $pdo->prepare('SELECT * FROM project WHERE creator_id = ?');
+            $stmt = $pdo->prepare('SELECT title, description, theme, link, images FROM project WHERE creator_id = ?');
             $stmt->execute([$_SESSION['user_id']]);
             $project_data = $stmt->fetchAll();
         }
