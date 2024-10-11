@@ -142,7 +142,7 @@ $userInfo = getUserInfo();
     <section id="cv" class="py-5">
         <?php
         $cv_data = [];
-        if ($_SESSION['user_id']) {
+        if (isset($_SESSION['user_id'])) {
             $stmt = $pdo->prepare('SELECT * FROM cv WHERE creator_id = ?');
             $stmt->execute([$_SESSION['user_id']]);
             $cv_data = $stmt->fetchAll();
@@ -159,7 +159,7 @@ $userInfo = getUserInfo();
                         if ($cv_data) {
                             $skills = [];
                             foreach ($cv_data as $cv)
-                                if ($cv['skills'])
+                                if (isset($cv['skills']))
                                     foreach (json_decode($cv['skills'], true) as $skill)
                                         if (!in_array($skill, $skills)) $skills[] = $skill;
                             for ($skill_i = 0; $skill_i < min(6, count($skills)); $skill_i++)
@@ -192,7 +192,7 @@ $userInfo = getUserInfo();
                                 displayExpCard($experience['post'], $experience['company'], $experience['start_date'], $experience['end_date'], $experience_i < min(3, count($experiences)) - 1);
                     } else displayExpCard(
                         'Pas d\'expérience enregistrée',
-                        $_SESSION['user_id'] ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
+                        isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
                         0,
                         0,
                         false
@@ -224,7 +224,7 @@ $userInfo = getUserInfo();
                                 displayCertifCard($certificate['level'], $certificate['school'], $certificate['date'], $certificate_i != min(3, count($certificates)) - 1);
                     } else displayCertifCard(
                         'Pas de diplome enregistrée',
-                        $_SESSION['user_id'] ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
+                        isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
                         0,
                         false
                     );
@@ -241,7 +241,7 @@ $userInfo = getUserInfo();
     <section id="projets" class="py-5 bg-dark">
         <?php
         $project_data = [];
-        if ($_SESSION['user_id']) {
+        if (isset($_SESSION['user_id'])) {
             $stmt = $pdo->prepare('SELECT * FROM project WHERE creator_id = ?');
             $stmt->execute([$_SESSION['user_id']]);
             $project_data = $stmt->fetchAll();
@@ -282,7 +282,7 @@ $userInfo = getUserInfo();
                             <div class="d-flex flex-row align-items-center">
                                 <h5 class="card-title p-2">' . $title . '</h5>' .
                         ($theme ? '<span class="badge text-light bg-primary ms-2">' . $theme . '</span>' : '') .
-                        ($link ? '<a href="'.$link.'" class="btn btn-sm btn-custom ms-auto">Voir le projet</a>' : '').
+                        ($link ? '<a href="' . $link . '" class="btn btn-sm btn-custom ms-auto">Voir le projet</a>' : '') .
                         '</div>
                             <p class="card-text mb-0">' . $description . '</p>
                             <div class="d-flex mt-2">' .
@@ -300,7 +300,7 @@ $userInfo = getUserInfo();
                     'Pas de projet enregistrée',
                     '',
                     '',
-                    $_SESSION['user_id'] ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
+                    isset($_SESSION['user_id']) ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
                     [],
                     0
                 );
@@ -317,18 +317,17 @@ $userInfo = getUserInfo();
             <div class="row">
                 <div class="col-md-6">
                     <form method="POST">
-                        <div class="mb-3">
+                        <div class="form-floating mb-3">
+                            <?php echo '<input type="text" class="form-control" id="name" placeholder="John Doe" value="' . (isset($_SESSION['user_id']) ? $userInfo['first_name'] . ' ' . $userInfo['last_name'] : '') . '" required>'; ?>
                             <label for="name" class="form-label">Nom</label>
-                            <?php echo '<input type="text" class="form-control" id="name" placeholder="John Doe" value="' . ($_SESSION['user_id'] ? $userInfo['first_name'] . ' ' . $userInfo['last_name'] : '') . '" required>'; ?>
                         </div>
-                        <div class="mb-3">
+                        <div class="form-floating mb-3">
+                            <?php echo '<input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="' . (isset($_SESSION['user_id']) ? $userInfo['email'] : '') . '" required>'; ?>
                             <label for="email" class="form-label">Email</label>
-                            <?php echo '<input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="' . ($_SESSION['user_id'] ? $userInfo['email'] : '') . '" required>'; ?>
                         </div>
-                        <div class="mb-3">
+                        <div class="form-floating mb-3">
+                            <textarea class="form-control" style="height: 13rem;" id="message" rows="4" placeholder="Entrez votre message..." required></textarea>
                             <label for="message" class="form-label">Message</label>
-                            <textarea class="form-control" id="message" rows="4" placeholder="Entrez votre message..."
-                                required></textarea>
                         </div>
                         <button type="submit" class="btn btn-custom">Envoyer</button>
                     </form>
