@@ -48,15 +48,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $data = $stmt->fetch();
 
         if (isset($data['password'])) {
-//            if (password_verify($_POST['password'], $data['password'])) $_SESSION['user_id'] = $data['id'];
-            if ($_POST['loginPassword'] === $data['password']) $_SESSION['user_id'] = $data['id'];
+            if (password_verify($_POST['loginPassword'], $data['password'])) $_SESSION['user_id'] = $data['id'];
             else $logError = array('password' => true);
         } else $logError = array('email' => true);
     }
 
     if (isset($_POST['registerEmail'])) {
+        $uuid = uuid_v4();
         $registerValue = array(
-            'id' => uuid_v4(),
             'email' => $_POST['registerEmail'],
             'first_name' => $_POST['registerFirstName'],
             'last_name' => $_POST['registerLastName'],
@@ -65,8 +64,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         try {
             $stmt = $pdo->prepare('INSERT INTO user (id, email, first_name, last_name, password) 
                                         VALUES (:id, :email, :first_name, :last_name, :password)');
-            $stmt->execute($registerValue);
-            $_SESSION['user_id'] = $registerValue['id'];
+            $stmt->execute(array(
+                    'id' => $uuid,
+                    'email' => $registerValue['email'],
+                    'first_name' => $registerValue['first_name'],
+                    'last_name' => $registerValue['last_name'],
+                    'password' => password_hash($registerValue['password'], PASSWORD_BCRYPT)
+            ));
+            $_SESSION['user_id'] = $uuid;
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
                 $regError = array('email' => true);
