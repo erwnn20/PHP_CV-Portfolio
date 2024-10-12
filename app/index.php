@@ -55,17 +55,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (isset($_POST['registerEmail'])) {
-        $uuid = uuid_v4();
-        $stmt = $pdo->prepare('INSERT INTO user (id, email, first_name, last_name, password) 
-                                        VALUES (:id, :email, :first_name, :last_name, :password)');
-        $stmt->execute(array(
-            'id' => $uuid,
+        $registerValue = array(
+            'id' => uuid_v4(),
             'email' => $_POST['registerEmail'],
             'first_name' => $_POST['registerFirstName'],
             'last_name' => $_POST['registerLastName'],
             'password' => $_POST['registerPassword']
-        ));
-        $_SESSION['user_id'] = $uuid;
+        );
+        try {
+            $stmt = $pdo->prepare('INSERT INTO user (id, email, first_name, last_name, password) 
+                                        VALUES (:id, :email, :first_name, :last_name, :password)');
+            $stmt->execute($registerValue);
+            $_SESSION['user_id'] = $registerValue['id'];
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                $regError = array('email' => true);
+            }
+        }
     }
 
     unset($_POST);
@@ -374,7 +380,7 @@ $userInfo = getUserInfo();
                         <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
                             <form method="post" class="mt-3" id="loginForm">
                                 <div class="form-floating mb-3">
-                                    <input type="email" class="form-control" id="loginEmail" name="loginEmail" placeholder required>
+                                    <input type="email" class="form-control" id="loginEmail" name="loginEmail" oninput="document.getElementById('loginEmailError').classList.add('d-none');" placeholder required>
                                     <label for="loginEmail" class="form-label">Email</label>
                                     <span id="loginEmailError" class="text-danger fst-italic ms-1 d-none"
                                           style="font-size: .9rem;" role="alert">
@@ -384,7 +390,7 @@ $userInfo = getUserInfo();
                                 <div class="mb-3">
                                     <div class="input-group">
                                         <div class="form-floating">
-                                            <input type="password" class="form-control" id="loginPassword" name="loginPassword" placeholder required>
+                                            <input type="password" class="form-control" id="loginPassword" name="loginPassword" oninput="document.getElementById('loginPasswordError').classList.add('d-none');" placeholder required>
                                             <label for="loginPassword" class="form-label">Mot de passe</label>
                                         </div>
                                         <span class="input-group-text password-toggle" onclick="togglePassword('loginPassword', 'loginPasswordToggle')">
@@ -419,8 +425,12 @@ $userInfo = getUserInfo();
                                     </div>
                                 </div>
                                 <div class="form-floating mb-3">
-                                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" placeholder required>
+                                    <input type="email" class="form-control" id="registerEmail" name="registerEmail" oninput="document.getElementById('registerEmailError').classList.add('d-none');" placeholder required>
                                     <label for="registerEmail" class="form-label">Email</label>
+                                    <span id="registerEmailError" class="text-danger fst-italic ms-1 d-none"
+                                          style="font-size: .9rem;" role="alert">
+                                        L'adresse email est déjà associée à un autre compte.  Veuillez réessayer.
+                                    </span>
                                 </div>
                                 <div class="mb-3">
                                     <div class="input-group">
@@ -493,6 +503,7 @@ $userInfo = getUserInfo();
             document.forms[formId].reset();
             document.getElementById('loginEmailError').classList.add('d-none');
             document.getElementById('loginPasswordError').classList.add('d-none');
+            document.getElementById('registerEmailError').classList.add('d-none');
             document.getElementById('registerError').classList.add('d-none');
         }
 
@@ -511,14 +522,30 @@ $userInfo = getUserInfo();
         });
     </script>
     <?php
-    // Display login modal on email or password error
+    // Display login modal on connection tab on email or password error
     if (isset($logError)) {
         echo '<script>
                 (new bootstrap.Modal(document.getElementById("loginModal"))).show();
                 document.getElementById("loginEmail").value = "' . ($loginEmail ?? '') . '";' .
             (isset($logError['email']) ? 'document.getElementById("loginEmailError").classList.remove("d-none");' : '') .
-            (isset($logError['password']) ? 'document.getElementById("loginPasswordError").classList.remove("d-none");' : '') . '
-              </script>';
+            (isset($logError['password']) ? 'document.getElementById("loginPasswordError").classList.remove("d-none");' : '') .
+              '</script>';
+
+    }
+
+    // Display login modal on register tab on email duplicate error
+    if (isset($regError)) {
+        echo '<script>                
+                (new bootstrap.Modal(document.getElementById("loginModal"))).show();
+                (new bootstrap.Tab(document.getElementById("register-tab"))).show();
+                
+                document.getElementById("registerLastName").value = "' . ($registerValue['last_name'] ?? '') . '";' .'
+                document.getElementById("registerFirstName").value = "' . ($registerValue['first_name'] ?? '') . '";' .'
+                document.getElementById("registerEmail").value = "' . ($registerValue['email'] ?? '') . '";' .'
+                document.getElementById("registerPassword").value = "' . ($registerValue['password'] ?? '') . '";' .
+            (isset($regError['email']) ?
+                'document.getElementById("registerEmailError").classList.remove("d-none");' : '') .
+              '</script>';
 
     }
     ?>
