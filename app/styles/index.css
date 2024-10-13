@@ -1,51 +1,22 @@
-body {
-    background-color: #121212;
-    color: var(--white-1);
-}
-
-.navbar {
-    background-color: var(--black-1) !important;
-}
-
 .card {
     background-color: var(--black-1);
 }
 
-.diplomes .card-title {
+.certificates .card-title {
     font-size: 1rem;
 }
 
-.diplomes .card-subtitle {
+.certificates .card-subtitle {
     font-size: .875rem;
 }
 
-.diplomes .card-text {
+.certificates .card-text {
     font-size: .8rem;
 }
 
-#projets .card img {
+#projects .card img {
     border-top-left-radius: .375rem;
     border-top-right-radius: .375rem;
-}
-
-.modal-content {
-    background-color: var(--black-1);
-    color: var(--white-1);
-}
-
-.modal-header {
-    border-bottom: 1px solid var(--black-2);
-}
-
-.form-control {
-    background-color: var(--black-2);
-    color: var(--white-1);
-    border-color: var(--black-3);
-}
-
-.form-control:focus {
-    background-color: var(--black-3);
-    color: var(--white-1);
 }
 
 .nav-tabs .nav-link {

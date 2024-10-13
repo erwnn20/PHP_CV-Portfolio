@@ -111,7 +111,7 @@ $userInfo = getUserInfo();
 </head>
 
 <body data-bs-theme="dark">
-    <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="/">Mon CV/Portfolio</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
@@ -127,7 +127,7 @@ $userInfo = getUserInfo();
                         <a class="nav-link" href="#cv">CV</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#projets">Projets</a>
+                        <a class="nav-link" href="#projects">Projets</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
@@ -153,7 +153,7 @@ $userInfo = getUserInfo();
         <div class="container text-center">
             <h1 class="display-4 mb-4">Bienvenue sur mon CV/Portfolio</h1>
             <p class="lead">Découvrez mes compétences, expériences et projets</p>
-            <a href="cv.php" class="btn btn-custom btn-lg mt-3">Voir les CV</a>
+            <a href="cv.php" class="btn btn-primary btn-custom btn-lg mt-3">Voir les CV</a>
         </div>
     </header>
 
@@ -181,8 +181,8 @@ $userInfo = getUserInfo();
                                     foreach (json_decode($cv['skills'], true) as $skill)
                                         if (!in_array($skill, $skills)) $skills[] = $skill;
                             for ($skill_i = 0; $skill_i < min(6, count($skills)); $skill_i++)
-                                echo '<li class="list-group-item text-bg-dark">' . $skills[$skill_i] . '</li>';
-                        } else echo '<li class="list-group-item text-bg-dark">Pas de compétence enregistrée</li>';
+                                echo '<li class="list-group-item">' . $skills[$skill_i] . '</li>';
+                        } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
                         ?>
                     </ul>
                 </div>
@@ -191,7 +191,7 @@ $userInfo = getUserInfo();
                     <?php
                     function displayExpCard($title, $subtitle, $start_year, $end_year, bool $margin)
                     {
-                        echo '<div class="card text-light' . ($margin ? ' mb-3' : '') . '">
+                        echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
                                     <div class="card-body">
                                         <h5 class="card-title">' . $title . '</h5>
                                         <h6 class="card-subtitle mb-2">' . $subtitle . '</h6>';
@@ -217,13 +217,13 @@ $userInfo = getUserInfo();
                     );
                     ?>
                 </div>
-                <div class="col-md-3 text-start diplomes">
+                <div class="col-md-3 text-start certificates">
                     <h3>Diplomes</h3>
                     <?php
                     function displayCertifCard($title, $subtitle, $year, bool $margin)
                     {
 
-                        echo '<div class="card text-light' . ($margin ? ' mb-3' : '') . '">
+                        echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
                                     <div class="card-body">
                                         <h5 class="card-title">' . $title . '</h5>
                                         <h6 class="card-subtitle mb-2">' . $subtitle . '</h6>';
@@ -250,13 +250,13 @@ $userInfo = getUserInfo();
                 </div>
             </div>
             <div class="text-center mt-4">
-                <a href="cv_modif.php" class="btn btn-custom me-3">Modifier mon CV</a>
-                <a href="#" class="btn btn-custom">Télécharger le CV en PDF</a>
+                <a href="cv_modif.php" class="btn btn-primary btn-custom me-3">Modifier mon CV</a>
+                <a href="#" class="btn btn-primary btn-custom">Télécharger le CV en PDF</a>
             </div>
         </div>
     </section>
 
-    <section id="projets" class="py-5 bg-dark">
+    <section id="projects" class="py-5 bg-dark">
         <?php
         $project_data = [];
         if (isset($_SESSION['user_id'])) {
@@ -273,7 +273,7 @@ $userInfo = getUserInfo();
                 function displayProjectCard($title, $theme, $link, $description, array $images, int $index)
                 {
                     echo '<div class="col-md-4 mb-4">
-                    <div class="card text-light">';
+                    <div class="card">';
                     if ($images) {
                         echo '<div id="carouselProject' . $index . '" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-indicators">';
@@ -299,8 +299,8 @@ $userInfo = getUserInfo();
                     echo '<div class="card-body">
                             <div class="d-flex flex-row align-items-center">
                                 <h5 class="card-title p-2">' . $title . '</h5>' .
-                        ($theme ? '<span class="badge text-light bg-primary ms-2">' . $theme . '</span>' : '') .
-                        ($link ? '<a href="' . $link . '" class="btn btn-sm btn-custom ms-auto">Voir le projet</a>' : '') .
+                        ($theme ? '<span class="badge rounded-pill text-bg-primary ms-2">' . $theme . '</span>' : '') .
+                        ($link ? '<a href="' . $link . '" class="btn btn-sm btn-primary btn-custom ms-auto">Voir le projet</a>' : '') .
                         '</div>
                             <p class="card-text mb-0">' . $description . '</p>
                             <div class="d-flex mt-2">' .
@@ -324,7 +324,7 @@ $userInfo = getUserInfo();
                 );
                 ?>
                 <div class="text-center mt-4">
-                    <a href="portfolio.php" class="btn btn-custom">Gérer mes Projets</a>
+                    <a href="portfolio.php" class="btn btn-primary btn-custom">Gérer mes Projets</a>
                 </div>
             </div>
     </section>
@@ -347,7 +347,7 @@ $userInfo = getUserInfo();
                             <textarea class="form-control" style="height: 13rem;" id="message" rows="4" placeholder="Entrez votre message..." required></textarea>
                             <label for="message" class="form-label">Message</label>
                         </div>
-                        <button type="submit" class="btn btn-custom">Envoyer</button>
+                        <button type="submit" class="btn btn-primary btn-custom">Envoyer</button>
                     </form>
                 </div>
                 <div class="col-md-6">
@@ -364,12 +364,12 @@ $userInfo = getUserInfo();
 
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="loginModalLabel">Connexion / Inscription</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
+            <div class="modal-content ">
+                <div class="modal-body py-0">
+                    <div class="modal-header mb-3">
+                        <h5 class="modal-title" id="loginModalLabel">Connexion / Inscription</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                     <ul class="nav nav-tabs" id="myTab" role="tablist">
                         <li class="nav-item" role="presentation">
                             <button class="nav-link active" id="login-tab" data-bs-toggle="tab" data-bs-target="#login"
@@ -407,10 +407,10 @@ $userInfo = getUserInfo();
                                         Mot de passe incorrect. Veuillez réessayer.
                                     </span>
                                 </div>
-                                <div class="d-flex gap-2 justify-content-end mt-4">
-                                    <button type="button" class="btn btn-link btn-sm link-secondary" style="font-size: .8rem;" onclick="resetForm('loginForm')">Réinitialiser</button>
-                                    <button type="submit" class="btn btn-custom ">Se connecter</button>
-                                    <button type="button" class="btn btn-outline-custom" disabled>
+                                <div class="modal-footer d-flex gap-2 justify-content-end mt-4">
+                                    <button type="button" class="btn btn-link btn-sm link-secondary p-0 me-auto" style="font-size: .8rem;" onclick="resetForm('loginForm')">Réinitialiser</button>
+                                    <button type="submit" class="btn btn-primary btn-custom ">Se connecter</button>
+                                    <button type="button" class="btn btn-outline-primary btn-custom" disabled>
                                         <i class="fab fa-google"></i>
                                     </button>
                                 </div>
@@ -463,9 +463,9 @@ $userInfo = getUserInfo();
                                         Les mots de passe ne correspondent pas.
                                     </span>
                                 </div>
-                                <div class="d-flex">
-                                    <button type="button" class="btn btn-link link-secondary" style="font-size: .8rem;" onclick="resetForm('registerForm')">Réinitialiser</button>
-                                    <button type="submit" class="btn btn-custom ms-auto">S'inscrire</button>
+                                <div class="modal-footer d-flex">
+                                    <button type="button" class="btn btn-link link-secondary p-0" style="font-size: .8rem;" onclick="resetForm('registerForm')">Réinitialiser</button>
+                                    <button type="submit" class="btn btn-primary btn-custom ms-auto">S'inscrire</button>
                                 </div>
                             </form>
                         </div>
@@ -475,15 +475,15 @@ $userInfo = getUserInfo();
         </div>
     </div>
 
-    <footer class="bg-dark text-light py-4">
+    <footer class="bg-dark py-4">
         <div class="container text-center">
             <p>&copy; 2024 Mon CV/Portfolio</p>
             <div class="mt-3">
                 <a href="https://www.instagram.com/erwnn_20/" class="text-light me-3"><i class="fab fa-instagram"></i></a>
                 <a href="#" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
                 <a href="https://github.com/erwnn20" class="text-light me-3"><i class="fab fa-github"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" class="text-light me-3"><i class="fab bi-download"></i></a>
-                <?php if ($userInfo['admin']) echo '<a href="admin.php" class="text-light me-3"><i class="fab bi-gear-fill"></i></a>'; ?>
+                <a href="https://github.com/erwnn20/PHP-TP" class="text-light"><i class="fab bi-download"></i></a>
+                <?php if ($userInfo['admin']) echo '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>'; ?>
             </div>
         </div>
     </footer>
