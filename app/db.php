@@ -18,3 +18,20 @@ try {
 } catch (\PDOException $e) {
     throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
+
+// Fetch user information from the database
+function getUserInfo($id)
+{
+    global $pdo;
+    if ($id) {
+        $stmt = $pdo->prepare('SELECT email, first_name, last_name, admin FROM user WHERE id = :id');
+        $stmt->execute(array('id' => $id));
+        return $stmt->fetch();
+    }
+    return array(
+        'email' => '',
+        'first_name' => '',
+        'last_name' => '',
+        'admin' => false
+    );
+}

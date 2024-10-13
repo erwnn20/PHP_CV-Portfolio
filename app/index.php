@@ -20,23 +20,6 @@ function uuid_v4(): string
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
 }
 
-// Fetch user information from the database
-function getUserInfo()
-{
-    global $pdo;
-    if (isset($_SESSION['user_id'])) {
-        $stmt = $pdo->prepare('SELECT email, first_name, last_name, admin FROM user WHERE id = :id');
-        $stmt->execute(array('id' => $_SESSION['user_id']));
-        return $stmt->fetch();
-    }
-    return array(
-        'email' => '',
-        'first_name' => '',
-        'last_name' => '',
-        'admin' => false
-    );
-}
-
 // Get infos for forms to Connect or Create and Connect user
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['loginEmail'])) {
@@ -82,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     unset($_POST);
 }
 
-$userInfo = getUserInfo();
+$userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
 ?>
 
 <!DOCTYPE html>
