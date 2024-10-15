@@ -129,7 +129,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
         if (isset($_SESSION['user_id'])) {
             $stmt = $pdo->prepare('SELECT skills, certificates, experiences FROM cv WHERE creator_id = ?');
             $stmt->execute([$_SESSION['user_id']]);
-            $cv_data = $stmt->fetchAll();
+            $cv_data = $stmt->fetch();
         }
         ?>
 
@@ -140,12 +140,10 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     <h3>Compétences</h3>
                     <ul class="list-group list-group-flush">
                         <?php
-                        if ($cv_data) {
+                        if (isset($cv_data['skills'])) {
                             $skills = [];
-                            foreach ($cv_data as $cv)
-                                if (isset($cv['skills']))
-                                    foreach (json_decode($cv['skills'], true) as $skill)
-                                        if (!in_array($skill, $skills)) $skills[] = $skill;
+                            foreach (json_decode($cv_data['skills'], true) as $skill)
+                                if (!in_array($skill, $skills)) $skills[] = $skill;
                             for ($skill_i = 0; $skill_i < min(6, count($skills)); $skill_i++)
                                 echo '<li class="list-group-item">' . $skills[$skill_i] . '</li>';
                         } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
@@ -155,25 +153,24 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 <div class="col-md-6 text-center">
                     <h3>Expériences</h3>
                     <?php
-                    function displayExpCard($title, $subtitle, $start_year, $end_year, bool $margin)
+                    function displayExpCard($title, $subtitle, $start_date, $end_date, bool $margin)
                     {
                         echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
                                     <div class="card-body">
                                         <h5 class="card-title">' . $title . '</h5>
-                                        <h6 class="card-subtitle mb-2">' . $subtitle . '</h6>';
-                        if ($start_year && $end_year)
-                            echo '<p class="card-text">' . $start_year . ' - ' . $end_year . '</p>';
-                        echo '    </div>
+                                        <h6 class="card-subtitle mb-2">' . $subtitle . '</h6>'.
+                                    ($start_date ?
+                                        '<p class="card-text">' .
+                                            date_format(date_create($start_date), "F Y") . ' - ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
+                                        '</p>' : '').
+                                    '</div>
                               </div>';
                     }
 
-                    if ($cv_data) {
-                        $experiences = [];
-                        foreach ($cv_data as $cv)
-                            $experiences = array_merge($experiences, json_decode($cv['experiences'], true));
-                        foreach ($experiences as $experience_i => $experience)
+                    if (isset($cv_data['experiences'])) {
+                        foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
                             if ($experience_i < 3)
-                                displayExpCard($experience['post'], $experience['company'], $experience['start_date'], $experience['end_date'], $experience_i < min(3, count($experiences)) - 1);
+                                displayExpCard($experience['role'], $experience['company'], $experience['start_date'], $experience['end_date'], $experience_i < min(3, count($experience)) - 1);
                     } else displayExpCard(
                         'Pas d\'expérience enregistrée',
                         isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
@@ -186,27 +183,24 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 <div class="col-md-3 text-start certificates">
                     <h3>Diplomes</h3>
                     <?php
-                    function displayCertifCard($title, $subtitle, $year, bool $margin)
+                    function displayCertificatesCard($title, $subtitle, $year, bool $margin)
                     {
 
                         echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
-                                    <div class="card-body">
-                                        <h5 class="card-title">' . $title . '</h5>
-                                        <h6 class="card-subtitle mb-2">' . $subtitle . '</h6>';
-                        if ($year)
-                            echo '<p class="card-text">' . $year . '</p>';
-                        echo '</div>
+                                <div class="card-body">
+                                    <h5 class="card-title">' . $title . '</h5>
+                                    <h6 class="card-subtitle mb-2">' . $subtitle . '</h6>'.
+                                ($year ?
+                                    '<p class="card-text">' . date_format(date_create($year), "Y") . '</p>' : '').
+                                '</div>
                               </div>';
                     }
 
-                    if ($cv_data) {
-                        $certificates = [];
-                        foreach ($cv_data as $cv)
-                            $certificates = array_merge($certificates, json_decode($cv['certificates'], true));
-                        foreach ($certificates as $certificate_i => $certificate)
+                    if (isset($cv_data['certificates'])) {
+                        foreach (json_decode($cv_data['certificates'], true) as $certificate_i => $certificate)
                             if ($certificate_i < 3)
-                                displayCertifCard($certificate['level'], $certificate['school'], $certificate['date'], $certificate_i != min(3, count($certificates)) - 1);
-                    } else displayCertifCard(
+                                displayCertificatesCard($certificate['degree'], $certificate['school'], $certificate['date'], $certificate_i != min(3, count($certificate)) - 1);
+                    } else displayCertificatesCard(
                         'Pas de diplome enregistrée',
                         isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
                         0,
