@@ -9,9 +9,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['loginEmail'])) {
         $loginEmail = $_POST['loginEmail'];
         $stmt = $pdo->prepare('SELECT id, email, password  FROM user WHERE email = :email');
-        $stmt->execute(array(
-            'email' => $loginEmail
-        ));
+        $stmt->execute(array('email' => $loginEmail));
         $data = $stmt->fetch();
 
         if (isset($data['password'])) {
@@ -104,8 +102,8 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     if (isset($_SESSION['user_id']))
                         echo '<li class="nav-item d-flex">
                                     <a class="nav-link fw-bold ms-3" href="profile.php">' .
-                            $userInfo['first_name'] . " " . $userInfo['last_name'] .
-                            '</a>
+                                        $userInfo['first_name'] . " " . $userInfo['last_name'] .
+                                    '</a>
                                     <a href="logout.php" class="nav-link align-content-center ps-0"><i class="bi bi-power"></i></a>
                                 </li>';
                     else echo '<li class="nav-item align-content-center ms-2">
@@ -129,8 +127,8 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
         <?php
         $cv_data = [];
         if (isset($_SESSION['user_id'])) {
-            $stmt = $pdo->prepare('SELECT skills, certificates, experiences FROM cv WHERE creator_id = ?');
-            $stmt->execute([$_SESSION['user_id']]);
+            $stmt = $pdo->prepare('SELECT skills, certificates, experiences FROM cv WHERE creator_id = :id');
+            $stmt->execute(array('id' => $_SESSION['user_id']));
             $cv_data = $stmt->fetch();
         }
         ?>
@@ -146,8 +144,9 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                             $skills = [];
                             foreach (json_decode($cv_data['skills'], true) as $skill)
                                 if (!in_array($skill, $skills)) $skills[] = $skill;
-                            for ($skill_i = 0; $skill_i < min(6, count($skills)); $skill_i++)
-                                echo '<li class="list-group-item">' . $skills[$skill_i] . '</li>';
+                            foreach ($skills as $skill_i => $skill)
+                                if ($skill_i < min(6, count($skills)))
+                                    echo '<li class="list-group-item">' . $skill . '</li>';
                         } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
                         ?>
                     </ul>
@@ -172,7 +171,12 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     if (isset($cv_data['experiences'])) {
                         foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
                             if ($experience_i < 3)
-                                displayExpCard($experience['role'], $experience['company'], $experience['start_date'], $experience['end_date'], $experience_i < min(3, count($experience)) - 1);
+                                displayExpCard(
+                                        $experience['role'],
+                                        $experience['company'],
+                                        $experience['start_date'],
+                                        $experience['end_date'],
+                                        $experience_i < min(3, count($experience)) - 1);
                     } else displayExpCard(
                         'Pas d\'expérience enregistrée',
                         isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
@@ -201,7 +205,12 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     if (isset($cv_data['certificates'])) {
                         foreach (json_decode($cv_data['certificates'], true) as $certificate_i => $certificate)
                             if ($certificate_i < 3)
-                                displayCertificatesCard($certificate['degree'], $certificate['school'], $certificate['date'], $certificate_i != min(3, count($certificate)) - 1);
+                                displayCertificatesCard(
+                                        $certificate['degree'],
+                                        $certificate['school'],
+                                        $certificate['date'],
+                                        $certificate_i != min(3, count($certificate)) - 1
+                                );
                     } else displayCertificatesCard(
                         'Pas de diplome enregistrée',
                         isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
@@ -222,8 +231,8 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
         <?php
         $project_data = [];
         if (isset($_SESSION['user_id'])) {
-            $stmt = $pdo->prepare('SELECT title, description, theme, link, images FROM project WHERE creator_id = ?');
-            $stmt->execute([$_SESSION['user_id']]);
+            $stmt = $pdo->prepare('SELECT title, description, theme, link, images FROM project WHERE creator_id = :id');
+            $stmt->execute(array('id' => $_SESSION['user_id']));
             $project_data = $stmt->fetchAll();
         }
         ?>
@@ -263,10 +272,8 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                 <h5 class="card-title p-2">' . $title . '</h5>' .
                         ($theme ? '<span class="badge rounded-pill text-bg-primary ms-2">' . $theme . '</span>' : '') .
                         ($link ? '<a href="' . $link . '" class="btn btn-sm btn-primary btn-custom ms-auto">Voir le projet</a>' : '') .
-                        '</div>
-                            <p class="card-text mb-0">' . $description . '</p>
-                            <div class="d-flex mt-2">' .
-                        '</div>
+                            '</div>
+                            <p class="card-text mb-1">' . $description . '</p>
                         </div>
                     </div>
                 </div>';
@@ -275,7 +282,14 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 if ($project_data) {
                     foreach ($project_data as $project_i => $project)
                         if ($project_i < 3)
-                            displayProjectCard($project['title'], $project['theme'], $project['link'], $project['description'], json_decode($project['images'], true), $project_i);
+                            displayProjectCard(
+                                    $project['title'],
+                                    $project['theme'],
+                                    $project['link'],
+                                    $project['description'],
+                                    json_decode($project['images'], true),
+                                    $project_i
+                            );
                 } else displayProjectCard(
                     'Pas de projet enregistrée',
                     '',
