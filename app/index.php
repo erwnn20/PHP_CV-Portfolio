@@ -1,5 +1,6 @@
 <?php
 global $pdo;
+ob_start();
 session_start();
 require 'db.php';
 
@@ -45,7 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    unset($_POST);
+    header("Location: " . $_SERVER['PHP_SELF']);
+    exit;
 }
 
 $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
@@ -515,3 +517,6 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
 </body>
 
 </html>
+
+<?php
+ob_end_flush();
