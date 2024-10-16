@@ -214,16 +214,16 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                         <form method="post" id="cvInfoForm" class="flex-grow-1 d-flex flex-column">
                             <div class="form-floating mb-3">
                                 <?php echo '<input type="text" class="form-control form-control-lg" id="cvTitle" name="cvTitle" 
-                                        value="'. ($cv_data['title'] ?? '') .'" placeholder'.(isset($_SESSION['user_id']) ? '' : ' disabled').'>' ?>
+                                        value="' . ($cv_data['title'] ?? '') . '" placeholder' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>' ?>
                                 <label for="cvTitle" class="form-label">Titre du CV</label>
                             </div>
                             <div class="form-floating flex-grow-1 d-flex flex-column mb-3">
                                 <?php echo '<textarea class="form-control form-control-sm flex-grow-1" id="cvDescription" name="cvDescription" 
-                                        oninput="textAreaAdjust(this)"'.(isset($_SESSION['user_id']) ? '' : ' disabled').'>'. ($cv_data['description'] ?? '') .'</textarea>' ?>
+                                        oninput="textAreaAdjust(this)"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>' . ($cv_data['description'] ?? '') . '</textarea>' ?>
                                 <label for="cvDescription" class="form-label">Description</label>
                             </div>
                             <div class="d-flex">
-                                <?php echo '<button type="submit" class="btn btn-primary btn-custom ms-auto"'.(isset($_SESSION['user_id']) ? '' : ' disabled').'>Enregistrer</button>' ?>
+                                <?php echo '<button type="submit" class="btn btn-primary btn-custom ms-auto"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>Enregistrer</button>' ?>
                             </div>
                         </form>
                     </div>
@@ -239,9 +239,9 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                             if (isset($cv_data['skills'])) {
                                 foreach (json_decode($cv_data['skills'], true) as $skill_i => $skill)
                                     echo '<li class="list-group-item d-flex skill-item">'
-                                                . $skill .
-                                            '<form method="post" class="d-flex align-items-center">
-                                                <button type="submit" name="delSkillIndex" value="'.$skill_i.'"  class="btn btn-sm btn-close pe-0 ms-2"></button>
+                                        . $skill .
+                                        '<form method="post" class="d-flex align-items-center">
+                                                <button type="submit" name="delSkillIndex" value="' . $skill_i . '"  class="btn btn-sm btn-close pe-0 ms-2"></button>
                                             </form>
                                         </li>';
                             } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
@@ -251,10 +251,10 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                         <?php
                         echo '<form method="post" id="addSkillForm">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="skillName" name="newSkill" placeholder'.(isset($_SESSION['user_id']) ? '' : ' disabled').' required>
+                                <input type="text" class="form-control" id="skillName" name="newSkill" placeholder' . (isset($_SESSION['user_id']) ? '' : ' disabled') . ' required>
                                 <label for="skillName" class="form-label">Nom de la nouvelle compétence</label>
                             </div>
-                            <button type="submit" class="btn btn-success"'.(isset($_SESSION['user_id']) ? '' : ' disabled').'>Ajouter</button>
+                            <button type="submit" class="btn btn-success"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>Ajouter</button>
                         </form>'
                         ?>
                     </div>
@@ -274,19 +274,19 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                     <div class="card-body">
                                         <h5 class="card-title mb-3">' . $role . '</h5>
                                         <h6 class="card-subtitle mb-2 text-muted">' . $company . '</h6>
-                                        <div class="d-flex">'.
-                                          ($start_date ?
-                                            '<p class="mb-0">
+                                        <div class="d-flex">' .
+                            ($start_date ?
+                                '<p class="mb-0">
                                                 <small class="text-muted">
                                                     Du ' . date_format(date_create($start_date), "F Y") .
-                                                    ' au ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
-                                                '</small>
-                                            </p>' : '').
-                                        ($delBtn ? '
+                                ' au ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
+                                '</small>
+                                            </p>' : '') .
+                            ($delBtn ? '
                                             <form method="post" class="ms-auto">
-                                                <button type="submit" name="delExpIndex" value="'.$index.'" class="btn btn-danger btn-sm">Supprimer</button>
-                                            </form>' : '').
-                                        '</div>
+                                                <button type="submit" name="delExpIndex" value="' . $index . '" class="btn btn-danger btn-sm">Supprimer</button>
+                                            </form>' : '') .
+                            '</div>
                                     </div>
                                 </div>
                             </div>';
@@ -313,7 +313,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     ?>
                 </div>
                 <?php
-                echo '<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addExperienceModal"'.(isset($_SESSION['user_id']) ? '' : ' disabled').'>
+                echo '<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addExperienceModal"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>
                         Ajouter une expérience
                     </button>'
                 ?>
@@ -331,21 +331,21 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                 <div class="card">
                                     <div class="card-body">
                                         <div class="d-flex align-items-center gap-2 flex-wrap ">
-                                            <h5 class="card-title text-break">'.$degree.'</h5>
-                                            <h6 class="card-subtitle text-muted">'.$school.'</h6>
+                                            <h5 class="card-title text-break">' . $degree . '</h5>
+                                            <h6 class="card-subtitle text-muted">' . $school . '</h6>
                                         </div>
-                                        <div class="d-flex">'.
-                                            ($date ?
-                                                '<p class="mb-0">
+                                        <div class="d-flex">' .
+                            ($date ?
+                                '<p class="mb-0">
                                                     <small class="text-muted h-100">
                                                         En ' . date_format(date_create($date), "Y") .
-                                                    '</small>
-                                                </p>' : '').
-                                            ($delBtn ? '
+                                '</small>
+                                                </p>' : '') .
+                            ($delBtn ? '
                                                 <form method="post" class="ms-auto">
-                                                    <button type="submit" name="delDegreeIndex" value="'.$index.'" class="btn btn-danger btn-sm">Supprimer</button>
-                                                </form>' : '').
-                                        '</div>
+                                                    <button type="submit" name="delDegreeIndex" value="' . $index . '" class="btn btn-danger btn-sm">Supprimer</button>
+                                                </form>' : '') .
+                            '</div>
                                     </div>
                                 </div>
                             </div>';
@@ -370,7 +370,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     ?>
                 </div>
                 <?php
-                echo '<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEducationModal"'.(isset($_SESSION['user_id']) ? '' : ' disabled').'>
+                echo '<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEducationModal"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>
                         Ajouter un diplôme
                     </button>'
                 ?>
