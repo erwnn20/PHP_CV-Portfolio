@@ -37,18 +37,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (isset($_POST['newSkill'])) {
+        $skillData = json_decode(getCVData($_SESSION['user_id'])['skills'] ?? '[]', true);
+        $skillData[] = $_POST['newSkill'];
+
         $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, skills) VALUES (:id, :creator_id, :skills) ON DUPLICATE KEY UPDATE skills = VALUES(skills)');
         $stmt->execute(array(
             'id' => uuid_v4(),
             'creator_id' => $_SESSION['user_id'],
-            'skills' => json_encode(
-                array_merge(
-                    json_decode(
-                        getCVData($_SESSION['user_id'])['skills'] ?? '[]',
-                        true),
-                    array($_POST['newSkill'])
-                )
-            )
+            'skills' => json_encode($skillData)
+        ));
+    }
+
+    if (isset($_POST['delSkillIndex'])) {
+        $skillData = array();
+        foreach (json_decode(getCVData($_SESSION['user_id'])['skills'] ?? '[]', true) as $skill_i => $skill) {
+            if ($skill_i != $_POST['delSkillIndex'])
+                $skillData[] = $skill;
+        }
+
+        $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, skills) VALUES (:id, :creator_id, :skills) ON DUPLICATE KEY UPDATE skills = VALUES(skills)');
+        $stmt->execute(array(
+            'id' => uuid_v4(),
+            'creator_id' => $_SESSION['user_id'],
+            'skills' => json_encode($skillData)
         ));
     }
 
@@ -69,13 +80,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ));
     }
 
-    if (isset($_POST['educationDegree'])) {
+    if (isset($_POST['delExpIndex'])) {
+        $expData = array();
+        foreach (json_decode(getCVData($_SESSION['user_id'])['experiences'] ?? '[]', true) as $certificate_i => $certificate) {
+            if ($certificate_i != $_POST['delExpIndex'])
+                $expData[] = $certificate;
+        }
+
+        $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, experiences) VALUES (:id, :creator_id, :experiences) ON DUPLICATE KEY UPDATE experiences = VALUES(experiences)');
+        $stmt->execute(array(
+            'id' => uuid_v4(),
+            'creator_id' => $_SESSION['user_id'],
+            'experiences' => json_encode($expData)
+        ));
+    }
+
+    if (isset($_POST['educationTitle'])) {
         $degData = json_decode(getCVData($_SESSION['user_id'])['certificates'] ?? '[]', true);
         $degData[] = array(
-            'degree' => $_POST['educationDegree'],
+            'degree' => $_POST['educationTitle'],
             'school' => $_POST['educationSchool'],
             'date' => $_POST['educationDate'],
         );
+
+        $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, certificates) VALUES (:id, :creator_id, :certificates) ON DUPLICATE KEY UPDATE certificates = VALUES(certificates)');
+        $stmt->execute(array(
+            'id' => uuid_v4(),
+            'creator_id' => $_SESSION['user_id'],
+            'certificates' => json_encode($degData)
+        ));
+    }
+
+    if (isset($_POST['delDegreeIndex'])) {
+        $degData = array();
+        foreach (json_decode(getCVData($_SESSION['user_id'])['certificates'] ?? '[]', true) as $certificate_i => $certificate) {
+            if ($certificate_i != $_POST['delDegreeIndex'])
+                $degData[] = $certificate;
+        }
 
         $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, certificates) VALUES (:id, :creator_id, :certificates) ON DUPLICATE KEY UPDATE certificates = VALUES(certificates)');
         $stmt->execute(array(
@@ -162,7 +203,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
 
     <div class="container my-5">
         <div class="text-center mb-5">
-            <h1 class="">Modifier mon CV</h1>
+            <h1>Modifier mon CV</h1>
             <?php if (!isset($_SESSION['user_id'])) echo '<p class="lead">Connectez vous pour modifier votre CV</p>' ?>
         </div>
         <div class="row">
@@ -196,8 +237,13 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                         <ul id="skillsList" class="list-group list-group-horizontal-sm d-flex flex-wrap mb-4">
                             <?php
                             if (isset($cv_data['skills'])) {
-                                foreach (json_decode($cv_data['skills'], true) as $skill)
-                                    echo '<li class="list-group-item">' . $skill . '</li>';
+                                foreach (json_decode($cv_data['skills'], true) as $skill_i => $skill)
+                                    echo '<li class="list-group-item d-flex skill-item">'
+                                                . $skill .
+                                            '<form method="post" class="d-flex align-items-center">
+                                                <button type="submit" name="delSkillIndex" value="'.$skill_i.'"  class="btn btn-sm btn-close pe-0 ms-2"></button>
+                                            </form>
+                                        </li>';
                             } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
                             ?>
                         </ul>
@@ -221,7 +267,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 <h2 class="card-title mb-4">Expériences</h2>
                 <div id="experiencesList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
                     <?php
-                    function displayExpCard($role, $company, $start_date, $end_date, bool $delBtn)
+                    function displayExpCard($role, $company, $start_date, $end_date, int $index, bool $delBtn)
                     {
                         echo '<div class="col">
                                 <div class="card experience-card">
@@ -236,7 +282,10 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                                     ' au ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
                                                 '</small>
                                             </p>' : '').
-                                            ($delBtn ? '<button class="btn btn-danger btn-sm ms-auto">Supprimer</button>' : '').
+                                        ($delBtn ? '
+                                            <form method="post" class="ms-auto">
+                                                <button type="submit" name="delExpIndex" value="'.$index.'" class="btn btn-danger btn-sm">Supprimer</button>
+                                            </form>' : '').
                                         '</div>
                                     </div>
                                 </div>
@@ -244,13 +293,21 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     }
 
                     if (isset($cv_data['experiences'])) {
-                        foreach (json_decode($cv_data['experiences'], true) as $experience)
-                            displayExpCard($experience['role'], $experience['company'], $experience['start_date'], $experience['end_date'], true);
+                        foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
+                            displayExpCard(
+                                $experience['role'],
+                                $experience['company'],
+                                $experience['start_date'],
+                                $experience['end_date'],
+                                $experience_i,
+                                true
+                            );
                     } else displayExpCard(
                         'Pas d\'expérience enregistrée',
                         isset($_SESSION['user_id']) ? 'Ajoutez vos experiances professionnelles ici !' : 'Connectez vous pour afficher vos experiences professionnelles',
                         0,
                         0,
+                        -1,
                         false
                     );
                     ?>
@@ -268,7 +325,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 <h2 class="card-title mb-4">Diplômes et Certifications</h2>
                 <div id="educationList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
                     <?php
-                    function displayCertificatesCard($degree, $school, $date, bool $delBtn)
+                    function displayCertificatesCard($degree, $school, $date, int $index, bool $delBtn)
                     {
                         echo '<div class="col">
                                 <div class="card">
@@ -284,7 +341,10 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                                         En ' . date_format(date_create($date), "Y") .
                                                     '</small>
                                                 </p>' : '').
-                                            ($delBtn ? '<button class="btn btn-danger btn-sm ms-auto">Supprimer</button>' : '').
+                                            ($delBtn ? '
+                                                <form method="post" class="ms-auto">
+                                                    <button type="submit" name="delDegreeIndex" value="'.$index.'" class="btn btn-danger btn-sm">Supprimer</button>
+                                                </form>' : '').
                                         '</div>
                                     </div>
                                 </div>
@@ -292,12 +352,19 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     }
 
                     if (isset($cv_data['certificates'])) {
-                        foreach (json_decode($cv_data['certificates'], true) as $certificate)
-                            displayCertificatesCard($certificate['degree'], $certificate['school'], $certificate['date'], true);
+                        foreach (json_decode($cv_data['certificates'], true) as $certificate_i => $certificate)
+                            displayCertificatesCard(
+                                $certificate['degree'],
+                                $certificate['school'],
+                                $certificate['date'],
+                                $certificate_i,
+                                true
+                            );
                     } else displayCertificatesCard(
                         'Pas de diplome enregistrée',
                         isset($_SESSION['user_id']) ? 'Ajoutez vos diplomes et certifications ici !' : 'Connectez vous pour afficher vos diplomes et certifications',
                         0,
+                        -1,
                         false
                     );
                     ?>
@@ -360,12 +427,12 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                         <h5 class="modal-title" id="addEducationModalLabel">Ajouter un diplôme</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="post" action="cv_modif.php" id="addEducationForm">
+                    <form method="post" id="addEducationForm">
                         <div class="mb-3">
-                            <label for="educationDegree" class="form-label">
+                            <label for="educationTitle" class="form-label">
                                 <h5 class="mb-0">Diplôme</h5>
                             </label>
-                            <input type="text" class="form-control form-control-lg" id="educationDegree" name="educationDegree" required>
+                            <input type="text" class="form-control form-control-lg" id="educationTitle" name="educationTitle" required>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" id="educationSchool" name="educationSchool" required>
