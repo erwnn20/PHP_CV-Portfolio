@@ -222,7 +222,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
             </div>
             <div class="text-center mt-4">
                 <a href="cv_modif.php" class="btn btn-primary btn-custom me-3">Modifier mon CV</a>
-                <a href="#" class="btn btn-primary btn-custom">Télécharger le CV en PDF</a>
+                <a href="#" class="btn btn-primary btn-custom disabled">Télécharger le CV en PDF</a>
             </div>
         </div>
     </section>
@@ -271,7 +271,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                             <div class="d-flex flex-row align-items-center">
                                 <h5 class="card-title p-2">' . $title . '</h5>' .
                         ($theme ? '<span class="badge rounded-pill text-bg-primary ms-2">' . $theme . '</span>' : '') .
-                        ($link ? '<a href="' . $link . '" class="btn btn-sm btn-primary btn-custom ms-auto">Voir le projet</a>' : '') .
+                        ($link ? '<a href="' . $link . '" target="_blank" class="btn btn-sm btn-primary btn-custom ms-auto">Voir le projet</a>' : '') .
                             '</div>
                             <p class="card-text mb-1">' . $description . '</p>
                         </div>
@@ -455,10 +455,10 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
         <div class="container text-center">
             <p>&copy; 2024 Mon CV/Portfolio</p>
             <div class="mt-3">
-                <a href="https://www.instagram.com/erwnn_20/" class="text-light me-3"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/erwnn20" class="text-light me-3"><i class="fab fa-github"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" class="text-light"><i class="fab bi-download"></i></a>
+                <a href="https://www.instagram.com/erwnn_20/" target="_blank" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/erwnn20" target="_blank" class="text-light me-3"><i class="fab fa-github"></i></a>
+                <a href="https://github.com/erwnn20/PHP-TP" target="_blank" class="text-light"><i class="fab bi-download"></i></a>
                 <?php if ($userInfo['admin']) echo '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>'; ?>
             </div>
         </div>
