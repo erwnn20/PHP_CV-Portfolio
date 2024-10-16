@@ -126,6 +126,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ));
     }
 
+    if (isset($_POST['connection'])) {
+        $_SESSION['loginError'] = array('external' => true);
+
+        header("Location: /");
+        exit;
+    }
+
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
@@ -192,8 +199,9 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                     <a href="logout.php" class="nav-link align-content-center ps-0"><i class="bi bi-power"></i></a>
                                 </li>';
                     else echo '<li class="nav-item align-content-center ms-2">
-                                    <a href="/" class="btn btn-success btn-sm">Connexion</a>
-                                    <!--<button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="/#loginModal">Connexion</button>-->
+                                    <form method="post" class="m-0">
+                                        <button type="submit" name="connection" value="1" class="btn btn-success btn-sm">Connexion</button>
+                                    </form>
                                 </li>';
                     ?>
                 </ul>

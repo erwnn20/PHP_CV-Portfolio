@@ -14,8 +14,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (isset($data['password'])) {
             if (password_verify($_POST['loginPassword'], $data['password'])) $_SESSION['user_id'] = $data['id'];
-            else $logError = array('password' => true);
-        } else $logError = array('email' => true);
+            else $_SESSION['loginError'] = array('password' => true);
+        } else $_SESSION['loginError'] = array('email' => true);
     }
 
     if (isset($_POST['registerEmail'])) {
@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id'] = $uuid;
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
-                $regError = array('email' => true);
+                $_SESSION['registerError'] = array('email' => true);
             }
         }
     }
@@ -504,17 +504,18 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
     </script>
     <?php
     // Display login modal on connection tab on email or password error
-    if (isset($logError)) {
+    if (isset($_SESSION['loginError'])) {
         echo '<script>
                 (new bootstrap.Modal(document.getElementById("loginModal"))).show();
                 document.getElementById("loginEmail").value = "' . ($loginEmail ?? '') . '";' .
-            (isset($logError['email']) ? 'document.getElementById("loginEmailError").classList.remove("d-none");' : '') .
-            (isset($logError['password']) ? 'document.getElementById("loginPasswordError").classList.remove("d-none");' : '') .
+            (isset($_SESSION['loginError']['email']) ? 'document.getElementById("loginEmailError").classList.remove("d-none");' : '') .
+            (isset($_SESSION['loginError']['password']) ? 'document.getElementById("loginPasswordError").classList.remove("d-none");' : '') .
             '</script>';
+        unset($_SESSION['loginError']);
     }
 
     // Display login modal on register tab on email duplicate error
-    if (isset($regError)) {
+    if (isset($_SESSION['registerError'])) {
         echo '<script>                
                 (new bootstrap.Modal(document.getElementById("loginModal"))).show();
                 (new bootstrap.Tab(document.getElementById("register-tab"))).show();
@@ -523,9 +524,10 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 document.getElementById("registerFirstName").value = "' . ($registerValue['first_name'] ?? '') . '";' . '
                 document.getElementById("registerEmail").value = "' . ($registerValue['email'] ?? '') . '";' . '
                 document.getElementById("registerPassword").value = "' . ($registerValue['password'] ?? '') . '";' .
-            (isset($regError['email']) ?
+            (isset($_SESSION['registerError']['email']) ?
                 'document.getElementById("registerEmailError").classList.remove("d-none");' : '') .
             '</script>';
+        unset($_SESSION['registerError']);
     }
     ?>
 </body>
