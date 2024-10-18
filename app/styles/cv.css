@@ -1,7 +1,3 @@
-.card {
-    background-color: var(--black-1);
-}
-
 .skill-item:not(:hover) .btn-close {
     display: none;
 }

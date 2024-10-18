@@ -23,6 +23,11 @@ body {
     background-color: var(--black-3);
 }
 
+.card {
+    background-color: var(--black-1);
+    border-color: var(--black-2);
+}
+
 .btn-primary.btn-custom {
     --bs-btn-color: #fff;
     --bs-btn-bg: var(--purple-default);
