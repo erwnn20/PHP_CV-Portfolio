@@ -1,3 +1,6 @@
 .env
 .idea
+app/img/*
+!app/img/no_img.png
+
 test*
