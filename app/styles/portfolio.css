@@ -1,0 +1,27 @@
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.project-card {
+    height: 100%;
+}
+
+.project-image {
+    height: 250px;
+    object-fit: cover;
+}
+
+.carousel-inner {
+    border-top-left-radius: var(--bs-card-border-radius);
+    border-top-right-radius: var(--bs-card-border-radius);
+}
+
+#projectDescription {
+    min-height: 10rem;
+}
