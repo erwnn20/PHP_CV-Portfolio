@@ -365,8 +365,8 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                 <div class="form-floating mb-3">
                                     <input type="email" class="form-control" id="loginEmail" name="loginEmail" oninput="document.getElementById('loginEmailError').classList.add('d-none');" placeholder required>
                                     <label for="loginEmail" class="form-label">Email</label>
-                                    <span id="loginEmailError" class="text-danger fst-italic ms-1 d-none"
-                                        style="font-size: .9rem;" role="alert">
+                                    <span id="loginEmailError" class="text-danger fst-italic ms-1 d-none" style="font-size: .9rem;" role="alert">
+                                        <i class="bi-exclamation-circle"></i>
                                         L'adresse email n'est associée à aucun compte. Veuillez réessayer.
                                     </span>
                                 </div>
@@ -380,8 +380,8 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                             <i id="loginPasswordToggle" class="fa fa-eye"></i>
                                         </span>
                                     </div>
-                                    <span id="loginPasswordError" class="text-danger fst-italic ms-1 d-none"
-                                        style="font-size: .9rem;" role="alert">
+                                    <span id="loginPasswordError" class="text-danger fst-italic ms-1 d-none" style="font-size: .9rem;" role="alert">
+                                        <i class="bi-exclamation-circle"></i>
                                         Mot de passe incorrect. Veuillez réessayer.
                                     </span>
                                 </div>
@@ -410,8 +410,8 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                 <div class="form-floating mb-3">
                                     <input type="email" class="form-control" id="registerEmail" name="registerEmail" oninput="document.getElementById('registerEmailError').classList.add('d-none');" placeholder required>
                                     <label for="registerEmail" class="form-label">Email</label>
-                                    <span id="registerEmailError" class="text-danger fst-italic ms-1 d-none"
-                                        style="font-size: .9rem;" role="alert">
+                                    <span id="registerEmailError" class="text-danger fst-italic ms-1 d-none" style="font-size: .9rem;" role="alert">
+                                        <i class="bi-exclamation-circle"></i>
                                         L'adresse email est déjà associée à un autre compte. Veuillez réessayer.
                                     </span>
                                 </div>
@@ -436,8 +436,8 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                                             <i id="registerConfirmPasswordToggle" class="fa fa-eye"></i>
                                         </span>
                                     </div>
-                                    <span id="registerError" class="text-danger fst-italic ms-1 d-none"
-                                        style="font-size: .9rem;" role="alert">
+                                    <span id="registerError" class="text-danger fst-italic ms-1 d-none" style="font-size: .9rem;" role="alert">
+                                        <i class="bi-exclamation-circle"></i>
                                         Les mots de passe ne correspondent pas.
                                     </span>
                                 </div>
