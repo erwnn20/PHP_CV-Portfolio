@@ -28,7 +28,7 @@ function saveProjectImg($projectID): array
 {
     $files_name = array();
 
-    $targetDirectory = 'img/' . $projectID . '/';
+    $targetDirectory = 'img/projects/' . $projectID . '/';
     if (!is_dir($targetDirectory)) {
         mkdir($targetDirectory, 0755, true);
     }
@@ -49,10 +49,14 @@ function saveProjectImg($projectID): array
 
 function deleteProjectImg($projectID): void
 {
-    $targetDirectory = 'img/' . $projectID . '/';
-    if (file_exists($targetDirectory)) {
-        unlink($targetDirectory);
+    $dir = 'img/projects/' . $projectID . '/';
+    $it = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
+    $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
+    foreach($files as $file) {
+        if ($file->isDir()) rmdir($file->getPathname());
+        else unlink($file->getPathname());
     }
+    rmdir($dir);
 }
 
 
