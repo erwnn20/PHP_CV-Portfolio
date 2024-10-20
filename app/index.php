@@ -126,14 +126,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
     </header>
 
     <section id="cv" class="py-5">
-        <?php
-        $cv_data = [];
-        if (isset($_SESSION['user_id'])) {
-            $stmt = $pdo->prepare('SELECT skills, certificates, experiences FROM cv WHERE creator_id = :id');
-            $stmt->execute(array('id' => $_SESSION['user_id']));
-            $cv_data = $stmt->fetch();
-        }
-        ?>
+        <?php $cv_data = getCVData($_SESSION['user_id'] ?? 0) ?>
 
         <div class="container">
             <h2 class="text-center mb-4">Mon CV</h2>
@@ -143,7 +136,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     <ul class="list-group list-group-flush">
                         <?php
                         if (isset($cv_data['skills'])) {
-                            $skills = [];
+                            $skills = array();
                             foreach (json_decode($cv_data['skills'], true) as $skill)
                                 if (!in_array($skill, $skills)) $skills[] = $skill;
                             foreach ($skills as $skill_i => $skill)
@@ -156,7 +149,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 <div class="col-md-6 text-center">
                     <h3>Expériences</h3>
                     <?php
-                    function displayExpCard($title, $subtitle, $start_date, $end_date, bool $margin)
+                    function displayExpCard($title, $subtitle, $start_date, $end_date, bool $margin): void
                     {
                         echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
                                     <div class="card-body">
@@ -191,7 +184,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 <div class="col-md-3 text-start certificates">
                     <h3>Diplomes</h3>
                     <?php
-                    function displayCertificatesCard($title, $subtitle, $year, bool $margin)
+                    function displayCertificatesCard($title, $subtitle, $year, bool $margin): void
                     {
 
                         echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
@@ -230,14 +223,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
     </section>
 
     <section id="projects" class="py-5 bg-dark">
-        <?php
-        $project_data = [];
-        if (isset($_SESSION['user_id'])) {
-            $stmt = $pdo->prepare('SELECT id, title, description, theme, link, images FROM project WHERE creator_id = :id LIMIT 3');
-            $stmt->execute(array('id' => $_SESSION['user_id']));
-            $project_data = $stmt->fetchAll();
-        }
-        ?>
+        <?php  $project_data = getProjectsData(userID: $_SESSION['user_id'] ?? 0) ?>
 
         <div class="container">
             <h2 class="text-center mb-4">Mes Projets</h2>
@@ -287,22 +273,23 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
 
                 if ($project_data) {
                     foreach ($project_data as $project_i => $project)
-                        displayProjectCard(
-                            $project['id'],
-                            $project['title'],
-                            $project['description'],
-                            $project['theme'],
-                            $project['link'],
-                            json_decode($project['images'], true),
-                            $project_i
-                        );
+                        if ($project_i < 3)
+                            displayProjectCard(
+                                $project['id'],
+                                $project['title'],
+                                $project['description'],
+                                $project['theme'],
+                                $project['link'],
+                                json_decode($project['images'], true),
+                                $project_i
+                            );
                 } else displayProjectCard(
                     -1,
                     'Pas de projet enregistrée',
                     isset($_SESSION['user_id']) ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
                     '',
                     '',
-                    [],
+                    array(),
                     0
                 );
                 ?>

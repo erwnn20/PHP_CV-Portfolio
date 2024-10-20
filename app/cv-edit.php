@@ -4,19 +4,6 @@ ob_start();
 session_start();
 require 'db.php';
 
-function getCVData($userID)
-{
-    global $pdo;
-    if (isset($userID)) {
-        $stmt = $pdo->prepare('SELECT title, description, skills, certificates, experiences FROM cv WHERE creator_id = :id');
-        $stmt->execute(array(
-            'id' => $userID
-        ));
-        return $stmt->fetch();
-    }
-    return array();
-}
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['cvTitle'])) {
         $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, title) VALUES (:id, :creator_id, :title) ON DUPLICATE KEY UPDATE title = VALUES(title)');

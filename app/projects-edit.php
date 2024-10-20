@@ -4,26 +4,6 @@ ob_start();
 session_start();
 require 'db.php';
 
-function getProjectsData($userID = null, $projectID = null)
-{
-    global $pdo;
-    if (isset($userID)) {
-        $stmt = $pdo->prepare('SELECT id, title, description, theme, link, images FROM project WHERE creator_id = :id');
-        $stmt->execute(array(
-            'id' => $userID
-        ));
-        return $stmt->fetchAll();
-    }
-    if (isset($projectID)) {
-        $stmt = $pdo->prepare('SELECT * FROM project WHERE id = :id');
-        $stmt->execute(array(
-            'id' => $projectID
-        ));
-        return $stmt->fetch();
-    }
-    return array();
-}
-
 function saveProjectImg($projectID): array
 {
     $files_name = array();
@@ -261,7 +241,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     isset($_SESSION['user_id']) ? 'Ajoutez vos projets personnels et professionnels ici !' : 'Connectez vous pour afficher vos projets personnels et professionnels',
                     '',
                     '',
-                    [],
+                    array(),
                     -1,
                     false
                 );
