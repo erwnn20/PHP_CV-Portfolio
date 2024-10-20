@@ -479,14 +479,10 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/textAreaAdjust.js"></script>
     <script>
         function resetForm(formId) {
             document.forms[formId].reset();
-        }
-
-        function textAreaAdjust(element) {
-            element.style.height = '1px';
-            element.style.height = (3 + element.scrollHeight) + 'px';
         }
 
         function setMinExpDate() {

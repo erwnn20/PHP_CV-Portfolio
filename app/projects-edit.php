@@ -337,17 +337,13 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/textAreaAdjust.js"></script>
     <script>
         function resetForm(formId) {
             document.forms[formId].reset();
             document.querySelector('button[name="projectId"]').value = '';
             document.getElementById('imgInputWarning').classList.add('d-none');
             document.getElementById('projectIdDisplayContainer').classList.add('d-none');
-        }
-
-        function textAreaAdjust(element) {
-            element.style.height = '1px';
-            element.style.height = (5 + element.scrollHeight) + 'px';
         }
 
         document.getElementById('projectImages').addEventListener('change', function(event) {

@@ -472,21 +472,8 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="scripts/togglePassword.js"></script>
     <script>
-        function togglePassword(inputId, toggleId) {
-            const input = document.getElementById(inputId);
-            const toggle = document.getElementById(toggleId);
-            if (input.type === "password") {
-                input.type = "text";
-                toggle.classList.remove("fa-eye");
-                toggle.classList.add("fa-eye-slash");
-            } else {
-                input.type = "password";
-                toggle.classList.remove("fa-eye-slash");
-                toggle.classList.add("fa-eye");
-            }
-        }
-
         function resetForm(formId) {
             document.forms[formId].reset();
             document.getElementById('loginEmailError').classList.add('d-none');
