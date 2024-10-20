@@ -1,6 +1,6 @@
 .env
 .idea
-app/img/*
-!app/img/no_img.png
+app/img/projects/*
+!app/img/projects/no_img.png
 
 test*
