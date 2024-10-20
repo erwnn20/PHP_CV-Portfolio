@@ -185,9 +185,11 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
         <div class="container my-5">
             <h1 class="mb-4">Gérer mes projets</h1>
 
-            <button class="btn btn-primary btn-custom mb-4" data-bs-toggle="modal" data-bs-target="#addProjectModal">
-                <i class="fas fa-plus"></i> Ajouter un nouveau projet
-            </button>
+            <?php
+            echo '<button class="btn btn-primary btn-custom mb-4" data-bs-toggle="modal" data-bs-target="#addProjectModal"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>
+                    <i class="fas fa-plus"></i> Ajouter un nouveau projet
+                </button>'
+            ?>
 
             <div id="projectsList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 <?php
