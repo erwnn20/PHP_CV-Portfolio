@@ -163,10 +163,12 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                     <?php
                     if (isset($_SESSION['user_id']))
                         echo '<li class="nav-item d-flex">
-                                    <a class="nav-link fw-bold ms-3" href="profile.php">' .
-                            $userInfo['first_name'] . " " . $userInfo['last_name'] .
-                            '</a>
-                                    <a href="logout.php" class="nav-link align-content-center ps-0"><i class="bi bi-power"></i></a>
+                                    <div class="nav-link d-flex align-items-center">
+                                        <a class="nav-link fw-bold p-0" href="profile.php">
+                                            ' . $userInfo['first_name'] . ' ' . $userInfo['last_name'] . '
+                                        </a>
+                                        <a href="logout.php" class="nav-link align-content-center p-0 ms-2"><i class="bi bi-power"></i></a>
+                                    </div>
                                 </li>';
                     else echo '<li class="nav-item align-content-center ms-2">
                                     <form method="post" class="m-0">
