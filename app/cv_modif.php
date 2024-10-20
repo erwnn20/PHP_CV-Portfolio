@@ -211,182 +211,197 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
         </div>
     </nav>
 
-    <div class="container my-5">
-        <div class="text-center mb-5">
-            <h1>Modifier mon CV</h1>
-            <?php if (!isset($_SESSION['user_id'])) echo '<p class="lead">Connectez vous pour modifier votre CV</p>' ?>
-        </div>
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <h2 class="card-title">Informations générales</h2>
-                        <form method="post" id="cvInfoForm" class="flex-grow-1 d-flex flex-column">
-                            <div class="form-floating mb-3">
-                                <?php echo '<input type="text" class="form-control form-control-lg" id="cvTitle" name="cvTitle" 
-                                        value="' . ($cv_data['title'] ?? '') . '" placeholder' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>' ?>
-                                <label for="cvTitle" class="form-label">Titre du CV</label>
-                            </div>
-                            <div class="form-floating flex-grow-1 d-flex flex-column mb-3">
-                                <?php echo '<textarea class="form-control form-control-sm flex-grow-1" id="cvDescription" name="cvDescription" 
-                                        oninput="textAreaAdjust(this)"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>' . ($cv_data['description'] ?? '') . '</textarea>' ?>
-                                <label for="cvDescription" class="form-label">Description</label>
-                            </div>
-                            <div class="d-flex">
-                                <?php echo '<button type="submit" class="btn btn-primary btn-custom ms-auto"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>Enregistrer</button>' ?>
-                            </div>
-                        </form>
+    <main>
+        <div class="container my-5">
+            <div class="text-center mb-5">
+                <h1>Modifier mon CV</h1>
+                <?php if (!isset($_SESSION['user_id'])) echo '<p class="lead">Connectez vous pour modifier votre CV</p>' ?>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h2 class="card-title">Informations générales</h2>
+                            <form method="post" id="cvInfoForm" class="flex-grow-1 d-flex flex-column">
+                                <div class="form-floating mb-3">
+                                    <?php echo '<input type="text" class="form-control form-control-lg" id="cvTitle" name="cvTitle" 
+                                            value="' . ($cv_data['title'] ?? '') . '" placeholder' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>' ?>
+                                    <label for="cvTitle" class="form-label">Titre du CV</label>
+                                </div>
+                                <div class="form-floating flex-grow-1 d-flex flex-column mb-3">
+                                    <?php echo '<textarea class="form-control form-control-sm flex-grow-1" id="cvDescription" name="cvDescription" 
+                                            oninput="textAreaAdjust(this)"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>' . ($cv_data['description'] ?? '') . '</textarea>' ?>
+                                    <label for="cvDescription" class="form-label">Description</label>
+                                </div>
+                                <div class="d-flex">
+                                    <?php echo '<button type="submit" class="btn btn-primary btn-custom ms-auto"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>Enregistrer</button>' ?>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h2 class="card-title">Compétences</h2>
+                            <ul id="skillsList" class="list-group list-group-horizontal-sm d-flex flex-wrap mb-4">
+                                <?php
+                                if (isset($cv_data['skills'])) {
+                                    foreach (json_decode($cv_data['skills'], true) as $skill_i => $skill)
+                                        echo '<li class="list-group-item d-flex skill-item">'
+                                            . $skill .
+                                            '<form method="post" class="d-flex align-items-center">
+                                                    <button type="submit" name="delSkillIndex" value="' . $skill_i . '"  class="btn btn-sm btn-close pe-0 ms-2"></button>
+                                                </form>
+                                            </li>';
+                                } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
+                                ?>
+                            </ul>
+                            <h5 class="card-subtitle mb-2">Nouvelle compétence</h5>
+                            <?php
+                            echo '<form method="post" id="addSkillForm">
+                                <div class="form-floating mb-3">
+                                    <input type="text" class="form-control" id="skillName" name="newSkill" placeholder' . (isset($_SESSION['user_id']) ? '' : ' disabled') . ' required>
+                                    <label for="skillName" class="form-label">Nom de la nouvelle compétence</label>
+                                </div>
+                                <button type="submit" class="btn btn-success"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>Ajouter</button>
+                            </form>'
+                            ?>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h2 class="card-title">Compétences</h2>
-                        <ul id="skillsList" class="list-group list-group-horizontal-sm d-flex flex-wrap mb-4">
-                            <?php
-                            if (isset($cv_data['skills'])) {
-                                foreach (json_decode($cv_data['skills'], true) as $skill_i => $skill)
-                                    echo '<li class="list-group-item d-flex skill-item">'
-                                        . $skill .
-                                        '<form method="post" class="d-flex align-items-center">
-                                                <button type="submit" name="delSkillIndex" value="' . $skill_i . '"  class="btn btn-sm btn-close pe-0 ms-2"></button>
-                                            </form>
-                                        </li>';
-                            } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
-                            ?>
-                        </ul>
-                        <h5 class="card-subtitle mb-2">Nouvelle compétence</h5>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Expériences</h2>
+                    <div id="experiencesList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
                         <?php
-                        echo '<form method="post" id="addSkillForm">
-                            <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="skillName" name="newSkill" placeholder' . (isset($_SESSION['user_id']) ? '' : ' disabled') . ' required>
-                                <label for="skillName" class="form-label">Nom de la nouvelle compétence</label>
-                            </div>
-                            <button type="submit" class="btn btn-success"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>Ajouter</button>
-                        </form>'
+                        function displayExpCard($role, $company, $start_date, $end_date, int $index, bool $delBtn)
+                        {
+                            echo '<div class="col">
+                                    <div class="card experience-card">
+                                        <div class="card-body">
+                                            <h5 class="card-title mb-3">' . $role . '</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">' . $company . '</h6>
+                                            <div class="d-flex">' .
+                                ($start_date ?
+                                    '<p class="mb-0">
+                                                    <small class="text-muted">
+                                                        Du ' . date_format(date_create($start_date), "F Y") .
+                                    ' au ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
+                                    '</small>
+                                                </p>' : '') .
+                                ($delBtn ? '
+                                                <form method="post" class="ms-auto">
+                                                    <button type="submit" name="delExpIndex" value="' . $index . '" class="btn btn-danger btn-sm">Supprimer</button>
+                                                </form>' : '') .
+                                '</div>
+                                        </div>
+                                    </div>
+                                </div>';
+                        }
+
+                        if (isset($cv_data['experiences'])) {
+                            foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
+                                displayExpCard(
+                                    $experience['role'],
+                                    $experience['company'],
+                                    $experience['start_date'],
+                                    $experience['end_date'],
+                                    $experience_i,
+                                    true
+                                );
+                        } else displayExpCard(
+                            'Pas d\'expérience enregistrée',
+                            isset($_SESSION['user_id']) ? 'Ajoutez vos experiances professionnelles ici !' : 'Connectez vous pour afficher vos experiences professionnelles',
+                            0,
+                            0,
+                            -1,
+                            false
+                        );
                         ?>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title mb-4">Expériences</h2>
-                <div id="experiencesList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
                     <?php
-                    function displayExpCard($role, $company, $start_date, $end_date, int $index, bool $delBtn)
-                    {
-                        echo '<div class="col">
-                                <div class="card experience-card">
-                                    <div class="card-body">
-                                        <h5 class="card-title mb-3">' . $role . '</h5>
-                                        <h6 class="card-subtitle mb-2 text-muted">' . $company . '</h6>
-                                        <div class="d-flex">' .
-                            ($start_date ?
-                                '<p class="mb-0">
-                                                <small class="text-muted">
-                                                    Du ' . date_format(date_create($start_date), "F Y") .
-                                ' au ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
-                                '</small>
-                                            </p>' : '') .
-                            ($delBtn ? '
-                                            <form method="post" class="ms-auto">
-                                                <button type="submit" name="delExpIndex" value="' . $index . '" class="btn btn-danger btn-sm">Supprimer</button>
-                                            </form>' : '') .
-                            '</div>
-                                    </div>
-                                </div>
-                            </div>';
-                    }
-
-                    if (isset($cv_data['experiences'])) {
-                        foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
-                            displayExpCard(
-                                $experience['role'],
-                                $experience['company'],
-                                $experience['start_date'],
-                                $experience['end_date'],
-                                $experience_i,
-                                true
-                            );
-                    } else displayExpCard(
-                        'Pas d\'expérience enregistrée',
-                        isset($_SESSION['user_id']) ? 'Ajoutez vos experiances professionnelles ici !' : 'Connectez vous pour afficher vos experiences professionnelles',
-                        0,
-                        0,
-                        -1,
-                        false
-                    );
+                    echo '<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addExperienceModal"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>
+                            Ajouter une expérience
+                        </button>'
                     ?>
                 </div>
-                <?php
-                echo '<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addExperienceModal"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>
-                        Ajouter une expérience
-                    </button>'
-                ?>
             </div>
-        </div>
 
-        <div class="card mb-4">
-            <div class="card-body">
-                <h2 class="card-title mb-4">Diplômes et Certifications</h2>
-                <div id="educationList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
-                    <?php
-                    function displayCertificatesCard($degree, $school, $date, int $index, bool $delBtn)
-                    {
-                        echo '<div class="col">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="d-flex align-items-center gap-2 flex-wrap ">
-                                            <h5 class="card-title text-break">' . $degree . '</h5>
-                                            <h6 class="card-subtitle text-muted">' . $school . '</h6>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h2 class="card-title mb-4">Diplômes et Certifications</h2>
+                    <div id="educationList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
+                        <?php
+                        function displayCertificatesCard($degree, $school, $date, int $index, bool $delBtn)
+                        {
+                            echo '<div class="col">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center gap-2 flex-wrap ">
+                                                <h5 class="card-title text-break">' . $degree . '</h5>
+                                                <h6 class="card-subtitle text-muted">' . $school . '</h6>
+                                            </div>
+                                            <div class="d-flex">' .
+                                ($date ?
+                                    '<p class="mb-0">
+                                                        <small class="text-muted h-100">
+                                                            En ' . date_format(date_create($date), "Y") .
+                                    '</small>
+                                                    </p>' : '') .
+                                ($delBtn ? '
+                                                    <form method="post" class="ms-auto">
+                                                        <button type="submit" name="delDegreeIndex" value="' . $index . '" class="btn btn-danger btn-sm">Supprimer</button>
+                                                    </form>' : '') .
+                                '</div>
                                         </div>
-                                        <div class="d-flex">' .
-                            ($date ?
-                                '<p class="mb-0">
-                                                    <small class="text-muted h-100">
-                                                        En ' . date_format(date_create($date), "Y") .
-                                '</small>
-                                                </p>' : '') .
-                            ($delBtn ? '
-                                                <form method="post" class="ms-auto">
-                                                    <button type="submit" name="delDegreeIndex" value="' . $index . '" class="btn btn-danger btn-sm">Supprimer</button>
-                                                </form>' : '') .
-                            '</div>
                                     </div>
-                                </div>
-                            </div>';
-                    }
+                                </div>';
+                        }
 
-                    if (isset($cv_data['certificates'])) {
-                        foreach (json_decode($cv_data['certificates'], true) as $certificate_i => $certificate)
-                            displayCertificatesCard(
-                                $certificate['degree'],
-                                $certificate['school'],
-                                $certificate['date'],
-                                $certificate_i,
-                                true
-                            );
-                    } else displayCertificatesCard(
-                        'Pas de diplome enregistrée',
-                        isset($_SESSION['user_id']) ? 'Ajoutez vos diplomes et certifications ici !' : 'Connectez vous pour afficher vos diplomes et certifications',
-                        0,
-                        -1,
-                        false
-                    );
+                        if (isset($cv_data['certificates'])) {
+                            foreach (json_decode($cv_data['certificates'], true) as $certificate_i => $certificate)
+                                displayCertificatesCard(
+                                    $certificate['degree'],
+                                    $certificate['school'],
+                                    $certificate['date'],
+                                    $certificate_i,
+                                    true
+                                );
+                        } else displayCertificatesCard(
+                            'Pas de diplome enregistrée',
+                            isset($_SESSION['user_id']) ? 'Ajoutez vos diplomes et certifications ici !' : 'Connectez vous pour afficher vos diplomes et certifications',
+                            0,
+                            -1,
+                            false
+                        );
+                        ?>
+                    </div>
+                    <?php
+                    echo '<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEducationModal"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>
+                            Ajouter un diplôme
+                        </button>'
                     ?>
                 </div>
-                <?php
-                echo '<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEducationModal"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>
-                        Ajouter un diplôme
-                    </button>'
-                ?>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="bg-dark py-4">
+        <div class="container text-center">
+            <p>&copy; 2024 Mon CV/Portfolio</p>
+            <div class="mt-3">
+                <a href="https://www.instagram.com/erwnn_20/" target="_blank" class="text-light me-3"><i class="fab fa-instagram"></i></a>
+                <a href="#" target="_blank" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/erwnn20" target="_blank" class="text-light me-3"><i class="fab fa-github"></i></a>
+                <a href="https://github.com/erwnn20/PHP-TP" target="_blank" class="text-light"><i class="fab bi-download"></i></a>
+                <?php if ($userInfo['admin']) echo '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>'; ?>
+            </div>
+        </div>
+    </footer>
 
     <div class="modal fade" id="addExperienceModal" tabindex="-1" aria-labelledby="addExperienceModalLabel"
         aria-hidden="true">
@@ -462,19 +477,6 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
             </div>
         </div>
     </div>
-
-    <footer class="bg-dark py-4">
-        <div class="container text-center">
-            <p>&copy; 2024 Mon CV/Portfolio</p>
-            <div class="mt-3">
-                <a href="https://www.instagram.com/erwnn_20/" target="_blank" class="text-light me-3"><i class="fab fa-instagram"></i></a>
-                <a href="#" target="_blank" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/erwnn20" target="_blank" class="text-light me-3"><i class="fab fa-github"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" target="_blank" class="text-light"><i class="fab bi-download"></i></a>
-                <?php if ($userInfo['admin']) echo '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>'; ?>
-            </div>
-        </div>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
