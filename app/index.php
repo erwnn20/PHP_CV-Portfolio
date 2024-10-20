@@ -223,7 +223,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 </div>
             </div>
             <div class="text-center mt-4">
-                <a href="cv_modif.php" class="btn btn-primary btn-custom me-3">Modifier mon CV</a>
+                <a href="cv-edit.php" class="btn btn-primary btn-custom me-3">Modifier mon CV</a>
                 <a href="#" class="btn btn-primary btn-custom disabled">Télécharger le CV en PDF</a>
             </div>
         </div>
@@ -302,7 +302,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
                 );
                 ?>
                 <div class="text-center mt-4">
-                    <a href="portfolio.php" class="btn btn-primary btn-custom">Gérer mes Projets</a>
+                    <a href="projects-edit.php" class="btn btn-primary btn-custom">Gérer mes Projets</a>
                 </div>
             </div>
     </section>
