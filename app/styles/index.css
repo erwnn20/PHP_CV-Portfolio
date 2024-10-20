@@ -10,6 +10,11 @@
     font-size: .8rem;
 }
 
+.project-image {
+    height: 250px;
+    object-fit: cover;
+}
+
 #projects .carousel-inner {
     border-top-left-radius: var(--bs-card-border-radius);
     border-top-right-radius: var(--bs-card-border-radius);
