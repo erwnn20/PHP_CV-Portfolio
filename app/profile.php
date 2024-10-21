@@ -85,7 +85,7 @@ $userInfo = getUserInfo($_SESSION['user_id']);
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Gérer mes projets - Mon CV/Portfolio</title>
+        <title>Mon Profil - Mon CV/Portfolio</title>
 
         <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -224,45 +224,106 @@ $userInfo = getUserInfo($_SESSION['user_id']);
                 <div class="card mb-4">
                     <div class="card-body">
                         <div class="d-flex mb-3">
-                            <h3 class="card-title m-0">Expériences</h3>
-                            <a href="cv-edit.php" class="btn btn-sm btn-primary btn-custom ms-auto">Modifier mon CV</a>
+                            <h3 class="card-title m-0">Mes Projets</h3>
+                            <a href="projects-edit.php" class="btn btn-sm btn-primary btn-custom ms-auto">Modifier mes
+                                projets</a>
                         </div>
-                        <div id="experiencesList">
-                            <!-- Les expériences seront ajoutées ici dynamiquement -->
-                            <div class="experience-item">
-                                <h4>Développeur Web</h4>
-                                <p class="mb-2">Entreprise A</p>
-                                <p class="mb-0"><small>2020 - Présent</small></p>
-                            </div>
-                            <!--  -->
+                        <div id="projectsList">
+                            <?php
+                            function displayProjectCard($id, $title, $description, $theme, $link, array $images, int $index): void
+                            {
+                                echo '<div class="project-item row">
+                                        <div class="col-md-8 mb-2">
+                                            <div class="d-flex flex-wrap align-items-center mb-2">
+                                                <h4 class="card-title text-break py-2 pe-2 m-0">'.$title.'</h4>
+                                                <span class="badge rounded-pill text-bg-primary">'.$theme.'</span>
+                                            </div>
+                                            <p class="mb-3">'.nl2br($description).'</p>'.
+                                ($link ? '  <a href="#" class="btn btn-sm btn-primary btn-custom mt-auto" target="_blank">
+                                                Voir le projet
+                                            </a>' : '').'
+                                        </div>';
+                                if ($images) {
+                                    echo '<div class="col-md-4">';
+                                    if (count($images) > 1) {
+                                        echo '<div id="carouselProject-'.$index.'" class="carousel slide" data-bs-ride="carousel">
+                                                    <div class="carousel-indicators">';
+                                        foreach ($images as $image_i => $image)
+                                            echo '      <button type="button" data-bs-target="#carouselProject-'.$index.'" data-bs-slide-to="'.$image_i.'"'.
+                                                            ($image_i === 0 ? ' class="active" aria-current="true"' : '').'></button>';
+                                        echo '      </div>
+                                                    <div class="carousel-inner rounded">';
+                                        foreach ($images as $image_i => $image)
+                                            echo '<div class="carousel-item'.($image_i === 0 ? ' active' : '').'">
+                                                        <img src="img/projects/' . $id . '/' . $image . '" class="project-img" alt="project image">
+                                                    </div>';
+                                        echo '    </div>
+                                            </div>';
+                                    } else echo '<img src="img/projects/'.$images[0].'" class="project-img rounded" alt="project image">';
+                                    echo '</div>';
+                                }
+                                echo '</div>';
+                            }
+
+                            if (!empty($projects_data)) {
+                                foreach ($projects_data as $project_i => $project)
+                                    displayProjectCard(
+                                        $project['id'],
+                                        $project['title'],
+                                        $project['description'],
+                                        $project['theme'],
+                                        $project['link'],
+                                        json_decode($project['images'] ?? '[]'),
+                                        $project_i,
+                                    );
+                            } else displayProjectCard(
+                                -1,
+                                'Pas de projet enregistré',
+                                'Ajoutez vos projets personnels et professionnels dans la section "Gerer mes Projets"',
+                                '',
+                                '',
+                                array(),
+                                -1,
+                            );
+                            ?>
                         </div>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex mb-3">
-                            <h3 class="card-title m-0">Projets</h3>
-                            <a href="projects-edit.php" class="btn btn-sm btn-primary btn-custom ms-auto">Modifier mes
-                                projets</a>
+                            <h3 class="card-title m-0">Mes Expériences</h3>
+                            <a href="cv-edit.php" class="btn btn-sm btn-primary btn-custom ms-auto">Modifier mon CV</a>
                         </div>
-                        <div id="projectsList">
-                            <!-- Les projets seront ajoutés ici dynamiquement -->
-                            <div class="project-item row">
-                                <div class="col-md-8 mb-2">
-                                    <div class="d-flex flex-wrap align-items-center mb-2">
-                                        <h4 class="card-title text-break m-0">Application mobile</h4>
-                                        <span class="badge rounded-pill text-bg-primary ms-2">Theme</span>
-                                    </div>
-                                    <p class="mb-3">Développement d'une application mobile avec React Native</p>
-                                    <a href="#" class="btn btn-sm btn-primary btn-custom mt-auto" target="_blank">
-                                        Voir le projet
-                                    </a>
-                                </div>
-                                <div class="col-md-4">
-                                    <img src="img/projects/no_img.png" class="project-img rounded" alt="...">
-                                </div>
-                            </div>
-                            <!--  -->
+                        <div id="experiencesList">
+                            <?php
+                            function displayExperienceCard($role, $company, $start_date, $end_date): void
+                            {
+                                echo '<div class="experience-item">
+                                        <h4>'.$role.'</h4>
+                                        <p class="mb-2">'.$company.'</p>'.
+                                    ($start_date ?
+                                        '<p class="mb-0">
+                                            <small>' . date_format(date_create($start_date), "F Y") . ' - ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .'</small>
+                                        </p>' : '').'
+                                    </div>';
+                            }
+
+                            if (isset($cv_data['experiences'])) {
+                                foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
+                                    displayExperienceCard(
+                                        $experience['role'],
+                                        $experience['company'],
+                                        $experience['start_date'],
+                                        $experience['end_date'],
+                                    );
+                            } else displayExperienceCard(
+                                'Pas d\'expérience enregistrée',
+                                'Ajoutez vos experiances professionnelles dans la section "Modifier mon CV"',
+                                0,
+                                0,
+                            );
+                            ?>
                         </div>
                     </div>
                 </div>
