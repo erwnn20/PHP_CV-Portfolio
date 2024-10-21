@@ -4,6 +4,13 @@ ob_start();
 session_start();
 require 'db.php';
 
+if (!isset($_SESSION['user_id'])) {
+    $_SESSION['loginError'] = array('external' => true);
+
+    header("Location: /");
+    exit;
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (isset($_POST['connection'])) {
@@ -19,9 +26,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //
 
-$cv_data = getCVData($_SESSION['user_id'] ?? 0);
-$projects_data = getProjectsData($_SESSION['user_id'] ?? 0);
-$userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
+$cv_data = getCVData($_SESSION['user_id']);
+$projects_data = getProjectsData($_SESSION['user_id']);
+$userInfo = getUserInfo($_SESSION['user_id']);
 ?>
 
     <!DOCTYPE html>
