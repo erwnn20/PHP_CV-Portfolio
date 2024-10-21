@@ -8,11 +8,50 @@ main {
     flex: 1 0 auto;
 }
 
+.profile-image-container,
 .profile-image {
     width: 150px;
     height: 150px;
-    object-fit: cover;
+}
+
+.profile-image-container {
     border-radius: 50%;
+    overflow: hidden;
+}
+
+.reset-profile-image-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.5);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-image {
+    object-fit: cover;
+}
+
+.reset-profile-image-container:hover {
+    opacity: 1;
+    transition: opacity .15s ease-in-out;
+}
+
+.reset-profile-image-container:not(:hover) {
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
+}
+
+.image-preview {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .experience-item:not(:last-child),

@@ -11,13 +11,61 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+function saveProfileImg($userID): bool
+{
+    $targetDirectory = 'img/profile/user/';
+    if (!is_dir($targetDirectory)) {
+        mkdir($targetDirectory, 0755, true);
+    }
+
+    $tmpName = $_FILES['profilePicture']['tmp_name'];
+    $imageError = $_FILES['profilePicture']['error'];
+
+    if ($imageError === UPLOAD_ERR_OK) {
+        $uniqueName =  $userID . '.png';
+        move_uploaded_file($tmpName, $targetDirectory . $uniqueName);
+
+        return true;
+    }
+
+    return false;
+}
+
+function deleteProfileImg($userID): bool
+{
+    $filePath = 'img/profile/user/' . $userID . '.png';
+    if (file_exists($filePath)) {
+        return unlink($filePath);
+    }
+    return false;
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['email'])) {
+        $newData = array(
+            'id' => $_SESSION['user_id'],
+            'email' => $_POST['email'],
+            'first_name' => $_POST['firstName'],
+            'last_name' => $_POST['lastName'],
+        );
+        if (isset($_POST['newPassword'])) $newData['password'] = password_hash($_POST['newPassword'], PASSWORD_BCRYPT);
+        if (saveProfileImg($_SESSION['user_id'])) {
+            $newData['profile_picture'] = true;
+        }
 
-    if (isset($_POST['connection'])) {
-        $_SESSION['loginError'] = array('external' => true);
+        $sql = 'UPDATE user SET email = :email, first_name = :first_name, last_name = :last_name'
+            .(isset($newData['password']) ? ', password = :password' : '')
+            .(isset($newData['profile_picture']) ? ', profile_picture = :profile_picture' : '')
+            .' WHERE id = :id;';
 
-        header("Location: /");
-        exit;
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($newData);
+    }
+
+    if (isset($_POST['deletePicture'])) {
+        $stmt = $pdo->prepare('UPDATE user SET profile_picture = FALSE WHERE id = :id;');
+        $stmt->execute(array('id' => $_SESSION['user_id']));
+        deleteProfileImg($_SESSION['user_id']);
     }
 
     header("Location: " . $_SERVER['PHP_SELF']);
@@ -78,22 +126,14 @@ $userInfo = getUserInfo($_SESSION['user_id']);
                     <li class="nav-item">
                         <a class="nav-link" href="/#contact">Contact</a>
                     </li>
-                    <?php
-                    if (isset($_SESSION['user_id']))
-                        echo '<li class="nav-item d-flex">
-                                    <div class="nav-link d-flex align-items-center">
-                                        <a class="nav-link fw-bold p-0" href="profile.php">
-                                            ' . $userInfo['first_name'] . ' ' . $userInfo['last_name'] . '
-                                        </a>
-                                        <a href="logout.php" class="nav-link align-content-center p-0 ms-2"><i class="bi bi-power"></i></a>
-                                    </div>
-                                </li>';
-                    else echo '<li class="nav-item align-content-center ms-2">
-                                    <form method="post" class="m-0">
-                                        <button type="submit" name="connection" value="1" class="btn btn-success btn-sm">Connexion</button>
-                                    </form>
-                                </li>';
-                    ?>
+                    <li class="nav-item d-flex">
+                        <div class="nav-link d-flex align-items-center">
+                            <a class="nav-link fw-bold p-0" href="profile.php">
+                                <?php echo $userInfo['first_name'] . ' ' . $userInfo['last_name'] ?>
+                            </a>
+                            <a href="logout.php" class="nav-link align-content-center p-0 ms-2"><i class="bi bi-power"></i></a>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -105,32 +145,39 @@ $userInfo = getUserInfo($_SESSION['user_id']);
         <div class="row">
             <div class="col-md-4">
                 <div class="card mb-4">
-                    <div class="card-body text-center">
-                        <img src="" alt="Photo de profil" class="profile-image mb-3" id="profileImage">
-                        <h2 class="card-title" id="userFullName">Prénom Nom</h2>
-                        <p class="card-text" id="userEmail">email@exemple.com</p>
+                    <div class="card-body d-flex flex-column align-items-center">
+                        <?php
+                        echo '<div class="profile-image-container position-relative mb-3">
+                                    <img src="img/profile/'.($userInfo['profile_picture'] ? 'user/'.$_SESSION['user_id'].'.png' : 'default.png').'" alt="Photo de profil" class="profile-image" id="profileImage">'.
+                            ($userInfo['profile_picture'] ?
+                                    '<form method="post" class="reset-profile-image-container">
+                                        <button type="submit" class="btn btn-sm btn-dark" name="deletePicture">Supprimer</button>
+                                    </form>' : '').'
+                                </div>
+                                <h2 class="card-title" id="userFullName">' . $userInfo['first_name'] . ' ' . $userInfo['last_name'] . '</h2>
+                                <p class="card-text" id="userEmail">' . $userInfo['email'] . '</p>';
+                        ?>
                     </div>
                 </div>
 
                 <div class="card mt-4">
                     <div class="card-body">
                         <h4 class="card-title mb-4">Modifier mes informations</h4>
-                        <form id="profileForm">
+                        <form method="post" id="profileForm" enctype="multipart/form-data">
                             <div class="form-floating mb-2">
-                                <input type="text" class="form-control" id="firstName" placeholder required>
+                                <?php echo '<input type="text" class="form-control" id="firstName" name="firstName" placeholder value="'.$userInfo['first_name'].'" required>'; ?>
                                 <label for="firstName" class="form-label">Prénom</label>
                             </div>
                             <div class="form-floating mb-2">
-                                <input type="text" class="form-control" id="lastName" placeholder required>
+                                <?php echo '<input type="text" class="form-control" id="lastName" name="lastName" placeholder value="'.$userInfo['last_name'].'" required>' ?>
                                 <label for="lastName" class="form-label">Nom</label>
                             </div>
                             <div class="form-floating mb-4">
-                                <input type="email" class="form-control" id="email" placeholder required>
+                                <?php echo '<input type="email" class="form-control" id="email" name="email" placeholder value="'.$userInfo['email'].'" required>' ?>
                                 <label for="email" class="form-label">Email</label>
                             </div>
                             <div class="mb-2">
-                                <p class="card-text mb-2">Nouveau mot de passe<small class="text-muted ms-2">laisser
-                                        vide si inchangé</small></p>
+                                <p class="card-text mb-2">Nouveau mot de passe<small class="text-muted ms-2">laisser vide si inchangé</small></p>
                                 <div class="input-group">
                                     <div class="form-floating">
                                         <input type="password" class="form-control" id="newPassword" name="newPassword"
@@ -162,8 +209,9 @@ $userInfo = getUserInfo($_SESSION['user_id']);
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <label for="profilePicture" class="form-label">Photo de profil</label>
-                                <input type="file" class="form-control" id="profilePicture" accept="image/*">
+                                <label for="profilePicture" class="form-label">Photo de profil<small class="text-muted ms-2">laisser vide si inchangé</small></label>
+                                <div id="image-preview-container" class="mb-2"></div>
+                                <input type="file" class="form-control" id="profilePicture" name="profilePicture" accept="image/*">
                             </div>
                             <button type="submit" class="btn btn-primary btn-custom">Enregistrer les
                                 modifications</button>
@@ -250,6 +298,21 @@ $userInfo = getUserInfo($_SESSION['user_id']);
                 errorDiv.classList.add('d-none');
                 this.submit();
             }
+        });
+
+        document.getElementById('profilePicture').addEventListener('change', function(event) {
+            const imagePreview = document.getElementById('image-preview-container');
+            imagePreview.innerHTML = '';
+            Array.from(event.target.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = e.target.result;
+                    imgElement.className = 'image-preview';
+                    imagePreview.appendChild(imgElement);
+                }
+                reader.readAsDataURL(file);
+            });
         });
     </script>
 

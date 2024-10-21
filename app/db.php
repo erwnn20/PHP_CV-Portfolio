@@ -45,12 +45,7 @@ function getUserInfo($id)
         $stmt->execute(array('id' => $id));
         return $stmt->fetch();
     }
-    return array(
-        'email' => '',
-        'first_name' => '',
-        'last_name' => '',
-        'admin' => false
-    );
+    return array();
 }
 
 function getCVData($userID)

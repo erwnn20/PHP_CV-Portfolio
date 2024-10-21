@@ -56,7 +56,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'id' => $uuid,
             'creator_id' => $_SESSION['user_id'],
             'title' => $_POST['projectTitle'],
-            //            'description' => str_replace("\r\n", '-_-', $_POST['projectDescription']),
             'description' => $_POST['projectDescription'],
             'theme' => $_POST['projectTheme'],
             'link' => $_POST['projectLink'],
