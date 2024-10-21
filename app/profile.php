@@ -155,7 +155,9 @@ $userInfo = getUserInfo($_SESSION['user_id']);
                                     </form>' : '').'
                                 </div>
                                 <h2 class="card-title" id="userFullName">' . $userInfo['first_name'] . ' ' . $userInfo['last_name'] . '</h2>
-                                <p class="card-text" id="userEmail">' . $userInfo['email'] . '</p>';
+                                <p class="card-text" id="userEmail">' . $userInfo['email'] . '</p>'.
+                            ($userInfo['admin'] ?
+                                '<a href="admin.php" class="btn btn-sm btn-dark w-100">Admin Panel</a>' : '');
                         ?>
                     </div>
                 </div>
