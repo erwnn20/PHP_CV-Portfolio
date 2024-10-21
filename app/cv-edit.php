@@ -1,8 +1,11 @@
 <?php
-global $pdo;
 ob_start();
 session_start();
-require 'db.php';
+
+require_once 'util/db.php';
+require_once 'util/user.php';
+require_once 'util/cv.php';
+global $pdo;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['cvTitle'])) {
@@ -24,7 +27,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (isset($_POST['newSkill'])) {
-        $skillData = json_decode(getCVData($_SESSION['user_id'])['skills'] ?? '[]', true);
+        $skillData = json_decode(CV::getData($_SESSION['user_id'])['skills'] ?? '[]', true);
         $skillData[] = $_POST['newSkill'];
 
         $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, skills) VALUES (:id, :creator_id, :skills) ON DUPLICATE KEY UPDATE skills = VALUES(skills)');
@@ -37,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (isset($_POST['delSkillIndex'])) {
         $skillData = array();
-        foreach (json_decode(getCVData($_SESSION['user_id'])['skills'] ?? '[]', true) as $skill_i => $skill) {
+        foreach (json_decode(CV::getData($_SESSION['user_id'])['skills'] ?? '[]', true) as $skill_i => $skill) {
             if ($skill_i != $_POST['delSkillIndex'])
                 $skillData[] = $skill;
         }
@@ -51,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (isset($_POST['experienceTitle'])) {
-        $expData = json_decode(getCVData($_SESSION['user_id'])['experiences'] ?? '[]', true);
+        $expData = json_decode(CV::getData($_SESSION['user_id'])['experiences'] ?? '[]', true);
         $expData[] = array(
             'role' => $_POST['experienceTitle'],
             'company' => $_POST['experienceCompany'],
@@ -69,7 +72,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (isset($_POST['delExpIndex'])) {
         $expData = array();
-        foreach (json_decode(getCVData($_SESSION['user_id'])['experiences'] ?? '[]', true) as $certificate_i => $certificate) {
+        foreach (json_decode(CV::getData($_SESSION['user_id'])['experiences'] ?? '[]', true) as $certificate_i => $certificate) {
             if ($certificate_i != $_POST['delExpIndex'])
                 $expData[] = $certificate;
         }
@@ -83,7 +86,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (isset($_POST['educationTitle'])) {
-        $degData = json_decode(getCVData($_SESSION['user_id'])['certificates'] ?? '[]', true);
+        $degData = json_decode(CV::getData($_SESSION['user_id'])['certificates'] ?? '[]', true);
         $degData[] = array(
             'degree' => $_POST['educationTitle'],
             'school' => $_POST['educationSchool'],
@@ -100,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (isset($_POST['delDegreeIndex'])) {
         $degData = array();
-        foreach (json_decode(getCVData($_SESSION['user_id'])['certificates'] ?? '[]', true) as $certificate_i => $certificate) {
+        foreach (json_decode(CV::getData($_SESSION['user_id'])['certificates'] ?? '[]', true) as $certificate_i => $certificate) {
             if ($certificate_i != $_POST['delDegreeIndex'])
                 $degData[] = $certificate;
         }
@@ -126,8 +129,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //
 
-$cv_data = getCVData($_SESSION['user_id'] ?? 0);
-$userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
+$cv_data = CV::getData($_SESSION['user_id'] ?? 0);
+$userInfo = User::getData($_SESSION['user_id'] ?? 0);
 ?>
 
 <!DOCTYPE html>

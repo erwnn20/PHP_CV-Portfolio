@@ -1,8 +1,12 @@
 <?php
-global $pdo;
 ob_start();
 session_start();
-require 'db.php';
+
+require_once 'util/db.php';
+require_once 'util/user.php';
+require_once 'util/cv.php';
+require_once 'util/projects.php';
+global $pdo;
 
 // Get infos for forms to Connect or Create and Connect user
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -48,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 }
 
-$userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
+$userInfo = User::getData($_SESSION['user_id'] ?? 0);
 ?>
 
 <!DOCTYPE html>
@@ -126,7 +130,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
     </header>
 
     <section id="cv" class="py-5">
-        <?php $cv_data = getCVData($_SESSION['user_id'] ?? 0) ?>
+        <?php $cv_data = CV::getData($_SESSION['user_id'] ?? 0) ?>
 
         <div class="container">
             <h2 class="text-center mb-4">Mon CV</h2>
@@ -223,7 +227,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
     </section>
 
     <section id="projects" class="py-5 bg-dark">
-        <?php  $project_data = getProjectsData(userID: $_SESSION['user_id'] ?? 0) ?>
+        <?php  $project_data = Projects::getData(userID: $_SESSION['user_id'] ?? 0) ?>
 
         <div class="container">
             <h2 class="text-center mb-4">Mes Projets</h2>

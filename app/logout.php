@@ -8,4 +8,3 @@ session_destroy();
 // Redirect to the CV page
 header("Location: /");
 exit;
-?>

@@ -1,8 +1,12 @@
 <?php
-global $pdo;
 ob_start();
 session_start();
-require 'db.php';
+
+require_once 'util/db.php';
+require_once 'util/user.php';
+require_once 'util/cv.php';
+require_once 'util/projects.php';
+global $pdo;
 
 if (!isset($_SESSION['user_id'])) {
     $_SESSION['loginError'] = array('external' => true);
@@ -74,9 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //
 
-$cv_data = getCVData($_SESSION['user_id']);
-$projects_data = getProjectsData($_SESSION['user_id']);
-$userInfo = getUserInfo($_SESSION['user_id']);
+$cv_data = CV::getData($_SESSION['user_id']);
+$projects_data = Projects::getData($_SESSION['user_id']);
+$userInfo = User::getData($_SESSION['user_id']);
 ?>
 
     <!DOCTYPE html>

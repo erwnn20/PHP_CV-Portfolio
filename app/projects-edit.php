@@ -1,8 +1,11 @@
 <?php
-global $pdo;
 ob_start();
 session_start();
-require 'db.php';
+
+require_once 'util/db.php';
+require_once 'util/user.php';
+require_once 'util/projects.php';
+global $pdo;
 
 function saveProjectImg($projectID): array
 {
@@ -38,7 +41,6 @@ function deleteProjectImg($projectID): void
     }
     rmdir($dir);
 }
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['projectTitle'])) {
@@ -88,8 +90,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //
 
-$projects_data = getProjectsData($_SESSION['user_id'] ?? 0);
-$userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
+$projects_data = Projects::getData($_SESSION['user_id'] ?? 0);
+$userInfo = User::getData($_SESSION['user_id'] ?? 0);
 ?>
 
 <!DOCTYPE html>
@@ -346,7 +348,7 @@ $userInfo = getUserInfo($_SESSION['user_id'] ?? 0);
     </script>
     <?php
     if (isset($_SESSION['editProjectId'])) {
-        $project_data = getProjectsData(projectID: $_SESSION['editProjectId']);
+        $project_data = Projects::getData(projectID: $_SESSION['editProjectId']);
         echo '<script>
                 document.getElementById("projectTitle").value = "' . $project_data['title'] . '";
                 document.getElementById("projectDescription").value = "' . str_replace("\r\n", "\\r\\n", $project_data['description']) . '";
