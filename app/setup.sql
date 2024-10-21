@@ -9,12 +9,13 @@ cv_db;
 -- Create table for users
 CREATE TABLE user
 (
-    id         UUID PRIMARY KEY,
-    email      VARCHAR(255) UNIQUE NOT NULL,
-    first_name VARCHAR(100)        NOT NULL,
-    last_name  VARCHAR(100)        NOT NULL,
-    password   VARCHAR(255)        NOT NULL,
-    admin      BOOLEAN             NOT NULL DEFAULT false
+    id              UUID PRIMARY KEY,
+    email           VARCHAR(255) UNIQUE NOT NULL,
+    first_name      VARCHAR(100)        NOT NULL,
+    last_name       VARCHAR(100)        NOT NULL,
+    profile_picture BOOLEAN                      DEFAULT false,
+    password        VARCHAR(255)        NOT NULL,
+    admin           BOOLEAN             NOT NULL DEFAULT false
 );
 
 INSERT INTO user (id, email, first_name, last_name, password, admin)
@@ -24,7 +25,7 @@ VALUES ('f15fab2b-e769-4bdf-8f17-7f58ee4cfa5d', 'admin@exemple.com', 'admin', '_
 CREATE TABLE cv
 (
     id           UUID PRIMARY KEY,
-    creator_id   UUID UNIQUE  NOT NULL,
+    creator_id   UUID UNIQUE NOT NULL,
     title        VARCHAR(255),
     description  TEXT,
     skills       JSON COMMENT 'Type: string[]',

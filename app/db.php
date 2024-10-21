@@ -41,7 +41,7 @@ function getUserInfo($id)
 {
     global $pdo;
     if ($id) {
-        $stmt = $pdo->prepare('SELECT email, first_name, last_name, admin FROM user WHERE id = :id');
+        $stmt = $pdo->prepare('SELECT email, first_name, last_name, profile_picture, admin FROM user WHERE id = :id');
         $stmt->execute(array('id' => $id));
         return $stmt->fetch();
     }
