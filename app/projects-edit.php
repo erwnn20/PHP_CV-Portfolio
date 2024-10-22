@@ -165,7 +165,6 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
     <main>
         <div class="container my-5">
             <h1 class="mb-4">Gérer mes projets</h1>
-
             <?php
             echo '<button class="btn btn-primary btn-custom mb-4" data-bs-toggle="modal" data-bs-target="#addProjectModal"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>
                     <i class="fas fa-plus"></i> Ajouter un nouveau projet
@@ -174,59 +173,9 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
 
             <div id="projectsList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 <?php
-                function displayProjectCard($id, $title, $description, $theme, $link, $images, int $index, bool $endBtn): void
-                {
-                    echo '<div class="col">
-                            <div class="card project-card">';
-                    if ($images) {
-                        if (count($images) > 1) {
-                            echo '  <div id="carouselProject-' . $index . '" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-indicators">';
-                            foreach ($images as $image_i => $image)
-                                echo '           <button type="button" data-bs-target="#carouselProject-' . $index . '" 
-                                            data-bs-slide-to="' . $image_i . '"' . ($image_i == 0 ? ' class="active" aria-current="true"' : '') . '>
-                                        </button>';
-                            echo '          </div>
-                                    <div class="carousel-inner">';
-                            foreach ($images as $image_i => $image)
-                                echo '        <div class="carousel-item ' . ($image_i == 0 ? ' active' : '') . '">
-                                            <img src="img/projects/' . $id . '/' . $image . '" class="project-image bd-placeholder-img bd-placeholder-img-lg d-block w-100" alt="project_image-' . $image_i . '">
-                                        </div>';
-                            echo '          </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject-' . $index . '" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProject-' . $index . '" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
-                                </div>';
-                        } else echo '<img src="img/projects/' . $id . '/' . $images[0] . '" class="card-img-top project-image" alt="no image project">';
-                    } else echo '<img src="img/projects/no_img.png" class="card-img-top project-image" alt="no image project">';
-                    echo '      <div class="card-body d-flex flex-column">
-                                    <div class="d-flex flex-wrap align-items-center mb-2">
-                                        <h5 class="card-title text-break p-2 ps-0 m-0">' . $title . '</h5>
-                                        <span class="badge rounded-pill text-bg-primary ms-auto">' . $theme . '</span>
-                                    </div>
-                                    <p class="card-text">' . nl2br($description) . '</p>
-                                    <div class="d-flex mt-auto">' .
-                        ($link ? '  <a href="' . $link . '" class="btn btn-sm btn-primary btn-custom me-auto" target="_blank">
-                                            Voir le projet
-                                        </a>' : '') .
-                        ($endBtn ? '<form method="post" class="ms-auto">
-                                            <button type="submit" class="btn btn-sm btn-outline-secondary" name="editProjectId" value="' . $id . '">Modifier</button>
-                                            <button type="submit" class="btn btn-sm btn-danger ms-1" name="deleteProjectId" value="' . $id . '">Supprimer</button>
-                                        </form>' : '') .
-                        '</div>
-                                </div>
-                            </div>
-                        </div>';
-                }
-
-                if (isset($projects_data)) {
+                if ($projects_data) {
                     foreach ($projects_data as $project_i => $project)
-                        displayProjectCard(
+                        Projects::displayCard_projectsEdit(
                             $project['id'],
                             $project['title'],
                             $project['description'],
@@ -236,13 +185,13 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                             $project_i,
                             true
                         );
-                } else displayProjectCard(
+                } else Projects::displayCard_projectsEdit(
                     -1,
                     'Pas de projet enregistré',
                     isset($_SESSION['user_id']) ? 'Ajoutez vos projets personnels et professionnels ici !' : 'Connectez vous pour afficher vos projets personnels et professionnels',
                     '',
                     '',
-                    array(),
+                    null,
                     -1,
                     false
                 );

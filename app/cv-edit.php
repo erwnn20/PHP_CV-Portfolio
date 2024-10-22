@@ -268,34 +268,9 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                     <h2 class="card-title mb-4">Expériences</h2>
                     <div id="experiencesList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
                         <?php
-                        function displayExpCard($role, $company, $start_date, $end_date, int $index, bool $delBtn)
-                        {
-                            echo '<div class="col">
-                                    <div class="card experience-card">
-                                        <div class="card-body">
-                                            <h5 class="card-title mb-3">' . $role . '</h5>
-                                            <h6 class="card-subtitle mb-2 text-muted">' . $company . '</h6>
-                                            <div class="d-flex">' .
-                                ($start_date ?
-                                    '<p class="mb-0">
-                                                    <small class="text-muted">
-                                                        Du ' . date_format(date_create($start_date), "F Y") .
-                                    ' au ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
-                                    '</small>
-                                                </p>' : '') .
-                                ($delBtn ? '
-                                                <form method="post" class="ms-auto">
-                                                    <button type="submit" name="delExpIndex" value="' . $index . '" class="btn btn-danger btn-sm">Supprimer</button>
-                                                </form>' : '') .
-                                '</div>
-                                        </div>
-                                    </div>
-                                </div>';
-                        }
-
                         if (isset($cv_data['experiences'])) {
                             foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
-                                displayExpCard(
+                                CV::displayExperienceCard_cvEdit(
                                     $experience['role'],
                                     $experience['company'],
                                     $experience['start_date'],
@@ -303,7 +278,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                                     $experience_i,
                                     true
                                 );
-                        } else displayExpCard(
+                        } else CV::displayExperienceCard_cvEdit(
                             'Pas d\'expérience enregistrée',
                             isset($_SESSION['user_id']) ? 'Ajoutez vos experiances professionnelles ici !' : 'Connectez vous pour afficher vos experiences professionnelles',
                             0,
@@ -326,42 +301,16 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                     <h2 class="card-title mb-4">Diplômes et Certifications</h2>
                     <div id="educationList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
                         <?php
-                        function displayCertificatesCard($degree, $school, $date, int $index, bool $delBtn)
-                        {
-                            echo '<div class="col">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-center gap-2 flex-wrap ">
-                                                <h5 class="card-title text-break">' . $degree . '</h5>
-                                                <h6 class="card-subtitle text-muted">' . $school . '</h6>
-                                            </div>
-                                            <div class="d-flex">' .
-                                ($date ?
-                                    '<p class="mb-0">
-                                                        <small class="text-muted h-100">
-                                                            En ' . date_format(date_create($date), "Y") .
-                                    '</small>
-                                                    </p>' : '') .
-                                ($delBtn ? '
-                                                    <form method="post" class="ms-auto">
-                                                        <button type="submit" name="delDegreeIndex" value="' . $index . '" class="btn btn-danger btn-sm">Supprimer</button>
-                                                    </form>' : '') .
-                                '</div>
-                                        </div>
-                                    </div>
-                                </div>';
-                        }
-
                         if (isset($cv_data['certificates'])) {
                             foreach (json_decode($cv_data['certificates'], true) as $certificate_i => $certificate)
-                                displayCertificatesCard(
+                                CV::displayCertificatesCard_cvEdit(
                                     $certificate['degree'],
                                     $certificate['school'],
                                     $certificate['date'],
                                     $certificate_i,
                                     true
                                 );
-                        } else displayCertificatesCard(
+                        } else CV::displayCertificatesCard_cvEdit(
                             'Pas de diplome enregistrée',
                             isset($_SESSION['user_id']) ? 'Ajoutez vos diplomes et certifications ici !' : 'Connectez vous pour afficher vos diplomes et certifications',
                             0,

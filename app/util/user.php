@@ -4,7 +4,7 @@ require_once 'db.php';
 
 class User
 {
-    public static function getData($id) : array
+    public static function getData($id) : array|bool
     {
         global $pdo;
         if ($id) {

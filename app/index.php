@@ -153,30 +153,16 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                 <div class="col-md-6 text-center">
                     <h3>Expériences</h3>
                     <?php
-                    function displayExpCard($title, $subtitle, $start_date, $end_date, bool $margin): void
-                    {
-                        echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
-                                    <div class="card-body">
-                                        <h5 class="card-title">' . $title . '</h5>
-                                        <h6 class="card-subtitle mb-2">' . $subtitle . '</h6>'.
-                                    ($start_date ?
-                                        '<p class="card-text">' .
-                                            date_format(date_create($start_date), "F Y") . ' - ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
-                                        '</p>' : '').
-                                    '</div>
-                              </div>';
-                    }
-
                     if (isset($cv_data['experiences'])) {
                         foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
                             if ($experience_i < 3)
-                                displayExpCard(
+                                CV::displayExperienceCard_home(
                                         $experience['role'],
                                         $experience['company'],
                                         $experience['start_date'],
                                         $experience['end_date'],
                                         $experience_i < min(3, count($experience)) - 1);
-                    } else displayExpCard(
+                    } else CV::displayExperienceCard_home(
                         'Pas d\'expérience enregistrée',
                         isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
                         0,
@@ -188,29 +174,16 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                 <div class="col-md-3 text-start certificates">
                     <h3>Diplomes</h3>
                     <?php
-                    function displayCertificatesCard($title, $subtitle, $year, bool $margin): void
-                    {
-
-                        echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
-                                <div class="card-body">
-                                    <h5 class="card-title">' . $title . '</h5>
-                                    <h6 class="card-subtitle mb-2">' . $subtitle . '</h6>'.
-                                ($year ?
-                                    '<p class="card-text">' . date_format(date_create($year), "Y") . '</p>' : '').
-                                '</div>
-                              </div>';
-                    }
-
                     if (isset($cv_data['certificates'])) {
                         foreach (json_decode($cv_data['certificates'], true) as $certificate_i => $certificate)
                             if ($certificate_i < 3)
-                                displayCertificatesCard(
+                                CV::displayCertificatesCard_home(
                                         $certificate['degree'],
                                         $certificate['school'],
                                         $certificate['date'],
                                         $certificate_i != min(3, count($certificate)) - 1
                                 );
-                    } else displayCertificatesCard(
+                    } else CV::displayCertificatesCard_home(
                         'Pas de diplome enregistrée',
                         isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
                         0,
@@ -233,52 +206,10 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
             <h2 class="text-center mb-4">Mes Projets</h2>
             <div class="row" style="justify-content: center;">
                 <?php
-                function displayProjectCard($id, $title, $description, $theme, $link, array $images, int $index): void
-                {
-                    echo '<div class="col-md-4 mb-4">
-                                <div class="card">';
-                    if ($images) {
-                        if (count($images) > 1) {
-                            echo '  <div id="carouselProject-' . $index . '" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-indicators">';
-                            foreach ($images as $image_i => $image)
-                                echo '           <button type="button" data-bs-target="#carouselProject-' . $index . '" 
-                                            data-bs-slide-to="' . $image_i . '"' . ($image_i == 0 ? ' class="active" aria-current="true"' : '') . '>
-                                        </button>';
-                            echo '          </div>
-                                    <div class="carousel-inner">';
-                            foreach ($images as $image_i => $image)
-                                echo '        <div class="carousel-item ' . ($image_i == 0 ? ' active' : '') . '">
-                                            <img src="img/projects/' . $id . '/' . $image . '" class="project-image bd-placeholder-img bd-placeholder-img-lg d-block w-100" alt="project_image-' . $image_i . '">
-                                        </div>';
-                            echo '          </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject-' . $index . '" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProject-' . $index . '" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
-                                </div>';
-                        } else echo '<img src="img/projects/' . $id . '/' . $images[0] . '" class="card-img-top project-image" alt="no image project">';
-                    } else echo '<img src="img/projects/no_img.png" class="card-img-top project-image" alt="no image project">';
-                    echo '<div class="card-body d-flex flex-column">
-                            <div class="d-flex flex-wrap align-items-center mb-2">
-                                <h5 class="card-title p-2 mb-0">' . $title . '</h5>
-                                <span class="badge rounded-pill text-bg-primary">' . $theme . '</span>'.
-                        ($link ? '<a href="' . $link . '" target="_blank" class="btn btn-sm btn-primary btn-custom ms-auto">Voir le projet</a>' : '') .
-                            '</div>
-                            <p class="card-text mb-1">' . nl2br($description) . '</p>
-                        </div>
-                    </div>
-                </div>';
-                }
-
                 if ($project_data) {
                     foreach ($project_data as $project_i => $project)
                         if ($project_i < 3)
-                            displayProjectCard(
+                            Projects::displayCard_home(
                                 $project['id'],
                                 $project['title'],
                                 $project['description'],
@@ -287,13 +218,13 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                                 json_decode($project['images'], true),
                                 $project_i
                             );
-                } else displayProjectCard(
+                } else Projects::displayCard_home(
                     -1,
                     'Pas de projet enregistrée',
                     isset($_SESSION['user_id']) ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
                     '',
                     '',
-                    array(),
+                    null,
                     0
                 );
                 ?>
