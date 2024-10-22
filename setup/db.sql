@@ -26,11 +26,17 @@ CREATE TABLE cv
 (
     id           UUID PRIMARY KEY,
     creator_id   UUID UNIQUE NOT NULL,
+    image        BOOLEAN DEFAULT false,
     title        VARCHAR(255),
     description  TEXT,
-    skills       JSON COMMENT 'Type: string[]',
-    experiences  JSON COMMENT 'Structure: role (string), company (string), start_date (year-month), end_date (year-month)',
-    certificates JSON COMMENT 'Structure: degree (string), school (string), date (year)'
+    email        VARCHAR(255),
+    phone_number VARCHAR(20),
+    address      TEXT,
+    skills       JSON COMMENT 'Structure: skill (string), year_exp (int)',
+    languages    JSON COMMENT 'Structure: lang (string), level (string)',
+    interests    JSON COMMENT 'Type: string[]',
+    experiences  JSON COMMENT 'Structure: role (string), company (string), start_date (string: year-month), end_date (string: year-month)',
+    certificates JSON COMMENT 'Structure: degree (string), school (string), date (string: year)'
 );
 
 -- Create table for project for portfolio
