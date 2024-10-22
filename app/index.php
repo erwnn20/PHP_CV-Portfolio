@@ -18,7 +18,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (isset($data['password'])) {
             if (password_verify($_POST['loginPassword'], $data['password'])) $_SESSION['user_id'] = $data['id'];
-            else $_SESSION['loginError'] = array('password' => true);
+            else $_SESSION['loginError'] = array(
+                'loginEmail' => $loginEmail,
+                'password' => true
+            );
         } else $_SESSION['loginError'] = array('email' => true);
     }
 
@@ -423,7 +426,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
     if (isset($_SESSION['loginError'])) {
         echo '<script>
                 (new bootstrap.Modal(document.getElementById("loginModal"))).show();
-                document.getElementById("loginEmail").value = "' . ($loginEmail ?? '') . '";' .
+                document.getElementById("loginEmail").value = "' . ($_SESSION['loginError']['loginEmail'] ?? '') . '";' .
             (isset($_SESSION['loginError']['email']) ? 'document.getElementById("loginEmailError").classList.remove("d-none");' : '') .
             (isset($_SESSION['loginError']['password']) ? 'document.getElementById("loginPasswordError").classList.remove("d-none");' : '') .
             '</script>';
