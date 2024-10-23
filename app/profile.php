@@ -15,35 +15,6 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
-function saveProfileImg($userID): bool
-{
-    $targetDirectory = 'img/profile/user/';
-    if (!is_dir($targetDirectory)) {
-        mkdir($targetDirectory, 0755, true);
-    }
-
-    $tmpName = $_FILES['profilePicture']['tmp_name'];
-    $imageError = $_FILES['profilePicture']['error'];
-
-    if ($imageError === UPLOAD_ERR_OK) {
-        $uniqueName =  $userID . '.png';
-        move_uploaded_file($tmpName, $targetDirectory . $uniqueName);
-
-        return true;
-    }
-
-    return false;
-}
-
-function deleteProfileImg($userID): bool
-{
-    $filePath = 'img/profile/user/' . $userID . '.png';
-    if (file_exists($filePath)) {
-        return unlink($filePath);
-    }
-    return false;
-}
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['email'])) {
         $newData = array(
@@ -53,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             'last_name' => $_POST['lastName'],
         );
         if (isset($_POST['newPassword'])) $newData['password'] = password_hash($_POST['newPassword'], PASSWORD_BCRYPT);
-        if (saveProfileImg($_SESSION['user_id'])) {
+        if (User::saveImg('img/profile/user/','profilePicture' , $_SESSION['user_id'])) {
             $newData['profile_picture'] = true;
         }
 
@@ -69,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['deletePicture'])) {
         $stmt = $pdo->prepare('UPDATE user SET profile_picture = FALSE WHERE id = :id;');
         $stmt->execute(array('id' => $_SESSION['user_id']));
-        deleteProfileImg($_SESSION['user_id']);
+        User::deleteImg('img/profile/user/', $_SESSION['user_id']);
     }
 
     header("Location: " . $_SERVER['PHP_SELF']);
