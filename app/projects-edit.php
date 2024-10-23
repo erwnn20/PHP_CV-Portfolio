@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                                         images = VALUES(images);');
         $stmt->execute(array(
             'id' => $uuid,
-            'creator_id' => $_SESSION['user_id'],
+            'creator_id' => $_SESSION['user']['id'],
             'title' => $_POST['projectTitle'],
             'description' => $_POST['projectDescription'],
             'theme' => $_POST['projectTheme'],
@@ -91,9 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //
 
-$projects_data = Projects::getData($_SESSION['user_id'] ?? 0);
-$userInfo = User::getData($_SESSION['user_id'] ?? 0);
-$inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
+$projects_data = Projects::getData($_SESSION['user']['id'] ?? 0);
+$inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
 ?>
 
 <!DOCTYPE html>
@@ -143,7 +142,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
                     <li class="nav-item">
                         <a class="nav-link" href="/#contact">Contact</a>
                     </li>
-                    <?php echo Element::headerUser($userInfo) ?>
+                    <?php echo Element::headerUser($_SESSION['user']['data'], $_SESSION['user']['id'] ?? 0) ?>
                 </ul>
             </div>
         </div>
@@ -173,7 +172,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
                 } else Projects::displayCard_projectsEdit(
                     -1,
                     'Pas de projet enregistré',
-                    isset($_SESSION['user_id']) ? 'Ajoutez vos projets personnels et professionnels ici !' : 'Connectez vous pour afficher vos projets personnels et professionnels',
+                    isset($_SESSION['user']['id']) ? 'Ajoutez vos projets personnels et professionnels ici !' : 'Connectez vous pour afficher vos projets personnels et professionnels',
                     '',
                     '',
                     null,
@@ -185,7 +184,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
         </div>
     </main>
 
-    <?php echo Element::footer($userInfo) ?>
+    <?php echo Element::footer($_SESSION['user']['data']) ?>
 
     <div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel"
         aria-hidden="true">

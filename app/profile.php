@@ -9,7 +9,7 @@ require_once 'util/cv.php';
 require_once 'util/projects.php';
 global $pdo;
 
-if (!isset($_SESSION['user_id'])) {
+if (!isset($_SESSION['user']['id'])) {
     $_SESSION['loginError'] = array('external' => true);
 
     header("Location: /");
@@ -19,13 +19,13 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['email'])) {
         $newData = array(
-            'id' => $_SESSION['user_id'],
+            'id' => $_SESSION['user']['id'],
             'email' => $_POST['email'],
             'first_name' => $_POST['firstName'],
             'last_name' => $_POST['lastName'],
         );
         if (isset($_POST['newPassword'])) $newData['password'] = password_hash($_POST['newPassword'], PASSWORD_BCRYPT);
-        if (User::saveImg('img/profile/user/','profilePicture' , $_SESSION['user_id'])) {
+        if (User::saveImg('img/profile/user/','profilePicture' , $_SESSION['user']['id'])) {
             $newData['profile_picture'] = true;
         }
 
@@ -40,19 +40,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (isset($_POST['deletePicture'])) {
         $stmt = $pdo->prepare('UPDATE user SET profile_picture = FALSE WHERE id = :id;');
-        $stmt->execute(array('id' => $_SESSION['user_id']));
-        User::deleteImg('img/profile/user/', $_SESSION['user_id']);
+        $stmt->execute(array('id' => $_SESSION['user']['id']));
+        User::deleteImg('img/profile/user/', $_SESSION['user']['id']);
     }
 
+    $_SESSION['user']['data'] = User::getData($_SESSION['user']['id']);
     header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
 
 //
 
-$cv_data = CV::getData($_SESSION['user_id']);
-$projects_data = Projects::getData($_SESSION['user_id']);
-$userInfo = User::getData($_SESSION['user_id']);
+$cv_data = CV::getData($_SESSION['user']['id']);
+$projects_data = Projects::getData($_SESSION['user']['id']);
 ?>
 
 <!DOCTYPE html>
@@ -102,7 +102,7 @@ $userInfo = User::getData($_SESSION['user_id']);
                     <li class="nav-item">
                         <a class="nav-link" href="/#contact">Contact</a>
                     </li>
-                    <?php echo Element::headerUser($userInfo) ?>
+                    <?php echo Element::headerUser($_SESSION['user']['data'], $_SESSION['user']['id']) ?>
                 </ul>
             </div>
         </div>
@@ -116,17 +116,17 @@ $userInfo = User::getData($_SESSION['user_id']);
                 <div class="card mb-4">
                     <div class="card-body d-flex flex-column align-items-center">
                         <div class="profile-image-container position-relative mb-3">
-                            <img src="img/profile/<?php echo $userInfo['profile_picture'] ? 'user/'.$_SESSION['user_id'].'.png' : 'default.png' ?>" alt="Photo de profil" class="profile-image" id="profileImage">'.
+                            <img src="img/profile/<?php echo $_SESSION['user']['data']['profile_picture'] ? 'user/'.$_SESSION['user']['id'].'.png' : 'default.png' ?>" alt="Photo de profil" class="profile-image" id="profileImage">'.
                             <?php
-                            if ($userInfo['profile_picture'])
+                            if ($_SESSION['user']['data']['profile_picture'])
                                 echo '<form method="post" class="reset-profile-image-container">
                                         <button type="submit" class="btn btn-sm btn-dark" name="deletePicture">Supprimer</button>
                                     </form>'
                             ?>
                         </div>
-                        <h2 class="card-title" id="userFullName"><?php echo $userInfo['first_name'] . ' ' . $userInfo['last_name'] ?></h2>
-                        <p class="card-text" id="userEmail"><?php echo $userInfo['email'] ?></p>
-                        <?php if ($userInfo['admin']) echo '<a href="admin.php" class="btn btn-sm btn-dark w-100">Admin Panel</a>' ?>
+                        <h2 class="card-title" id="userFullName"><?php echo $_SESSION['user']['data']['first_name'] . ' ' . $_SESSION['user']['data']['last_name'] ?></h2>
+                        <p class="card-text" id="userEmail"><?php echo $_SESSION['user']['data']['email'] ?></p>
+                        <?php if ($_SESSION['user']['data']['admin']) echo '<a href="admin.php" class="btn btn-sm btn-dark w-100">Admin Panel</a>' ?>
                     </div>
                 </div>
 
@@ -135,15 +135,15 @@ $userInfo = User::getData($_SESSION['user_id']);
                         <h4 class="card-title mb-4">Modifier mes informations</h4>
                         <form method="post" id="profileForm" enctype="multipart/form-data">
                             <div class="form-floating mb-2">
-                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder value="<?php echo $userInfo['first_name'] ?>" required>
+                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder value="<?php echo $_SESSION['user']['data']['first_name'] ?>" required>
                                 <label for="firstName" class="form-label">Prénom</label>
                             </div>
                             <div class="form-floating mb-2">
-                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder value="<?php echo $userInfo['last_name']?>" required>
+                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder value="<?php echo $_SESSION['user']['data']['last_name']?>" required>
                                 <label for="lastName" class="form-label">Nom</label>
                             </div>
                             <div class="form-floating mb-4">
-                                <input type="email" class="form-control" id="email" name="email" placeholder value="<?php echo $userInfo['email']?>" required>
+                                <input type="email" class="form-control" id="email" name="email" placeholder value="<?php echo $_SESSION['user']['data']['email']?>" required>
                                 <label for="email" class="form-label">Email</label>
                             </div>
                             <div class="mb-2">
@@ -254,7 +254,7 @@ $userInfo = User::getData($_SESSION['user_id']);
         </div>
     </main>
 
-    <?php echo Element::footer($userInfo) ?>
+    <?php echo Element::footer($_SESSION['user']['data']) ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="scripts/togglePassword.js"></script>

@@ -11,13 +11,13 @@ global $pdo;
 function appendData(string $dbDataID, array|string $newData): void
 {
     global $pdo;
-    $data = json_decode(CV::getData($_SESSION['user_id'])[$dbDataID] ?? '[]', true);
+    $data = json_decode(CV::getData($_SESSION['user']['id'])[$dbDataID] ?? '[]', true);
     $data[] = $newData;
 
     $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, '.$dbDataID.') VALUES (:id, :creator_id, :'.$dbDataID.') ON DUPLICATE KEY UPDATE '.$dbDataID.' = VALUES('.$dbDataID.')');
     $stmt->execute(array(
         'id' => uuid_v4(),
-        'creator_id' => $_SESSION['user_id'],
+        'creator_id' => $_SESSION['user']['id'],
         $dbDataID => json_encode($data)
     ));
 }
@@ -26,7 +26,7 @@ function deleteData(string $dbDataID, int $delIndex): void
 {
     global $pdo;
     $data = array();
-    foreach (json_decode(CV::getData($_SESSION['user_id'])[$dbDataID] ?? '[]', true) as $i => $element) {
+    foreach (json_decode(CV::getData($_SESSION['user']['id'])[$dbDataID] ?? '[]', true) as $i => $element) {
         if ($i != $delIndex)
             $data[] = $element;
     }
@@ -34,7 +34,7 @@ function deleteData(string $dbDataID, int $delIndex): void
     $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, '.$dbDataID.') VALUES (:id, :creator_id, :'.$dbDataID.') ON DUPLICATE KEY UPDATE '.$dbDataID.' = VALUES('.$dbDataID.')');
     $stmt->execute(array(
         'id' => uuid_v4(),
-        'creator_id' => $_SESSION['user_id'],
+        'creator_id' => $_SESSION['user']['id'],
         $dbDataID => json_encode($data)
     ));
 }
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, title) VALUES (:id, :creator_id, :title) ON DUPLICATE KEY UPDATE title = VALUES(title)');
         $stmt->execute(array(
             'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user_id'],
+            'creator_id' => $_SESSION['user']['id'],
             'title' => $_POST['cvTitle']
         ));
     }
@@ -53,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, description) VALUES (:id, :creator_id, :description) ON DUPLICATE KEY UPDATE description = VALUES(description)');
         $stmt->execute(array(
             'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user_id'],
+            'creator_id' => $_SESSION['user']['id'],
             'description' => $_POST['cvDescription']
         ));
     }
@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, email) VALUES (:id, :creator_id, :email) ON DUPLICATE KEY UPDATE email = VALUES(email)');
         $stmt->execute(array(
             'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user_id'],
+            'creator_id' => $_SESSION['user']['id'],
             'email' => $_POST['cvEmail']
         ));
     }
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, phone_number) VALUES (:id, :creator_id, :phone_number) ON DUPLICATE KEY UPDATE phone_number = VALUES(phone_number)');
         $stmt->execute(array(
             'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user_id'],
+            'creator_id' => $_SESSION['user']['id'],
             'phone_number' => $_POST['cvPhone']
         ));
     }
@@ -77,15 +77,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, address) VALUES (:id, :creator_id, :address) ON DUPLICATE KEY UPDATE address = VALUES(address)');
         $stmt->execute(array(
             'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user_id'],
+            'creator_id' => $_SESSION['user']['id'],
             'address' => $_POST['cvAddress']
         ));
     }
 
-    if (User::saveImg('img/cv/', 'cvProfileImage', CV::getData($_SESSION['user_id'] ?? 0)['id'])) {
+    if (User::saveImg('img/cv/', 'cvProfileImage', CV::getData($_SESSION['user']['id'] ?? 0)['id'])) {
         $stmt = $pdo->prepare('UPDATE cv SET image = TRUE WHERE id = :id;');
         $stmt->execute(array(
-            'id' => CV::getData($_SESSION['user_id'] ?? 0)['id']
+            'id' => CV::getData($_SESSION['user']['id'] ?? 0)['id']
         ));
     }
     if (isset($_POST['delCvProfileImage'])) {
@@ -161,9 +161,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //
 
-$cv_data = CV::getData($_SESSION['user_id'] ?? 0);
-$userInfo = User::getData($_SESSION['user_id'] ?? 0);
-$inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
+$cv_data = CV::getData($_SESSION['user']['id'] ?? 0);
+$inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
 ?>
 
 <!DOCTYPE html>
@@ -213,7 +212,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
                     <li class="nav-item">
                         <a class="nav-link" href="/#contact">Contact</a>
                     </li>
-                    <?php echo Element::headerUser($userInfo) ?>
+                    <?php echo Element::headerUser($_SESSION['user']['data'], $_SESSION['user']['id'] ?? 0) ?>
                 </ul>
             </div>
         </div>
@@ -223,7 +222,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
         <div class="container my-5">
             <div class="text-center mb-5">
                 <h1>Modifier mon CV</h1>
-                <?php if (!isset($_SESSION['user_id'])) echo '<p class="lead">Connectez vous pour modifier votre CV</p>' ?>
+                <?php if (!isset($_SESSION['user']['id'])) echo '<p class="lead">Connectez vous pour modifier votre CV</p>' ?>
             </div>
             <div class="row">
                 <div class="col-md-6 mb-4">
@@ -254,7 +253,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
                                 <div class="input-group mb-3">
                                     <label for="email" class="input-group-text">Adresse e-mail</label>
                                     <input type="email" class="form-control" id="email" name="cvEmail" placeholder="exemple@mail.com"
-                                           value ="<?php echo $cv_data['email'] ?? $userInfo['email'] ?? '' ?>" <?php echo $inputDisable?>>
+                                           value ="<?php echo $cv_data['email'] ?? $_SESSION['user']['data']['email'] ?? '' ?>" <?php echo $inputDisable?>>
                                 </div>
                                 <div class="input-group mb-3">
                                     <label for="phone" class="input-group-text">Numéro de téléphone</label>
@@ -386,7 +385,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
                                 );
                         } else CV::displayExperienceCard_cvEdit(
                             'Pas d\'expérience enregistrée',
-                            isset($_SESSION['user_id']) ? 'Ajoutez vos experiances professionnelles ici !' : 'Connectez vous pour afficher vos experiences professionnelles',
+                            isset($_SESSION['user']['id']) ? 'Ajoutez vos experiances professionnelles ici !' : 'Connectez vous pour afficher vos experiences professionnelles',
                             0,
                             0,
                             -1,
@@ -432,7 +431,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
         </div>
     </main>
 
-    <?php echo Element::footer($userInfo) ?>
+    <?php echo Element::footer($_SESSION['user']['data']) ?>
 
     <div class="modal fade" id="addExperienceModal" tabindex="-1" aria-labelledby="addExperienceModalLabel"
         aria-hidden="true">

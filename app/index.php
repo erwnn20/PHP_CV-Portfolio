@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $data = $stmt->fetch();
 
         if (isset($data['password'])) {
-            if (password_verify($_POST['loginPassword'], $data['password'])) $_SESSION['user_id'] = $data['id'];
+            if (password_verify($_POST['loginPassword'], $data['password'])) $_SESSION['user']['id'] = $data['id'];
             else $_SESSION['loginError'] = array(
                 'loginEmail' => $loginEmail,
                 'password' => true
@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 'last_name' => $registerValue['last_name'],
                 'password' => password_hash($registerValue['password'], PASSWORD_BCRYPT)
             ));
-            $_SESSION['user_id'] = $uuid;
+            $_SESSION['user']['id'] = $uuid;
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
                 $_SESSION['registerError'] = array('email' => true);
@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 }
 
-$userInfo = User::getData($_SESSION['user_id'] ?? 0);
+$_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
 ?>
 
 <!DOCTYPE html>
@@ -106,7 +106,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                     <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
-                    <?php echo Element::headerUser($userInfo) ?>
+                    <?php echo Element::headerUser($_SESSION['user']['data'], $_SESSION['user']['id'] ?? 0) ?>
                 </ul>
             </div>
         </div>
@@ -121,7 +121,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
     </header>
 
     <section id="cv" class="py-5">
-        <?php $cv_data = CV::getData($_SESSION['user_id'] ?? 0) ?>
+        <?php $cv_data = CV::getData($_SESSION['user']['id'] ?? 0) ?>
         <div class="container">
             <h2 class="text-center mb-4">Mon CV</h2>
             <div class="row g-4">
@@ -160,7 +160,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                                             );
                                 } else CV::displayExperienceCard_home(
                                     'Pas d\'expérience enregistrée',
-                                    isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
+                                    isset($_SESSION['user']['id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
                                     0,
                                     0,
                                 );
@@ -186,7 +186,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                                             );
                                 } else CV::displayCertificatesCard_home(
                                     'Pas de diplome enregistrée',
-                                    isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
+                                    isset($_SESSION['user']['id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
                                     0,
                                 );
                                 ?>
@@ -203,7 +203,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
     </section>
 
     <section id="projects" class="py-5">
-        <?php  $project_data = Projects::getData(userID: $_SESSION['user_id'] ?? 0) ?>
+        <?php  $project_data = Projects::getData(userID: $_SESSION['user']['id'] ?? 0) ?>
         <div class="container">
             <h2 class="text-center mb-4">Mes Projets</h2>
             <div class="row" style="justify-content: center;">
@@ -223,7 +223,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                 } else Projects::displayCard_home(
                     -1,
                     'Pas de projet enregistrée',
-                    isset($_SESSION['user_id']) ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
+                    isset($_SESSION['user']['id']) ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
                     '',
                     '',
                     null,
@@ -243,11 +243,11 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                 <div class="col-md-6">
                     <form method="POST">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="name" placeholder="John Doe" value="<?php if (isset($userInfo['first_name'], $userInfo['last_name'])) echo $userInfo['first_name'] . ' ' . $userInfo['last_name'] ?>" required>
+                            <input type="text" class="form-control" id="name" placeholder="John Doe" value="<?php if (isset($_SESSION['user']['data']['first_name'], $_SESSION['user']['data']['last_name'])) echo $_SESSION['user']['data']['first_name'] . ' ' . $_SESSION['user']['data']['last_name'] ?>" required>
                             <label for="name" class="form-label">Nom</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="<?php echo $userInfo['email'] ?? '' ?>" required>
+                            <input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="<?php echo $_SESSION['user']['data']['email'] ?? '' ?>" required>
                             <label for="email" class="form-label">Email</label>
                         </div>
                         <div class="form-floating mb-3">
@@ -269,7 +269,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
         </div>
     </section>
 
-    <?php echo Element::footer($userInfo) ?>
+    <?php echo Element::footer($_SESSION['user']['data']) ?>
 
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
