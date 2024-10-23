@@ -216,7 +216,6 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
 
     <section id="projects" class="py-5 bg-dark">
         <?php  $project_data = Projects::getData(userID: $_SESSION['user_id'] ?? 0) ?>
-
         <div class="container">
             <h2 class="text-center mb-4">Mes Projets</h2>
             <div class="row" style="justify-content: center;">
@@ -256,11 +255,11 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                 <div class="col-md-6">
                     <form method="POST">
                         <div class="form-floating mb-3">
-                            <?php echo '<input type="text" class="form-control" id="name" placeholder="John Doe" value="' . (isset($_SESSION['user_id']) ? $userInfo['first_name'] . ' ' . $userInfo['last_name'] : '') . '" required>'; ?>
+                            <input type="text" class="form-control" id="name" placeholder="John Doe" value="<?php if (isset($userInfo['first_name']) && isset($userInfo['last_name'])) echo $userInfo['first_name'] . ' ' . $userInfo['last_name'] ?>" required>
                             <label for="name" class="form-label">Nom</label>
                         </div>
                         <div class="form-floating mb-3">
-                            <?php echo '<input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="' . (isset($_SESSION['user_id']) ? $userInfo['email'] : '') . '" required>'; ?>
+                            <input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="<?php echo $userInfo['email'] ?? '' ?>" required>
                             <label for="email" class="form-label">Email</label>
                         </div>
                         <div class="form-floating mb-3">

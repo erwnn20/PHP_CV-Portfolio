@@ -162,7 +162,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $cv_data = CV::getData($_SESSION['user_id'] ?? 0);
 $userInfo = User::getData($_SESSION['user_id'] ?? 0);
-$inputDisable = isset($_SESSION['user_id']) ? '' : ' disabled';
+$inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
 ?>
 
 <!DOCTYPE html>

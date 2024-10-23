@@ -80,32 +80,6 @@ class Projects
         echo '<div class="col">
                 <div class="card project-card">';
         self::displayImg($images, $index, $id);
-        /*if ($images) {
-            if (count($images) > 1) {
-                echo '  <div id="carouselProject-' . $index . '" class="carousel slide" data-bs-ride="carousel">
-                                    <div class="carousel-indicators">';
-                foreach ($images as $image_i => $image)
-                    echo '           <button type="button" data-bs-target="#carouselProject-' . $index . '" 
-                                            data-bs-slide-to="' . $image_i . '"' . ($image_i == 0 ? ' class="active" aria-current="true"' : '') . '>
-                                        </button>';
-                echo '          </div>
-                                    <div class="carousel-inner">';
-                foreach ($images as $image_i => $image)
-                    echo '        <div class="carousel-item ' . ($image_i == 0 ? ' active' : '') . '">
-                                            <img src="img/projects/' . $id . '/' . $image . '" class="project-image bd-placeholder-img bd-placeholder-img-lg d-block w-100" alt="project_image-' . $image_i . '">
-                                        </div>';
-                echo '          </div>
-                                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject-' . $index . '" data-bs-slide="prev">
-                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Previous</span>
-                                    </button>
-                                    <button class="carousel-control-next" type="button" data-bs-target="#carouselProject-' . $index . '" data-bs-slide="next">
-                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                        <span class="visually-hidden">Next</span>
-                                    </button>
-                                </div>';
-            } else echo '<img src="img/projects/' . $id . '/' . $images[0] . '" class="card-img-top project-image" alt="no image project">';
-        } else echo '<img src="img/projects/no_img.png" class="card-img-top project-image" alt="no image project">';*/
         echo '      <div class="card-body d-flex flex-column">
                         <div class="d-flex flex-wrap align-items-center mb-2">
                             <h5 class="card-title text-break p-2 ps-0 m-0">' . $title . '</h5>
@@ -160,7 +134,7 @@ class Projects
                             </div>';
                 echo '  </div>
                     </div>';
-            } else echo '<img src="img/projects/' . $images[0] . '" class="project-img rounded" alt="project image">';
+            } else echo '<img src="img/projects/' . $id . '/' . $images[0] . '" class="project-img rounded" alt="project image">';
             echo '</div>';
         }
         echo '</div>';

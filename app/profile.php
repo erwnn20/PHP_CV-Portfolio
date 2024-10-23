@@ -121,19 +121,18 @@ $userInfo = User::getData($_SESSION['user_id']);
             <div class="col-md-4">
                 <div class="card mb-4">
                     <div class="card-body d-flex flex-column align-items-center">
-                        <?php
-                        echo '<div class="profile-image-container position-relative mb-3">
-                                    <img src="img/profile/'.($userInfo['profile_picture'] ? 'user/'.$_SESSION['user_id'].'.png' : 'default.png').'" alt="Photo de profil" class="profile-image" id="profileImage">'.
-                            ($userInfo['profile_picture'] ?
-                                    '<form method="post" class="reset-profile-image-container">
+                        <div class="profile-image-container position-relative mb-3">
+                            <img src="img/profile/<?php echo $userInfo['profile_picture'] ? 'user/'.$_SESSION['user_id'].'.png' : 'default.png' ?>" alt="Photo de profil" class="profile-image" id="profileImage">'.
+                            <?php
+                            if ($userInfo['profile_picture'])
+                                echo '<form method="post" class="reset-profile-image-container">
                                         <button type="submit" class="btn btn-sm btn-dark" name="deletePicture">Supprimer</button>
-                                    </form>' : '').'
-                                </div>
-                                <h2 class="card-title" id="userFullName">' . $userInfo['first_name'] . ' ' . $userInfo['last_name'] . '</h2>
-                                <p class="card-text" id="userEmail">' . $userInfo['email'] . '</p>'.
-                            ($userInfo['admin'] ?
-                                '<a href="admin.php" class="btn btn-sm btn-dark w-100">Admin Panel</a>' : '');
-                        ?>
+                                    </form>'
+                            ?>
+                        </div>
+                        <h2 class="card-title" id="userFullName"><?php echo $userInfo['first_name'] . ' ' . $userInfo['last_name'] ?></h2>
+                        <p class="card-text" id="userEmail"><?php echo $userInfo['email'] ?></p>
+                        <?php if ($userInfo['admin']) echo '<a href="admin.php" class="btn btn-sm btn-dark w-100">Admin Panel</a>' ?>
                     </div>
                 </div>
 
@@ -142,15 +141,15 @@ $userInfo = User::getData($_SESSION['user_id']);
                         <h4 class="card-title mb-4">Modifier mes informations</h4>
                         <form method="post" id="profileForm" enctype="multipart/form-data">
                             <div class="form-floating mb-2">
-                                <?php echo '<input type="text" class="form-control" id="firstName" name="firstName" placeholder value="'.$userInfo['first_name'].'" required>'; ?>
+                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder value="<?php echo $userInfo['first_name'] ?>" required>
                                 <label for="firstName" class="form-label">Prénom</label>
                             </div>
                             <div class="form-floating mb-2">
-                                <?php echo '<input type="text" class="form-control" id="lastName" name="lastName" placeholder value="'.$userInfo['last_name'].'" required>' ?>
+                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder value="<?php echo $userInfo['last_name']?>" required>
                                 <label for="lastName" class="form-label">Nom</label>
                             </div>
                             <div class="form-floating mb-4">
-                                <?php echo '<input type="email" class="form-control" id="email" name="email" placeholder value="'.$userInfo['email'].'" required>' ?>
+                                <input type="email" class="form-control" id="email" name="email" placeholder value="<?php echo $userInfo['email']?>" required>
                                 <label for="email" class="form-label">Email</label>
                             </div>
                             <div class="mb-2">

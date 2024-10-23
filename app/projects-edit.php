@@ -92,6 +92,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 $projects_data = Projects::getData($_SESSION['user_id'] ?? 0);
 $userInfo = User::getData($_SESSION['user_id'] ?? 0);
+$inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
 ?>
 
 <!DOCTYPE html>
@@ -165,11 +166,9 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
     <main>
         <div class="container my-5">
             <h1 class="mb-4">Gérer mes projets</h1>
-            <?php
-            echo '<button class="btn btn-primary btn-custom mb-4" data-bs-toggle="modal" data-bs-target="#addProjectModal"' . (isset($_SESSION['user_id']) ? '' : ' disabled') . '>
-                    <i class="fas fa-plus"></i> Ajouter un nouveau projet
-                </button>'
-            ?>
+            <button class="btn btn-primary btn-custom mb-4" data-bs-toggle="modal" data-bs-target="#addProjectModal" <?php echo $inputDisable ?>>
+            <i class="fas fa-plus"></i> Ajouter un nouveau projet
+            </button>
 
             <div id="projectsList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 <?php
@@ -316,7 +315,6 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
 
         unset($_SESSION['editProjectId']);
     }
-
     ?>
 </body>
 
