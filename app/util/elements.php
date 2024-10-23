@@ -10,6 +10,7 @@ class Element
             return '<li class="nav-item d-flex">
                         <div class="nav-link d-flex align-items-center">
                             <a class="nav-link fw-bold p-0" href="profile.php">
+                                <img src="img/profile/'.($userData['profile_picture'] ? 'user/'.$_SESSION['user_id'].'.png' : 'default.png').'" alt="Photo de profil" class="profile-picture me-1" id="profileImage">
                                 ' . $userData['first_name'] . ' ' . $userData['last_name'] . '
                             </a>
                             <a href="logout.php" class="nav-link align-content-center p-0 ms-2"><i class="bi bi-power"></i></a>

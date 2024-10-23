@@ -6,6 +6,13 @@ body {
     background-color: var(--black-1) !important;
 }
 
+.profile-picture {
+    height: 1.75rem;
+    width: 1.75rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .modal-content {
     background-color: var(--black-1);
 }

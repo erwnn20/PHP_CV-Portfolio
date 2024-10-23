@@ -14,6 +14,10 @@ main {
     height: 150px;
 }
 
+.profile-image {
+    object-fit: cover;
+}
+
 .profile-image-container {
     border-radius: 50%;
     overflow: hidden;
@@ -31,10 +35,6 @@ main {
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.profile-image {
-    object-fit: cover;
 }
 
 .reset-profile-image-container:hover {

@@ -102,14 +102,7 @@ $userInfo = User::getData($_SESSION['user_id']);
                     <li class="nav-item">
                         <a class="nav-link" href="/#contact">Contact</a>
                     </li>
-                    <li class="nav-item d-flex">
-                        <div class="nav-link d-flex align-items-center">
-                            <a class="nav-link fw-bold p-0" href="profile.php">
-                                <?php echo $userInfo['first_name'] . ' ' . $userInfo['last_name'] ?>
-                            </a>
-                            <a href="logout.php" class="nav-link align-content-center p-0 ms-2"><i class="bi bi-power"></i></a>
-                        </div>
-                    </li>
+                    <?php echo Element::headerUser($userInfo) ?>
                 </ul>
             </div>
         </div>
