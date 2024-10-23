@@ -7,4 +7,6 @@ app/img/projects/*
 app/img/profile/*
 !app/img/profile/default.png
 
+app/img/cv/*
+
 test*
