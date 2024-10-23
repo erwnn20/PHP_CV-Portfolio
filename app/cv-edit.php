@@ -3,6 +3,7 @@ ob_start();
 session_start();
 
 require_once 'util/db.php';
+require_once 'util/elements.php';
 require_once 'util/user.php';
 require_once 'util/cv.php';
 global $pdo;
@@ -212,22 +213,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
                     <li class="nav-item">
                         <a class="nav-link" href="/#contact">Contact</a>
                     </li>
-                    <?php
-                    if (isset($_SESSION['user_id']))
-                        echo '<li class="nav-item d-flex">
-                                    <div class="nav-link d-flex align-items-center">
-                                        <a class="nav-link fw-bold p-0" href="profile.php">
-                                            ' . $userInfo['first_name'] . ' ' . $userInfo['last_name'] . '
-                                        </a>
-                                        <a href="logout.php" class="nav-link align-content-center p-0 ms-2"><i class="bi bi-power"></i></a>
-                                    </div>
-                                </li>';
-                    else echo '<li class="nav-item align-content-center ms-2">
-                                    <form method="post" class="m-0">
-                                        <button type="submit" name="connection" value="1" class="btn btn-success btn-sm">Connexion</button>
-                                    </form>
-                                </li>';
-                    ?>
+                    <?php echo Element::headerUser($userInfo) ?>
                 </ul>
             </div>
         </div>
@@ -446,18 +432,7 @@ $inputDisable = isset($_SESSION['user_id']) ? '' : 'disabled';
         </div>
     </main>
 
-    <footer class="bg-dark py-4">
-        <div class="container text-center">
-            <p>&copy; 2024 Mon CV/Portfolio</p>
-            <div class="mt-3">
-                <a href="https://www.instagram.com/erwnn_20/" target="_blank" class="text-light me-3"><i class="fab fa-instagram"></i></a>
-                <a href="#" target="_blank" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/erwnn20" target="_blank" class="text-light me-3"><i class="fab fa-github"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" target="_blank" class="text-light"><i class="fab bi-download"></i></a>
-                <?php if (isset($userInfo['admin'])) echo '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>'; ?>
-            </div>
-        </div>
-    </footer>
+    <?php echo Element::footer($userInfo) ?>
 
     <div class="modal fade" id="addExperienceModal" tabindex="-1" aria-labelledby="addExperienceModalLabel"
         aria-hidden="true">

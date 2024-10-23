@@ -3,6 +3,7 @@ ob_start();
 session_start();
 
 require_once 'util/db.php';
+require_once 'util/elements.php';
 require_once 'util/user.php';
 require_once 'util/cv.php';
 require_once 'util/projects.php';
@@ -105,20 +106,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                     <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
-                    <?php
-                    if (isset($_SESSION['user_id']))
-                        echo '<li class="nav-item d-flex">
-                                    <div class="nav-link d-flex align-items-center">
-                                        <a class="nav-link fw-bold p-0" href="profile.php">
-                                            ' . $userInfo['first_name'] . ' ' . $userInfo['last_name'] . '
-                                        </a>
-                                        <a href="logout.php" class="nav-link align-content-center p-0 ms-2"><i class="bi bi-power"></i></a>
-                                    </div>
-                                </li>';
-                    else echo '<li class="nav-item align-content-center ms-2">
-                                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">Connexion</button>
-                                </li>';
-                    ?>
+                    <?php echo Element::headerUser($userInfo) ?>
                 </ul>
             </div>
         </div>
@@ -255,7 +243,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
                 <div class="col-md-6">
                     <form method="POST">
                         <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="name" placeholder="John Doe" value="<?php if (isset($userInfo['first_name']) && isset($userInfo['last_name'])) echo $userInfo['first_name'] . ' ' . $userInfo['last_name'] ?>" required>
+                            <input type="text" class="form-control" id="name" placeholder="John Doe" value="<?php if (isset($userInfo['first_name'], $userInfo['last_name'])) echo $userInfo['first_name'] . ' ' . $userInfo['last_name'] ?>" required>
                             <label for="name" class="form-label">Nom</label>
                         </div>
                         <div class="form-floating mb-3">
@@ -280,6 +268,8 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
             </div>
         </div>
     </section>
+
+    <?php echo Element::footer($userInfo) ?>
 
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -393,19 +383,6 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
             </div>
         </div>
     </div>
-
-    <footer class="bg-dark py-4">
-        <div class="container text-center">
-            <p>&copy; 2024 Mon CV/Portfolio</p>
-            <div class="mt-3">
-                <a href="https://www.instagram.com/erwnn_20/" target="_blank" class="text-light me-3"><i class="fab fa-instagram"></i></a>
-                <a href="#" target="_blank" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/erwnn20" target="_blank" class="text-light me-3"><i class="fab fa-github"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" target="_blank" class="text-light"><i class="fab bi-download"></i></a>
-                <?php if ($userInfo['admin']) echo '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>'; ?>
-            </div>
-        </div>
-    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="scripts/togglePassword.js"></script>

@@ -3,6 +3,7 @@ ob_start();
 session_start();
 
 require_once 'util/db.php';
+require_once 'util/elements.php';
 require_once 'util/user.php';
 require_once 'util/cv.php';
 require_once 'util/projects.php';
@@ -260,18 +261,7 @@ $userInfo = User::getData($_SESSION['user_id']);
         </div>
     </main>
 
-    <footer class="bg-dark py-4">
-        <div class="container text-center">
-            <p>&copy; 2024 Mon CV/Portfolio</p>
-            <div class="mt-3">
-                <a href="https://www.instagram.com/erwnn_20/" target="_blank" class="text-light me-3"><i class="fab fa-instagram"></i></a>
-                <a href="#" target="_blank" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/erwnn20" target="_blank" class="text-light me-3"><i class="fab fa-github"></i></a>
-                <a href="https://github.com/erwnn20/PHP-TP" target="_blank" class="text-light"><i class="fab bi-download"></i></a>
-                <?php if ($userInfo['admin']) echo '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>'; ?>
-            </div>
-        </div>
-    </footer>
+    <?php echo Element::footer($userInfo) ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="scripts/togglePassword.js"></script>
