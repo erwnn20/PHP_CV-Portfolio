@@ -28,6 +28,10 @@ body {
     border-color: var(--black-2);
 }
 
+.bg-custom {
+     background-color: var(--purple-dark-1) !important;
+ }
+
 .btn-primary.btn-custom {
     --bs-btn-color: #fff;
     --bs-btn-bg: var(--purple-default);
@@ -69,6 +73,8 @@ body {
     --black-1: #1e1e1e;
     --black-2: #2d2d2d;
     --black-3: #3d3d3d;
+
+    --grey-0: #6c757d;
 
     --purple-light-0: #bb86fc;
     --purple-default: #9965f4;

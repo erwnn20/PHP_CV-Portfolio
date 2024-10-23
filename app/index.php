@@ -134,65 +134,77 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
 
     <section id="cv" class="py-5">
         <?php $cv_data = CV::getData($_SESSION['user_id'] ?? 0) ?>
-
         <div class="container">
             <h2 class="text-center mb-4">Mon CV</h2>
-            <div class="row">
-                <div class="col-md-3 text-end">
-                    <h3>Compétences</h3>
-                    <ul class="list-group list-group-flush">
-                        <?php
-                        if (isset($cv_data['skills'])) {
-                            $skills = array();
-                            foreach (json_decode($cv_data['skills'], true) as $skill)
-                                if (!in_array($skill, $skills)) $skills[] = $skill;
-                            foreach ($skills as $skill_i => $skill)
-                                if ($skill_i < min(6, count($skills)))
-                                    echo '<li class="list-group-item">' . $skill . '</li>';
-                        } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
-                        ?>
-                    </ul>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-4">Compétences</h3>
+                            <ul class="list-group list-group-flush">
+                                <?php
+                                $skills = json_decode($cv_data['skills'] ?? '[]', true);
+                                if ($skills) {
+                                    foreach ($skills as $skill_i => $skill)
+                                        if ($skill_i < 7)
+                                            CV::displaySkill_home($skill['skill'], $skill['year_exp']);
+                                } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6 text-center">
-                    <h3>Expériences</h3>
-                    <?php
-                    if (isset($cv_data['experiences'])) {
-                        foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
-                            if ($experience_i < 3)
-                                CV::displayExperienceCard_home(
-                                        $experience['role'],
-                                        $experience['company'],
-                                        $experience['start_date'],
-                                        $experience['end_date'],
-                                        $experience_i < min(3, count($experience)) - 1);
-                    } else CV::displayExperienceCard_home(
-                        'Pas d\'expérience enregistrée',
-                        isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
-                        0,
-                        0,
-                        false
-                    );
-                    ?>
-                </div>
-                <div class="col-md-3 text-start certificates">
-                    <h3>Diplomes</h3>
-                    <?php
-                    if (isset($cv_data['certificates'])) {
-                        foreach (json_decode($cv_data['certificates'], true) as $certificate_i => $certificate)
-                            if ($certificate_i < 3)
-                                CV::displayCertificatesCard_home(
-                                        $certificate['degree'],
-                                        $certificate['school'],
-                                        $certificate['date'],
-                                        $certificate_i != min(3, count($certificate)) - 1
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-4">Expériences</h3>
+                            <div class="timeline">
+                                <?php
+                                $experiences = json_decode($cv_data['experiences'] ?? '[]', true);
+                                if ($experiences) {
+                                    foreach ($experiences as $experience_i => $experience)
+                                        if ($experience_i < 5)
+                                            CV::displayExperienceCard_home(
+                                                $experience['role'],
+                                                $experience['company'],
+                                                $experience['start_date'],
+                                                $experience['end_date'],
+                                            );
+                                } else CV::displayExperienceCard_home(
+                                    'Pas d\'expérience enregistrée',
+                                    isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
+                                    0,
+                                    0,
                                 );
-                    } else CV::displayCertificatesCard_home(
-                        'Pas de diplome enregistrée',
-                        isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
-                        0,
-                        false
-                    );
-                    ?>
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-4">Diplômes</h3>
+                            <div class="timeline">
+                                <?php
+                                $certificates = json_decode($cv_data['certificates'] ?? '[]', true);
+                                if ($certificates) {
+                                    foreach ($certificates as $certificate_i => $certificate)
+                                        if ($certificate_i < 5)
+                                            CV::displayCertificatesCard_home(
+                                                $certificate['degree'],
+                                                $certificate['school'],
+                                                $certificate['date'],
+                                            );
+                                } else CV::displayCertificatesCard_home(
+                                    'Pas de diplome enregistrée',
+                                    isset($_SESSION['user_id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
+                                    0,
+                                );
+                                ?>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="text-center mt-4">

@@ -19,30 +19,34 @@ class CV
     }
 
     // on index.php
-    public static function displayExperienceCard_home($role, $company, $start_date, $end_date, bool $margin): void
+    public static function displaySkill_home($skill, $year_exp): void
     {
-        echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
-                <div class="card-body">
-                    <h5 class="card-title">' . $role . '</h5>
-                    <h6 class="card-subtitle mb-2">' . $company . '</h6>'.
-                ($start_date ?
-                    '<p class="card-text">' .
-                        date_format(date_create($start_date), "F Y") . ' - ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
-                    '</p>' : '').
-                '</div>
-              </div>';
+        echo '<li class="list-group-item d-flex justify-content-between align-items-center">
+                '.$skill.'
+                <span class="badge rounded-pill bg-custom">'.$year_exp.' an'.($year_exp > 1 ? 's': '').'</span>
+            </li>';
     }
 
-    public static function displayCertificatesCard_home($degree, $school, $year, bool $margin): void
+    public static function displayExperienceCard_home($role, $company, $start_date, $end_date): void
     {
-        echo '<div class="card' . ($margin ? ' mb-3' : '') . '">
-                <div class="card-body">
-                    <h5 class="card-title">' . $degree . '</h5>
-                    <h6 class="card-subtitle mb-2">' . $school . '</h6>'.
-                ($year ?
-                    '<p class="card-text">' . date_format(date_create($year), "Y") . '</p>' : '').
-                '</div>
-              </div>';
+        echo '<div class="timeline-item">'.
+        ($start_date ?
+                '<div class="timeline-date">'.
+                    date_format(date_create($start_date), "F Y") . ' - ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
+                '</div>' : '').'
+                <h5 class="timeline-title">'.$role.'</h5>
+                <p class="timeline-subtitle">'.$company.'</p>
+            </div>';
+    }
+
+    public static function displayCertificatesCard_home($certificate, $school, $year): void
+    {
+        echo '<div class="timeline-item">'.
+            ($year ?
+                '<div class="timeline-date">' . date_format(date_create($year), "Y") . '</div>' : '').'
+                <h5 class="timeline-title">' . $certificate . '</h5>
+                <p class="timeline-subtitle">' . $school . '</p>
+            </div>';
     }
 
     // on cv-edit.php
@@ -51,7 +55,7 @@ class CV
         echo '<li class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <span class="fw-bold">'.$skill.'</span>
-                    <span class="badge rounded-pill text-bg-primary ms-2">'.$year_exp.' an'.($year_exp > 1 ? 's': '').'</span>
+                    <span class="badge rounded-pill bg-custom ms-2">'.$year_exp.' an'.($year_exp > 1 ? 's': '').'</span>
                 </div>
                 <form method="post" class="d-flex align-items-center">
                     <button type="submit" name="delSkillIndex" value="'.$index.'"  class="btn btn-close"></button>
@@ -103,12 +107,12 @@ class CV
             </div>';
     }
 
-    public static function displayCertificatesCard_cvEdit($degree, $school, $year, int $index, bool $delBtn): void
+    public static function displayCertificatesCard_cvEdit($certificate, $school, $year, int $index, bool $delBtn): void
     {
         echo '<div class="col">
                 <div class="card bg-dark shadow">
                     <div class="card-body">
-                        <h5 class="card-title text-break">' . $degree . '</h5>
+                        <h5 class="card-title text-break">' . $certificate . '</h5>
                         <h6 class="card-subtitle text-muted">' . $school . '</h6>
                         <div class="d-flex">' .
                     ($year ?
