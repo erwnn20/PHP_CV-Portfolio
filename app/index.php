@@ -202,7 +202,7 @@ $userInfo = User::getData($_SESSION['user_id'] ?? 0);
         </div>
     </section>
 
-    <section id="projects" class="py-5 bg-dark">
+    <section id="projects" class="py-5">
         <?php  $project_data = Projects::getData(userID: $_SESSION['user_id'] ?? 0) ?>
         <div class="container">
             <h2 class="text-center mb-4">Mes Projets</h2>

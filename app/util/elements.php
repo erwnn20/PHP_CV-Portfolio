@@ -22,7 +22,7 @@ class Element
     }
 
     public static function footer($userData) : string {
-        return '<footer class="bg-dark py-4">
+        return '<footer class="py-4">
                     <div class="container text-center">
                         <p>&copy; 2024 Mon CV/Portfolio</p>
                         <div class="mt-3">
@@ -30,7 +30,7 @@ class Element
                             <a href="#" target="_blank" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
                             <a href="https://github.com/erwnn20" target="_blank" class="text-light me-3"><i class="fab fa-github"></i></a>
                             <a href="https://github.com/erwnn20/PHP-TP" target="_blank" class="text-light"><i class="fab bi-download"></i></a>'.
-                            ($userData['admin'] ? '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>' : '').'
+                            (isset($userData['admin']) && $userData['admin'] ? '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>' : '').'
                         </div>
                     </div>
                 </footer>';

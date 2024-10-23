@@ -4,6 +4,11 @@ body {
 
 .navbar {
     background-color: var(--black-1) !important;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .175);
+}
+
+footer {
+    background-color: var(--black-1) !important;
 }
 
 .profile-picture {
@@ -16,6 +21,7 @@ body {
 .modal-content {
     background-color: var(--black-1);
 }
+
 .modal-header,
 .modal-footer {
     border-color: var(--black-3);
@@ -36,8 +42,8 @@ body {
 }
 
 .bg-custom {
-     background-color: var(--purple-dark-1) !important;
- }
+    background-color: var(--purple-dark-1) !important;
+}
 
 .btn-primary.btn-custom {
     --bs-btn-color: #fff;

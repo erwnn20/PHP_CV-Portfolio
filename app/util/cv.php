@@ -135,10 +135,10 @@ class CV
     public static function displayExperienceCard_profile($role, $company, $start_date, $end_date): void
     {
         echo '<div class="experience-item">
-                <h4>'.$role.'</h4>
-                <p class="mb-2">'.$company.'</p>'.
+                <h4 class="mb-1">'.$role.'</h4>
+                <p class="experience-company fw-medium">'.$company.'</p>'.
             ($start_date ?
-                '<p class="mb-0">
+                '<p>
                     <small>' . date_format(date_create($start_date), "F Y") . ' - ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .'</small>
                 </p>' : '').'
             </div>';

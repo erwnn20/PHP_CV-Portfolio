@@ -88,13 +88,13 @@ class Projects
                         <p class="card-text">' . nl2br($description) . '</p>
                         <div class="d-flex mt-auto">' .
                     ($link ?
-                            '<a href="' . $link . '" class="btn btn-sm btn-primary btn-custom me-auto" target="_blank">
+                            '<a href="' . $link . '" class="btn btn-sm btn-outline-primary btn-custom me-auto" target="_blank">
                                 Voir le projet
                             </a>' : '') .
                     ($endBtn ?
                             '<form method="post" class="ms-auto">
                                 <button type="submit" class="btn btn-sm btn-outline-secondary" name="editProjectId" value="' . $id . '">Modifier</button>
-                                <button type="submit" class="btn btn-sm btn-danger ms-1" name="deleteProjectId" value="' . $id . '">Supprimer</button>
+                                <button type="submit" class="btn btn-sm btn-outline-danger ms-1" name="deleteProjectId" value="' . $id . '">Supprimer</button>
                             </form>' : '') .
                         '</div>
                     </div>

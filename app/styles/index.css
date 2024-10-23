@@ -81,3 +81,17 @@
     font-size: 0.9rem;
     color: var(--grey-0);
 }
+
+#projects {
+    background-color: var(--black-1);
+}
+
+#projects .card {
+    background-color: var(--black-0);
+    border-color: var(--black-1);
+}
+
+#projects .card-text {
+    font-size: 0.95rem;
+    color: var(--grey-0);
+}

@@ -25,3 +25,8 @@ main {
 #projectDescription {
     min-height: 10rem;
 }
+
+#projectsList .card-text {
+    font-size: 0.95rem;
+    color: var(--grey-0);
+}

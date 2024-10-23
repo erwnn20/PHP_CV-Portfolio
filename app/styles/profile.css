@@ -66,3 +66,17 @@ main {
     height: 150px;
     object-fit: cover;
 }
+
+.project-item p {
+    font-size: 0.95rem;
+    color: var(--grey-0);
+}
+
+.experience-item p {
+    margin-bottom: 0;
+    color: var(--grey-0);
+}
+
+.experience-company {
+    font-size: 1.1rem;
+}
