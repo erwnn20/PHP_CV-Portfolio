@@ -38,7 +38,7 @@ class Projects
                             <div class="carousel-inner">';
                 foreach ($images as $image_i => $image)
                     echo '      <div class="carousel-item ' . ($image_i == 0 ? ' active' : '') . '">
-                                    <img src="img/projects/' . $projectID . '/' . $image . '" class="project-image bd-placeholder-img bd-placeholder-img-lg d-block w-100" alt="project_image-' . $image_i . '">
+                                    <img src="img/projects/' . $projectID . '/' . $image . '" class="project-image rounded-top w-100" alt="project_image-' . $image_i . '">
                                 </div>';
                 echo '      </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject-' . $index . '" data-bs-slide="prev">

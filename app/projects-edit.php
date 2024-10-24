@@ -226,7 +226,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                         </div>
                         <div id="imagePreview" class="row mb-3"></div>
                         <div class="modal-footer">
-                            <p id="projectIdDisplayContainer" class="text-secondary fst-italic flex-grow-1 user-select-none" style="font-size: .85rem;">
+                            <p id="projectIdDisplayContainer" class="text-secondary fst-italic flex-grow-1 user-select-none d-none" style="font-size: .85rem;">
                                 Modification projet :
                                 <span id="projectIdDisplay" class="text-secondary ms-1"></span>
                             </p>
