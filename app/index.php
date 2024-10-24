@@ -106,7 +106,7 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                     <li class="nav-item">
                         <a class="nav-link" href="#contact">Contact</a>
                     </li>
-                    <?php echo Element::headerUser($_SESSION['user']['data'], $_SESSION['user']['id'] ?? 0) ?>
+                    <?php echo Element::headerUser($_SESSION['user']['data'], $_SESSION['user']['id'] ?? 0, true) ?>
                 </ul>
             </div>
         </div>

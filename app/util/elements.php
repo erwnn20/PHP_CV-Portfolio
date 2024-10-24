@@ -4,7 +4,7 @@ require_once 'db.php';
 
 class Element
 {
-    public static function headerUser($userData, $id) : string
+    public static function headerUser($userData, $id, bool $home = false) : string
     {
         if (isset($userData['first_name'], $userData['last_name']))
             return '<li class="nav-item d-flex">
@@ -15,6 +15,12 @@ class Element
                             </a>
                             <a href="logout.php" class="nav-link align-content-center p-0 ms-2"><i class="bi bi-power"></i></a>
                         </div>
+                    </li>';
+        if (!$home)
+            return '<li class="nav-item align-content-center ms-2">
+                        <form method="post" class="m-0">
+                            <button type="submit" name="connection" value="1" class="btn btn-success btn-sm">Connexion</button>
+                        </form>
                     </li>';
         return '<li class="nav-item align-content-center ms-2">
                     <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#loginModal">Connexion</button>
