@@ -112,162 +112,164 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
         </div>
     </nav>
 
-    <header id="accueil" class="py-5">
-        <div class="container text-center">
-            <h1 class="display-4 mb-4">Bienvenue sur mon CV/Portfolio</h1>
-            <p class="lead">Découvrez mes compétences, expériences et projets</p>
-            <a href="cv.php" class="btn btn-primary btn-custom btn-lg mt-3">Voir les CV</a>
-        </div>
-    </header>
+    <main>
+        <header id="accueil" class="py-5">
+            <div class="container text-center">
+                <h1 class="display-4 mb-4">Bienvenue sur mon CV/Portfolio</h1>
+                <p class="lead">Découvrez mes compétences, expériences et projets</p>
+                <a href="resume.php" class="btn btn-primary btn-custom btn-lg mt-3">Voir les CV</a>
+            </div>
+        </header>
 
-    <section id="cv" class="py-5">
-        <?php $cv_data = CV::getData($_SESSION['user']['id'] ?? 0) ?>
-        <div class="container">
-            <h2 class="text-center mb-4">Mon CV</h2>
-            <div class="row g-4">
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h3 class="card-title text-center mb-4">Compétences</h3>
-                            <ul class="list-group list-group-flush">
-                                <?php
-                                $skills = json_decode($cv_data['skills'] ?? '[]', true);
-                                if ($skills) {
-                                    foreach ($skills as $skill_i => $skill)
-                                        if ($skill_i < 7)
-                                            CV::displaySkill_home($skill['skill'], $skill['year_exp']);
-                                } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
-                                ?>
-                            </ul>
+        <section id="cv" class="py-5">
+            <?php $cv_data = CV::getData($_SESSION['user']['id'] ?? 0) ?>
+            <div class="container">
+                <h2 class="text-center mb-4">Mon CV</h2>
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h3 class="card-title text-center mb-4">Compétences</h3>
+                                <ul class="list-group list-group-flush">
+                                    <?php
+                                    $skills = json_decode($cv_data['skills'] ?? '[]', true);
+                                    if ($skills) {
+                                        foreach ($skills as $skill_i => $skill)
+                                            if ($skill_i < 7)
+                                                CV::displaySkill_home($skill['skill'], $skill['year_exp']);
+                                    } else echo '<li class="list-group-item">Pas de compétence enregistrée</li>';
+                                    ?>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h3 class="card-title text-center mb-4">Expériences</h3>
-                            <div class="timeline">
-                                <?php
-                                $experiences = json_decode($cv_data['experiences'] ?? '[]', true);
-                                if ($experiences) {
-                                    foreach ($experiences as $experience_i => $experience)
-                                        if ($experience_i < 5)
-                                            CV::displayExperienceCard_home(
-                                                $experience['role'],
-                                                $experience['company'],
-                                                $experience['start_date'],
-                                                $experience['end_date'],
-                                            );
-                                } else CV::displayExperienceCard_home(
-                                    'Pas d\'expérience enregistrée',
-                                    isset($_SESSION['user']['id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
-                                    0,
-                                    0,
-                                );
-                                ?>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h3 class="card-title text-center mb-4">Expériences</h3>
+                                <div class="timeline">
+                                    <?php
+                                    $experiences = json_decode($cv_data['experiences'] ?? '[]', true);
+                                    if ($experiences) {
+                                        foreach ($experiences as $experience_i => $experience)
+                                            if ($experience_i < 5)
+                                                CV::displayExperienceCard_home(
+                                                    $experience['role'],
+                                                    $experience['company'],
+                                                    $experience['start_date'],
+                                                    $experience['end_date'],
+                                                );
+                                    } else CV::displayExperienceCard_home(
+                                        'Pas d\'expérience enregistrée',
+                                        isset($_SESSION['user']['id']) ? 'Modifiez votre CV pour ajouter vos experiances professionnelles' : 'Connectez vous pour afficher vos experiences professionnelles',
+                                        0,
+                                        0,
+                                    );
+                                    ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h3 class="card-title text-center mb-4">Diplômes</h3>
+                                <div class="timeline">
+                                    <?php
+                                    $certificates = json_decode($cv_data['certificates'] ?? '[]', true);
+                                    if ($certificates) {
+                                        foreach ($certificates as $certificate_i => $certificate)
+                                            if ($certificate_i < 5)
+                                                CV::displayCertificatesCard_home(
+                                                    $certificate['degree'],
+                                                    $certificate['school'],
+                                                    $certificate['date'],
+                                                );
+                                    } else CV::displayCertificatesCard_home(
+                                        'Pas de diplome enregistrée',
+                                        isset($_SESSION['user']['id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
+                                        0,
+                                    );
+                                    ?>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h3 class="card-title text-center mb-4">Diplômes</h3>
-                            <div class="timeline">
-                                <?php
-                                $certificates = json_decode($cv_data['certificates'] ?? '[]', true);
-                                if ($certificates) {
-                                    foreach ($certificates as $certificate_i => $certificate)
-                                        if ($certificate_i < 5)
-                                            CV::displayCertificatesCard_home(
-                                                $certificate['degree'],
-                                                $certificate['school'],
-                                                $certificate['date'],
-                                            );
-                                } else CV::displayCertificatesCard_home(
-                                    'Pas de diplome enregistrée',
-                                    isset($_SESSION['user']['id']) ? 'Modifiez votre CV pour ajouter vos diplomes et certifications' : 'Connectez vous pour afficher vos diplomes et certifications',
-                                    0,
-                                );
-                                ?>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center mt-4">
-                <a href="cv-edit.php" class="btn btn-primary btn-custom me-3">Modifier mon CV</a>
-                <a href="#" class="btn btn-primary btn-custom disabled">Télécharger le CV en PDF</a>
-            </div>
-        </div>
-    </section>
-
-    <section id="projects" class="py-5">
-        <?php  $project_data = Projects::getData(userID: $_SESSION['user']['id'] ?? 0) ?>
-        <div class="container">
-            <h2 class="text-center mb-4">Mes Projets</h2>
-            <div class="row" style="justify-content: center;">
-                <?php
-                if ($project_data) {
-                    foreach ($project_data as $project_i => $project)
-                        if ($project_i < 3)
-                            Projects::displayCard_home(
-                                $project['id'],
-                                $project['title'],
-                                $project['description'],
-                                $project['theme'],
-                                $project['link'],
-                                json_decode($project['images'], true),
-                                $project_i
-                            );
-                } else Projects::displayCard_home(
-                    -1,
-                    'Pas de projet enregistrée',
-                    isset($_SESSION['user']['id']) ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
-                    '',
-                    '',
-                    null,
-                    0
-                );
-                ?>
                 <div class="text-center mt-4">
-                    <a href="projects-edit.php" class="btn btn-primary btn-custom">Gérer mes Projets</a>
+                    <a href="cv-edit.php" class="btn btn-primary btn-custom me-3">Modifier mon CV</a>
+                    <a href="#" class="btn btn-primary btn-custom disabled">Télécharger le CV en PDF</a>
                 </div>
             </div>
-    </section>
+        </section>
 
-    <section id="contact" class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">Contactez-moi</h2>
-            <div class="row">
-                <div class="col-md-6">
-                    <form method="POST">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="name" placeholder="John Doe" value="<?php if (isset($_SESSION['user']['data']['first_name'], $_SESSION['user']['data']['last_name'])) echo $_SESSION['user']['data']['first_name'] . ' ' . $_SESSION['user']['data']['last_name'] ?>" required>
-                            <label for="name" class="form-label">Nom</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="<?php echo $_SESSION['user']['data']['email'] ?? '' ?>" required>
-                            <label for="email" class="form-label">Email</label>
-                        </div>
-                        <div class="form-floating mb-3">
-                            <textarea class="form-control" style="height: 13rem;" id="message" rows="4" placeholder="Entrez votre message..." required></textarea>
-                            <label for="message" class="form-label">Message</label>
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-custom">Envoyer</button>
-                    </form>
+        <section id="projects" class="py-5">
+            <?php  $project_data = Projects::getData(userID: $_SESSION['user']['id'] ?? 0) ?>
+            <div class="container">
+                <h2 class="text-center mb-4">Mes Projets</h2>
+                <div class="row" style="justify-content: center;">
+                    <?php
+                    if ($project_data) {
+                        foreach ($project_data as $project_i => $project)
+                            if ($project_i < 3)
+                                Projects::displayCard_home(
+                                    $project['id'],
+                                    $project['title'],
+                                    $project['description'],
+                                    $project['theme'],
+                                    $project['link'],
+                                    json_decode($project['images'], true),
+                                    $project_i
+                                );
+                    } else Projects::displayCard_home(
+                        -1,
+                        'Pas de projet enregistrée',
+                        isset($_SESSION['user']['id']) ? 'Gerez et  ajoutez vos projets personnels et professionnels' : 'Connectez vous pour afficher vos projets personnels et professionnels',
+                        '',
+                        '',
+                        null,
+                        0
+                    );
+                    ?>
+                    <div class="text-center mt-4">
+                        <a href="projects-edit.php" class="btn btn-primary btn-custom">Gérer mes Projets</a>
+                    </div>
                 </div>
-                <div class="col-md-6">
-                    <h3>Localisation</h3>
-                    <div class="ratio ratio-16x9">
-                        <iframe
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5777.627296697174!2d1.4293162765289558!3d43.61042155519602!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12aebdbb42d83293%3A0x6e448c24640106bd!2sToulouse%20Ynov%20Campus%20-%20%C3%89cole%20des%20m%C3%A9tiers%20du%20digital!5e0!3m2!1sfr!2sfr!4v1728315900372!5m2!1sfr!2sfr"
-                            allowfullscreen="" loading="lazy"></iframe>
+        </section>
+
+        <section id="contact" class="py-5">
+            <div class="container">
+                <h2 class="text-center mb-4">Contactez-moi</h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <form method="POST">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control" id="name" placeholder="John Doe" value="<?php if (isset($_SESSION['user']['data']['first_name'], $_SESSION['user']['data']['last_name'])) echo $_SESSION['user']['data']['first_name'] . ' ' . $_SESSION['user']['data']['last_name'] ?>" required>
+                                <label for="name" class="form-label">Nom</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="<?php echo $_SESSION['user']['data']['email'] ?? '' ?>" required>
+                                <label for="email" class="form-label">Email</label>
+                            </div>
+                            <div class="form-floating mb-3">
+                                <textarea class="form-control" style="height: 13rem;" id="message" rows="4" placeholder="Entrez votre message..." required></textarea>
+                                <label for="message" class="form-label">Message</label>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-custom">Envoyer</button>
+                        </form>
+                    </div>
+                    <div class="col-md-6">
+                        <h3>Localisation</h3>
+                        <div class="ratio ratio-16x9">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5777.627296697174!2d1.4293162765289558!3d43.61042155519602!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12aebdbb42d83293%3A0x6e448c24640106bd!2sToulouse%20Ynov%20Campus%20-%20%C3%89cole%20des%20m%C3%A9tiers%20du%20digital!5e0!3m2!1sfr!2sfr!4v1728315900372!5m2!1sfr!2sfr"
+                                allowfullscreen="" loading="lazy"></iframe>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <?php echo Element::footer($_SESSION['user']['data']) ?>
 

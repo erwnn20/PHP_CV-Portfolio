@@ -15,11 +15,6 @@
     object-fit: cover;
 }
 
-#projects .carousel-inner {
-    border-top-left-radius: var(--bs-card-border-radius);
-    border-top-right-radius: var(--bs-card-border-radius);
-}
-
 .nav-tabs .nav-link {
     color: var(--white-1);
 }
