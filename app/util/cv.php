@@ -118,8 +118,8 @@ class CV
                     ($year ?
                             '<p class="mb-0">
                                 <small class="text-muted h-100">
-                                    En ' . date_format(date_create($year), "Y") .
-                                '</small>
+                                    En '.$year.'
+                                </small>
                             </p>' : '') .
                     ($delBtn ? '
                             <form method="post" class="ms-auto">

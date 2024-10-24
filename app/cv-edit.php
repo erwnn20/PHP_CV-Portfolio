@@ -309,12 +309,12 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                                 <?php
                                 $langLvl = array(
                                     'native' => 'Langue maternelle',
-                                    'A1' => 'A1 (Débutant)',
-                                    'A2' => 'A2 (Élémentaire)',
-                                    'B1' => 'B1 (Intermédiaire)',
-                                    'B2' => 'B2 (Avancé)',
-                                    'C1' => 'C1 (Autonome)',
-                                    'C2' => 'C2 (Maîtrise)'
+                                    'A1' => 'Débutant (A1)',
+                                    'A2' => 'Élémentaire (A2)',
+                                    'B1' => 'Intermédiaire (B1)',
+                                    'B2' => 'Avancé (B2)',
+                                    'C1' => 'Courant (C1)',
+                                    'C2' => 'Maîtrise (C2)'
                                 );
                                 $languages = json_decode($cv_data['languages'] ?? '[]', true);
                                 if ($languages) {
@@ -416,7 +416,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                                 );
                         } else CV::displayCertificatesCard_cvEdit(
                             'Pas de diplome enregistrée',
-                            isset($_SESSION['user_id']) ? 'Ajoutez vos diplomes et certifications ici !' : 'Connectez vous pour afficher vos diplomes et certifications',
+                            isset($_SESSION['user']['id']) ? 'Ajoutez vos diplomes et certifications ici !' : 'Connectez vous pour afficher vos diplomes et certifications',
                             0,
                             -1,
                             false
