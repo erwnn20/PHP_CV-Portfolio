@@ -88,12 +88,12 @@ $projectData = Projects::getData($userSelectID);
                     <select class="form-select" id="userSelect" name="userSelect" required>
                         <?php
                         if ($userSelectID)
-                            echo '<option value="' . $userSelectID . '">' . $userData['first_name'] . ' ' . $userData['last_name'] . '</option>';
+                            echo '<option value="' . $userSelectID . '">' . htmlspecialchars($userData['first_name']) . ' ' . htmlspecialchars($userData['last_name']) . '</option>';
 
                         $users = User::getList();
                         if ($users)
                             foreach ($users as $user) if ($user['id'] != $userSelectID)
-                                echo '<option value="' . $user['id'] . '">' . $user['first_name'] . ' ' . $user['last_name'] . '</option>';
+                                echo '<option value="' . $user['id'] . '">' . htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']) . '</option>';
                         ?>
                     </select>
                     <button type="submit" class="btn btn-primary btn-custom">Mettre à jour</button>
@@ -105,8 +105,8 @@ $projectData = Projects::getData($userSelectID);
                     <div class="col-md-4 pt-4 text-center personal-info">
                         <img src="<?php echo 'img/' . (isset($cvData['image']) ? 'cv/' . $cvData['id'] . '.png' : 'profile/default.png') ?>"
                              alt="Photo de profil" class="profile-image mb-3">
-                        <h2 id="userName"><?php echo $userData['first_name'] . ' ' . $userData['last_name'] ?></h2>
-                        <p id="userTitle"><?php echo $cvData['title'] ?></p>
+                        <h2 id="userName"><?php echo htmlspecialchars($userData['first_name']) . ' ' . htmlspecialchars($userData['last_name']) ?></h2>
+                        <p id="userTitle"><?php echo htmlspecialchars($cvData['title']) ?></p>
 
                         <div class="cv-section">
                             <?php
@@ -115,7 +115,7 @@ $projectData = Projects::getData($userSelectID);
                                 echo '<h2>Compétences</h2>
                                         <ul id="userSkills" class="list-inline">';
                                 foreach ($skills as $skill)
-                                    echo '<li class="list-inline-item badge text-bg-dark me-2 mb-2">' . $skill['skill'] . '</li>';
+                                    echo '<li class="list-inline-item badge text-bg-dark me-2 mb-2">' . htmlspecialchars($skill['skill']) . '</li>';
                                 echo '</ul>';
                             }
                             ?>
@@ -128,7 +128,7 @@ $projectData = Projects::getData($userSelectID);
                             <p><i class="fas fa-phone me-2"></i> <span
                                         id="userPhone"><?php echo $cvData['phone_number'] ?></span></p>
                             <p><i class="fas fa-map-marker-alt me-2"></i> <span
-                                        id="userAddress"><?php echo $cvData['address'] ?></span></p>
+                                        id="userAddress"><?php echo htmlspecialchars($cvData['address']) ?></span></p>
                         </div>
 
                         <div class="cv-section">
@@ -147,7 +147,7 @@ $projectData = Projects::getData($userSelectID);
                                 echo '<h2>Langues</h2>
                                         <ul id="userLanguages" class="list-unstyled">';
                                 foreach ($languages as $language)
-                                    echo '<li>' . $language['lang'] . ' - ' . $langLvl[$language['level']] . '</li>';
+                                    echo '<li>' . htmlspecialchars($language['lang']) . ' - ' . $langLvl[$language['level']] . '</li>';
                                 echo '</ul>';
                             }
                             ?>
@@ -160,7 +160,7 @@ $projectData = Projects::getData($userSelectID);
                                 echo '<h2>Centres d\'intérêt</h2>
                                         <ul id="userInterests" class="list-inline">';
                                 foreach ($interests as $interest)
-                                    echo '<li class="list-inline-item badge text-bg-light me-2 mb-2">' . $interest . '</li>';
+                                    echo '<li class="list-inline-item badge text-bg-light me-2 mb-2">' . htmlspecialchars($interest) . '</li>';
                                 echo '</ul>';
                             }
                             ?>
@@ -170,7 +170,7 @@ $projectData = Projects::getData($userSelectID);
                     <div class="col-md-8 pt-4 ps-4">
                         <div class="cv-section">
                             <h2>À propos de moi</h2>
-                            <p id="userDescription"><?php echo nl2br($cvData['description']) ?></p>
+                            <p id="userDescription"><?php echo nl2br(htmlspecialchars($cvData['description'])) ?></p>
                         </div>
 
                         <div class="cv-section">
@@ -181,8 +181,8 @@ $projectData = Projects::getData($userSelectID);
                                         <div id="userExperiences">';
                                 foreach ($experiences as $experience) {
                                     echo '<div class="mb-3">
-                                                <h4>' . $experience['role'] . '</h4>
-                                                <h5>' . $experience['company'] . '</h5>
+                                                <h4>' . htmlspecialchars($experience['role']) . '</h4>
+                                                <h5>' . htmlspecialchars($experience['company']) . '</h5>
                                                 <p class="text-muted">' .
                                         date_format(date_create($experience['start_date']), "F Y") . ' - ' . ($experience['end_date'] ? date_format(date_create($experience['end_date']), "F Y") : 'Present') . '
                                                 </p>
@@ -202,8 +202,8 @@ $projectData = Projects::getData($userSelectID);
                                         <div id="userEducation">';
                                 foreach ($certificates as $certificate) {
                                     echo '<div class="mb-3">
-                                                <h4>' . $certificate['degree'] . '</h4>
-                                                <h5>' . $certificate['school'] . '</h5>
+                                                <h4>' . htmlspecialchars($certificate['degree']) . '</h4>
+                                                <h5>' . htmlspecialchars($certificate['school']) . '</h5>
                                                 <p class="text-muted">' . date_format(date_create($certificate['date']), "Y") . '</p>
                                             </div>';
                                 }

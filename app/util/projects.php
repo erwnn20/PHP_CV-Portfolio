@@ -63,12 +63,12 @@ class Projects
         self::displayImg($images, $index, $id);
         echo '        <div class="card-body d-flex flex-column">
                         <div class="d-flex flex-wrap align-items-center mb-2">
-                            <h5 class="card-title p-2 mb-0">' . $title . '</h5>
-                            <span class="badge rounded-pill text-bg-primary">' . $theme . '</span>' .
+                            <h5 class="card-title p-2 mb-0">' . htmlspecialchars($title) . '</h5>
+                            <span class="badge rounded-pill text-bg-primary">' . htmlspecialchars($theme) . '</span>' .
                     ($link ?
                             '<a href="' . $link . '" target="_blank" class="btn btn-sm btn-primary btn-custom ms-auto">Voir le projet</a>' : '') .
                         '</div>
-                        <p class="card-text mb-1">' . nl2br($description) . '</p>
+                        <p class="card-text mb-1">' . nl2br(htmlspecialchars($description)) . '</p>
                     </div>
                 </div>
             </div>';
@@ -82,10 +82,10 @@ class Projects
         self::displayImg($images, $index, $id);
         echo '      <div class="card-body d-flex flex-column">
                         <div class="d-flex flex-wrap align-items-center mb-2">
-                            <h5 class="card-title text-break p-2 ps-0 m-0">' . $title . '</h5>
-                            <span class="badge rounded-pill text-bg-primary ms-auto">' . $theme . '</span>
+                            <h5 class="card-title text-break p-2 ps-0 m-0">' . htmlspecialchars($title) . '</h5>
+                            <span class="badge rounded-pill text-bg-primary ms-auto">' . htmlspecialchars($theme) . '</span>
                         </div>
-                        <p class="card-text">' . nl2br($description) . '</p>
+                        <p class="card-text">' . nl2br(htmlspecialchars($description)) . '</p>
                         <div class="d-flex mt-auto">' .
                     ($link ?
                             '<a href="' . $link . '" class="btn btn-sm btn-outline-primary btn-custom me-auto" target="_blank">
@@ -108,10 +108,10 @@ class Projects
         echo '<div class="project-item row">
                 <div class="col-md-8 mb-2">
                     <div class="d-flex flex-wrap align-items-center mb-2">
-                        <h4 class="card-title text-break py-2 pe-2 m-0">'.$title.'</h4>
-                        <span class="badge rounded-pill text-bg-primary">'.$theme.'</span>
+                        <h4 class="card-title text-break py-2 pe-2 m-0">'.htmlspecialchars($title).'</h4>
+                        <span class="badge rounded-pill text-bg-primary">'.htmlspecialchars($theme).'</span>
                     </div>
-                    <p class="mb-3">'.nl2br($description).'</p>'.
+                    <p class="mb-3">'.nl2br(htmlspecialchars($description)).'</p>'.
                 ($link ?
                     '<a href="#" class="btn btn-sm btn-primary btn-custom mt-auto" target="_blank">
                         Voir le projet

@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //
 
-$projects_data = Projects::getData($_SESSION['user']['id'] ?? 0);
+$projectsData = Projects::getData($_SESSION['user']['id'] ?? 0);
 $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
 ?>
 
@@ -157,8 +157,8 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
 
             <div id="projectsList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                 <?php
-                if ($projects_data) {
-                    foreach ($projects_data as $project_i => $project)
+                if ($projectsData) {
+                    foreach ($projectsData as $project_i => $project)
                         Projects::displayCard_projectsEdit(
                             $project['id'],
                             $project['title'],
@@ -269,16 +269,33 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
         });
     </script>
     <?php
-    if (isset($_SESSION['editProjectId'])) {
-        $project_data = Projects::getData(projectID: $_SESSION['editProjectId']);
-        echo '<script>
-                document.getElementById("projectTitle").value = "' . $project_data['title'] . '";
-                document.getElementById("projectDescription").value = "' . str_replace("\r\n", "\\r\\n", $project_data['description']) . '";
-                document.getElementById("projectTheme").value = "' . $project_data['theme'] . '";
-                document.getElementById("projectLink").value = "' . $project_data['link'] . '";
+    function format(string $text) : string
+    {
+        return htmlspecialchars(str_replace(
+            array(
+                "\\",
+                "\"",
+                "\r\n"
+            ),
+            array(
+                "\\\\",
+                "\\\"",
+                "\\r\\n"
+            ),
+            $text
+        ));
+    }
 
-                document.getElementById("projectIdDisplay").innerText = "' . $project_data['id'] . '";
-                document.querySelector(\'button[name="projectId"]\').value = "' . $project_data['id'] . '";
+    if (isset($_SESSION['editProjectId'])) {
+        $projectData = Projects::getData(projectID: $_SESSION['editProjectId']);
+        echo '<script>
+                document.getElementById("projectTitle").value = "' . format($projectData['title']) . '";
+                document.getElementById("projectDescription").value = "' . format($projectData['description']) . '";
+                document.getElementById("projectTheme").value = "' . format($projectData['theme']) . '";
+                document.getElementById("projectLink").value = "' . $projectData['link'] . '";
+
+                document.getElementById("projectIdDisplay").innerText = "' . $projectData['id'] . '";
+                document.querySelector(\'button[name="projectId"]\').value = "' . $projectData['id'] . '";
                 
                 document.getElementById("projectIdDisplayContainer").classList.remove("d-none");
                 document.getElementById("imgInputWarning").classList.remove("d-none");

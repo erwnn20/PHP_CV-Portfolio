@@ -51,8 +51,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //
 
-$cv_data = CV::getData($_SESSION['user']['id']);
-$projects_data = Projects::getData($_SESSION['user']['id']);
+$cvData = CV::getData($_SESSION['user']['id']);
+$projectsData = Projects::getData($_SESSION['user']['id']);
 ?>
 
 <!DOCTYPE html>
@@ -124,7 +124,9 @@ $projects_data = Projects::getData($_SESSION['user']['id']);
                                     </form>'
                             ?>
                         </div>
-                        <h2 class="card-title" id="userFullName"><?php echo $_SESSION['user']['data']['first_name'] . ' ' . $_SESSION['user']['data']['last_name'] ?></h2>
+                        <h2 class="card-title" id="userFullName">
+                            <?php echo htmlspecialchars($_SESSION['user']['data']['first_name']) . ' ' . htmlspecialchars($_SESSION['user']['data']['last_name']) ?>
+                        </h2>
                         <p class="card-text" id="userEmail"><?php echo $_SESSION['user']['data']['email'] ?></p>
                         <?php if ($_SESSION['user']['data']['admin']) echo '<a href="admin.php" class="btn btn-sm btn-dark w-100">Admin Panel</a>' ?>
                     </div>
@@ -135,11 +137,13 @@ $projects_data = Projects::getData($_SESSION['user']['id']);
                         <h4 class="card-title mb-4">Modifier mes informations</h4>
                         <form method="post" id="profileForm" enctype="multipart/form-data">
                             <div class="form-floating mb-2">
-                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder value="<?php echo $_SESSION['user']['data']['first_name'] ?>" required>
+                                <input type="text" class="form-control" id="firstName" name="firstName" placeholder
+                                       value="<?php echo htmlspecialchars($_SESSION['user']['data']['first_name']) ?>" required>
                                 <label for="firstName" class="form-label">Prénom</label>
                             </div>
                             <div class="form-floating mb-2">
-                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder value="<?php echo $_SESSION['user']['data']['last_name']?>" required>
+                                <input type="text" class="form-control" id="lastName" name="lastName" placeholder
+                                       value="<?php echo htmlspecialchars($_SESSION['user']['data']['last_name'])?>" required>
                                 <label for="lastName" class="form-label">Nom</label>
                             </div>
                             <div class="form-floating mb-4">
@@ -200,8 +204,8 @@ $projects_data = Projects::getData($_SESSION['user']['id']);
                         </div>
                         <div id="projectsList">
                             <?php
-                            if (!empty($projects_data)) {
-                                foreach ($projects_data as $project_i => $project)
+                            if (!empty($projectsData)) {
+                                foreach ($projectsData as $project_i => $project)
                                     Projects::displayCard_profile(
                                         $project['id'],
                                         $project['title'],
@@ -232,8 +236,8 @@ $projects_data = Projects::getData($_SESSION['user']['id']);
                         </div>
                         <div id="experiencesList">
                             <?php
-                            if (isset($cv_data['experiences'])) {
-                                foreach (json_decode($cv_data['experiences'], true) as $experience_i => $experience)
+                            if (isset($cvData['experiences'])) {
+                                foreach (json_decode($cvData['experiences'], true) as $experience_i => $experience)
                                     CV::displayExperienceCard_profile(
                                         $experience['role'],
                                         $experience['company'],

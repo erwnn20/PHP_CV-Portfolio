@@ -22,7 +22,7 @@ class CV
     public static function displaySkill_home($skill, $year_exp): void
     {
         echo '<li class="list-group-item d-flex justify-content-between align-items-center">
-                '.$skill.'
+                '.htmlspecialchars($skill).'
                 <span class="badge rounded-pill bg-custom">'.$year_exp.' an'.($year_exp > 1 ? 's': '').'</span>
             </li>';
     }
@@ -34,8 +34,8 @@ class CV
                 '<div class="timeline-date">'.
                     date_format(date_create($start_date), "F Y") . ' - ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
                 '</div>' : '').'
-                <h5 class="timeline-title">'.$role.'</h5>
-                <p class="timeline-subtitle">'.$company.'</p>
+                <h5 class="timeline-title">'.htmlspecialchars($role).'</h5>
+                <p class="timeline-subtitle">'.htmlspecialchars($company).'</p>
             </div>';
     }
 
@@ -44,8 +44,8 @@ class CV
         echo '<div class="timeline-item">'.
             ($year ?
                 '<div class="timeline-date">' . date_format(date_create($year), "Y") . '</div>' : '').'
-                <h5 class="timeline-title">' . $certificate . '</h5>
-                <p class="timeline-subtitle">' . $school . '</p>
+                <h5 class="timeline-title">' . htmlspecialchars($certificate) . '</h5>
+                <p class="timeline-subtitle">' . htmlspecialchars($school) . '</p>
             </div>';
     }
 
@@ -54,7 +54,7 @@ class CV
     {
         echo '<li class="list-group-item d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <span class="fw-bold">'.$skill.'</span>
+                    <span class="fw-bold">'.htmlspecialchars($skill).'</span>
                     <span class="badge rounded-pill bg-custom ms-2">'.$year_exp.' an'.($year_exp > 1 ? 's': '').'</span>
                 </div>
                 <form method="post" class="d-flex align-items-center">
@@ -66,7 +66,7 @@ class CV
     public static function displayLang_cvEdit($lang, $lvl, array $lvlArray, int $index): void
     {
         echo '<li class="list-group-item d-flex justify-content-between align-items-center">
-                '.$lang.' - '.$lvlArray[$lvl].'
+                '.htmlspecialchars($lang).' - '.$lvlArray[$lvl].'
                 <form method="post" class="d-flex align-items-center">
                     <button type="submit" name="delLangIndex" value="'.$index.'"  class="btn btn-close"></button>
                 </form>
@@ -76,7 +76,7 @@ class CV
     public static function displayInterest_cvEdit($interest, int $index): void
     {
         echo '<li class="list-group-item d-flex justify-content-between align-items-center">
-                '.$interest.'
+                '.htmlspecialchars($interest).'
                 <form method="post" class="d-flex align-items-center">
                     <button type="submit" name="delInterestIndex" value="'.$index.'"  class="btn btn-close"></button>
                 </form>
@@ -88,8 +88,8 @@ class CV
         echo '<div class="col">
                 <div class="card bg-dark shadow">
                     <div class="card-body">
-                        <h5 class="card-title mb-3">' . $role . '</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">' . $company . '</h6>
+                        <h5 class="card-title mb-3">' . htmlspecialchars($role) . '</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">' . htmlspecialchars($company) . '</h6>
                         <div class="d-flex">' .
                     ($start_date ?
                             '<p class="mb-0">
@@ -112,8 +112,8 @@ class CV
         echo '<div class="col">
                 <div class="card bg-dark shadow">
                     <div class="card-body">
-                        <h5 class="card-title text-break">' . $certificate . '</h5>
-                        <h6 class="card-subtitle text-muted">' . $school . '</h6>
+                        <h5 class="card-title text-break">' . htmlspecialchars($certificate) . '</h5>
+                        <h6 class="card-subtitle text-muted">' . htmlspecialchars($school) . '</h6>
                         <div class="d-flex">' .
                     ($year ?
                             '<p class="mb-0">
@@ -135,8 +135,8 @@ class CV
     public static function displayExperienceCard_profile($role, $company, $start_date, $end_date): void
     {
         echo '<div class="experience-item">
-                <h4 class="mb-1">'.$role.'</h4>
-                <p class="experience-company fw-medium">'.$company.'</p>'.
+                <h4 class="mb-1">'.htmlspecialchars($role).'</h4>
+                <p class="experience-company fw-medium">'.htmlspecialchars($company).'</p>'.
             ($start_date ?
                 '<p>
                     <small>' . date_format(date_create($start_date), "F Y") . ' - ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .'</small>

@@ -122,7 +122,7 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
         </header>
 
         <section id="cv" class="py-5">
-            <?php $cv_data = CV::getData($_SESSION['user']['id'] ?? 0) ?>
+            <?php $cvData = CV::getData($_SESSION['user']['id'] ?? 0) ?>
             <div class="container">
                 <h2 class="text-center mb-4">Mon CV</h2>
                 <div class="row g-4">
@@ -132,7 +132,7 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                                 <h3 class="card-title text-center mb-4">Compétences</h3>
                                 <ul class="list-group list-group-flush">
                                     <?php
-                                    $skills = json_decode($cv_data['skills'] ?? '[]', true);
+                                    $skills = json_decode($cvData['skills'] ?? '[]', true);
                                     if ($skills) {
                                         foreach ($skills as $skill_i => $skill)
                                             if ($skill_i < 7)
@@ -149,7 +149,7 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                                 <h3 class="card-title text-center mb-4">Expériences</h3>
                                 <div class="timeline">
                                     <?php
-                                    $experiences = json_decode($cv_data['experiences'] ?? '[]', true);
+                                    $experiences = json_decode($cvData['experiences'] ?? '[]', true);
                                     if ($experiences) {
                                         foreach ($experiences as $experience_i => $experience)
                                             if ($experience_i < 5)
@@ -176,7 +176,7 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                                 <h3 class="card-title text-center mb-4">Diplômes</h3>
                                 <div class="timeline">
                                     <?php
-                                    $certificates = json_decode($cv_data['certificates'] ?? '[]', true);
+                                    $certificates = json_decode($cvData['certificates'] ?? '[]', true);
                                     if ($certificates) {
                                         foreach ($certificates as $certificate_i => $certificate)
                                             if ($certificate_i < 5)
@@ -204,13 +204,13 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
         </section>
 
         <section id="projects" class="py-5">
-            <?php  $project_data = Projects::getData(userID: $_SESSION['user']['id'] ?? 0) ?>
+            <?php  $projectData = Projects::getData(userID: $_SESSION['user']['id'] ?? 0) ?>
             <div class="container">
                 <h2 class="text-center mb-4">Mes Projets</h2>
                 <div class="row" style="justify-content: center;">
                     <?php
-                    if ($project_data) {
-                        foreach ($project_data as $project_i => $project)
+                    if ($projectData) {
+                        foreach ($projectData as $project_i => $project)
                             if ($project_i < 3)
                                 Projects::displayCard_home(
                                     $project['id'],
@@ -244,11 +244,14 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                     <div class="col-md-6">
                         <form method="POST">
                             <div class="form-floating mb-3">
-                                <input type="text" class="form-control" id="name" placeholder="John Doe" value="<?php if (isset($_SESSION['user']['data']['first_name'], $_SESSION['user']['data']['last_name'])) echo $_SESSION['user']['data']['first_name'] . ' ' . $_SESSION['user']['data']['last_name'] ?>" required>
+                                <input type="text" class="form-control" id="name" placeholder="John Doe"
+                                       value="<?php if (isset($_SESSION['user']['data']['first_name'], $_SESSION['user']['data']['last_name']))
+                                           echo htmlspecialchars($_SESSION['user']['data']['first_name']) . ' ' . htmlspecialchars($_SESSION['user']['data']['last_name']) ?>" required>
                                 <label for="name" class="form-label">Nom</label>
                             </div>
                             <div class="form-floating mb-3">
-                                <input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com" value="<?php echo $_SESSION['user']['data']['email'] ?? '' ?>" required>
+                                <input type="email" class="form-control" id="email" placeholder="john_doe@exemple.com"
+                                       value="<?php echo htmlspecialchars($_SESSION['user']['data']['email'] ?? '') ?>" required>
                                 <label for="email" class="form-label">Email</label>
                             </div>
                             <div class="form-floating mb-3">
@@ -412,6 +415,23 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
         });
     </script>
     <?php
+    function format(string $text) : string
+    {
+        return htmlspecialchars(str_replace(
+            array(
+                "\\",
+                "\"",
+                "\r\n"
+            ),
+            array(
+                "\\\\",
+                "\\\"",
+                "\\r\\n"
+            ),
+            $text
+        ));
+    }
+
     // Display login modal on connection tab on email or password error
     if (isset($_SESSION['loginError'])) {
         echo '<script>
@@ -429,10 +449,10 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                 (new bootstrap.Modal(document.getElementById("loginModal"))).show();
                 (new bootstrap.Tab(document.getElementById("register-tab"))).show();
                 
-                document.getElementById("registerLastName").value = "' . ($registerValue['last_name'] ?? '') . '";' . '
-                document.getElementById("registerFirstName").value = "' . ($registerValue['first_name'] ?? '') . '";' . '
+                document.getElementById("registerLastName").value = "' . format($registerValue['last_name'] ?? '') . '";' . '
+                document.getElementById("registerFirstName").value = "' . format($registerValue['first_name'] ?? '') . '";' . '
                 document.getElementById("registerEmail").value = "' . ($registerValue['email'] ?? '') . '";' . '
-                document.getElementById("registerPassword").value = "' . ($registerValue['password'] ?? '') . '";' .
+                document.getElementById("registerPassword").value = "' . format($registerValue['password'] ?? '') . '";' .
             (isset($_SESSION['registerError']['email']) ?
                 'document.getElementById("registerEmailError").classList.remove("d-none");' : '') .
             '</script>';

@@ -161,7 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 //
 
-$cv_data = CV::getData($_SESSION['user']['id'] ?? 0);
+$cvData = CV::getData($_SESSION['user']['id'] ?? 0);
 $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
 ?>
 
@@ -231,39 +231,39 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                             <h2 class="card-title">Informations générales</h2>
                             <form method="post" id="cvInfoForm" class="flex-grow-1 d-flex flex-column mb-0" enctype="multipart/form-data">
                                 <div class="mb-3 text-center">
-                                    <img src="<?php echo 'img/' . (isset($cv_data['image']) ? 'cv/'.$cv_data['id'].'.png' : 'profile/default.png') ?>"
+                                    <img src="<?php echo 'img/' . (isset($cvData['image']) ? 'cv/'.$cvData['id'].'.png' : 'profile/default.png') ?>"
                                          alt="Photo de profil" class="profile-image-preview mb-2" id="profileImagePreview">
                                     <div class="input-group mb-3">
                                         <input type="file" class="form-control" id="profileImage" name="cvProfileImage" accept="image/*" <?php echo $inputDisable?>>
-                                        <button type="submit" name="delCvProfileImage" value="<?php echo $cv_data['id'] ?? '' ?>"
+                                        <button type="submit" name="delCvProfileImage" value="<?php echo $cvData['id'] ?? '' ?>"
                                                 class="btn btn-sm btn-outline-danger" <?php echo $inputDisable?>>Supprimer</button>
                                     </div>
                                 </div>
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control form-control-lg" id="cvTitle" name="cvTitle"
-                                           value="<?php echo $cv_data['title'] ?? '' ?>" placeholder <?php echo $inputDisable?>>
+                                           value="<?php echo htmlspecialchars($cvData['title'] ?? '') ?>" placeholder <?php echo $inputDisable?>>
                                     <label for="cvTitle" class="form-label">Titre du CV</label>
                                 </div>
                                 <div class="form-floating flex-grow-1 d-flex flex-column mb-3">
                                     <textarea class="form-control form-control-sm flex-grow-1" id="cvDescription"
                                               name="cvDescription" oninput="textAreaAdjust(this)" <?php echo $inputDisable?>
-                                    ><?php echo ($cv_data['description'] ?? '') ?></textarea>
+                                    ><?php echo htmlspecialchars($cvData['description'] ?? '') ?></textarea>
                                     <label for="cvDescription" class="form-label">Description</label>
                                 </div>
                                 <div class="input-group mb-3">
                                     <label for="email" class="input-group-text">Adresse e-mail</label>
                                     <input type="email" class="form-control" id="email" name="cvEmail" placeholder="exemple@mail.com"
-                                           value ="<?php echo $cv_data['email'] ?? $_SESSION['user']['data']['email'] ?? '' ?>" <?php echo $inputDisable?>>
+                                           value ="<?php echo $cvData['email'] ?? $_SESSION['user']['data']['email'] ?? '' ?>" <?php echo $inputDisable?>>
                                 </div>
                                 <div class="input-group mb-3">
                                     <label for="phone" class="input-group-text">Numéro de téléphone</label>
-                                    <input type="tel" class="form-control" id="phone" name="cvPhone" placeholder="+33 600000000"
-                                           value ="<?php echo $cv_data['phone_number'] ?? '' ?>" <?php echo $inputDisable?>>
+                                    <input type="tel" class="form-control" id="phone" name="cvPhone" placeholder="+33 6 00 00 00 00"
+                                           value ="<?php echo $cvData['phone_number'] ?? '' ?>" <?php echo $inputDisable?>>
                                 </div>
                                 <div class="input-group mb-3">
                                     <label for="address" class="input-group-text">Adresse</label>
                                     <input type="text" class="form-control" id="address" name="cvAddress" placeholder="103 Av. de Castres, 31500 Toulouse"
-                                           value="<?php echo $cv_data['address'] ?? '' ?>" <?php echo $inputDisable?>>
+                                           value="<?php echo htmlspecialchars($cvData['address'] ?? '') ?>" <?php echo $inputDisable?>>
                                 </div>
                                 <div class="d-flex">
                                     <button type="submit" class="btn btn-primary btn-custom ms-auto" <?php echo $inputDisable?>>Enregistrer</button>
@@ -279,7 +279,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                             <h2 class="card-title">Compétences</h2>
                             <ul id="skillsList" class="list-group mb-3">
                                 <?php
-                                $skills = json_decode($cv_data['skills'] ?? '[]', true);
+                                $skills = json_decode($cvData['skills'] ?? '[]', true);
                                 if ($skills) {
                                     foreach ($skills as $skill_i => $skill)
                                         CV::displaySkill_cvEdit(
@@ -316,7 +316,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                                     'C1' => 'Courant (C1)',
                                     'C2' => 'Maîtrise (C2)'
                                 );
-                                $languages = json_decode($cv_data['languages'] ?? '[]', true);
+                                $languages = json_decode($cvData['languages'] ?? '[]', true);
                                 if ($languages) {
                                     foreach ($languages as $lang_i => $lang)
                                         CV::displayLang_cvEdit(
@@ -349,7 +349,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                             <h2 class="card-title">Centres d'intérêt</h2>
                             <ul id="interestsList" class="list-group mb-3">
                                 <?php
-                                $interests = json_decode($cv_data['interests'] ?? '[]', true);
+                                $interests = json_decode($cvData['interests'] ?? '[]', true);
                                 if ($interests) {
                                     foreach ($interests as $interest_i => $interest)
                                         CV::displayInterest_cvEdit($interest, $interest_i);
@@ -372,7 +372,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                     <h2 class="card-title mb-4">Expériences</h2>
                     <div id="experiencesList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
                         <?php
-                        $experiences = json_decode($cv_data['experiences'] ?? '[]', true);
+                        $experiences = json_decode($cvData['experiences'] ?? '[]', true);
                         if ($experiences) {
                             foreach ($experiences as $experience_i => $experience)
                                 CV::displayExperienceCard_cvEdit(
@@ -404,7 +404,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                     <h2 class="card-title mb-4">Diplômes et Certifications</h2>
                     <div id="educationList" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-3">
                         <?php
-                        $certificates = json_decode($cv_data['certificates'] ?? '[]', true);
+                        $certificates = json_decode($cvData['certificates'] ?? '[]', true);
                         if ($certificates) {
                             foreach ($certificates as $certificate_i => $certificate)
                                 CV::displayCertificatesCard_cvEdit(
