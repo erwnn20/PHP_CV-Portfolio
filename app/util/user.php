@@ -15,6 +15,14 @@ class User
         return array();
     }
 
+    public static function getList(): array|bool
+    {
+        global $pdo;
+        $stmt = $pdo->prepare('SELECT id, first_name, last_name FROM user');
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     public static function saveImg($targetDirectory, $formName, $id): bool
     {
         if (!is_dir($targetDirectory)) {
