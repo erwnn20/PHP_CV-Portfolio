@@ -82,22 +82,28 @@ $projectData = Projects::getData($userSelectID);
         <div class="container my-5">
             <h1 class="text-center mb-4">CV Professionnel</h1>
 
-            <form method="post" class="mb-4">
-                <label for="userSelect" class="form-label">Sélectionner un utilisateur :</label>
-                <div class="input-group">
-                    <select class="form-select" id="userSelect" name="userSelect" required>
-                        <?php
-                        if ($userSelectID)
-                            echo '<option value="' . $userSelectID . '">' . htmlspecialchars($userData['first_name']) . ' ' . htmlspecialchars($userData['last_name']) . '</option>';
+            <form method="post" class="d-flex w-50 mx-auto mb-4">
+                <div class="flex-grow-1">
+                    <label for="userSelect" class="form-label">Sélectionner un utilisateur :</label>
+                    <div class="input-group">
+                        <select class="form-select" id="userSelect" name="userSelect" required>
+                            <?php
+                            if ($userSelectID)
+                                echo '<option value="' . $userSelectID . '">' . htmlspecialchars($userData['first_name']) . ' ' . htmlspecialchars($userData['last_name']) . '</option>';
 
-                        $users = User::getList();
-                        if ($users)
-                            foreach ($users as $user) if ($user['id'] != $userSelectID)
-                                echo '<option value="' . $user['id'] . '">' . htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']) . '</option>';
-                        ?>
-                    </select>
-                    <button type="submit" class="btn btn-primary btn-custom">Mettre à jour</button>
+                            $users = User::getList();
+                            if ($users)
+                                foreach ($users as $user) if ($user['id'] != $userSelectID)
+                                    echo '<option value="' . $user['id'] . '">' . htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['last_name']) . '</option>';
+                            ?>
+                        </select>
+                        <button type="submit" class="btn btn-primary btn-custom">Mettre à jour</button>
+                    </div>
                 </div>
+                <?php
+                if (isset($_SESSION['user']['id']) && $userSelectID === $_SESSION['user']['id'])
+                    echo '<button type="button" class="btn btn-outline-success ms-2 mt-auto" disabled><i class="fab bi-download"></i></button>';
+                ?>
             </form>
 
             <div id="cvContent">
