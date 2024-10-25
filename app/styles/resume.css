@@ -12,7 +12,7 @@
     width: 200px;
     height: 200px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 5%;
 }
 
 .personal-info {
@@ -31,4 +31,13 @@
 .project-image {
     height: 250px;
     object-fit: cover;
+}
+
+.experience:not(:last-child) {
+    border-bottom: 1px dashed var(--grey-0);
+}
+
+.experience p,
+.experience li {
+    font-size: .9rem;
 }

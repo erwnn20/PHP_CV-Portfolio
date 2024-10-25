@@ -109,6 +109,16 @@ $projectData = Projects::getData($userSelectID);
                         <p id="userTitle"><?php echo htmlspecialchars($cvData['title']) ?></p>
 
                         <div class="cv-section">
+                            <h2>Coordonnées</h2>
+                            <p><i class="fas fa-envelope me-2"></i> <span
+                                        id="userEmail"><?php echo $cvData['email'] ?></span></p>
+                            <p><i class="fas fa-phone me-2"></i> <span
+                                        id="userPhone"><?php echo $cvData['phone_number'] ?></span></p>
+                            <p><i class="fas fa-map-marker-alt me-2"></i> <span
+                                        id="userAddress"><?php echo htmlspecialchars($cvData['address']) ?></span></p>
+                        </div>
+
+                        <div class="cv-section">
                             <?php
                             $skills = json_decode($cvData['skills'] ?? '[]', true);
                             if ($skills) {
@@ -119,16 +129,6 @@ $projectData = Projects::getData($userSelectID);
                                 echo '</ul>';
                             }
                             ?>
-                        </div>
-
-                        <div class="cv-section">
-                            <h2>Coordonnées</h2>
-                            <p><i class="fas fa-envelope me-2"></i> <span
-                                        id="userEmail"><?php echo $cvData['email'] ?></span></p>
-                            <p><i class="fas fa-phone me-2"></i> <span
-                                        id="userPhone"><?php echo $cvData['phone_number'] ?></span></p>
-                            <p><i class="fas fa-map-marker-alt me-2"></i> <span
-                                        id="userAddress"><?php echo htmlspecialchars($cvData['address']) ?></span></p>
                         </div>
 
                         <div class="cv-section">
@@ -180,10 +180,10 @@ $projectData = Projects::getData($userSelectID);
                                 echo '<h2>Expériences professionnelles</h2>
                                         <div id="userExperiences">';
                                 foreach ($experiences as $experience) {
-                                    echo '<div class="mb-3">
+                                    echo '<div class="experience mb-3">
                                                 <h4>' . htmlspecialchars($experience['role']) . '</h4>
-                                                <h5>' . htmlspecialchars($experience['company']) . '</h5>
-                                                <p class="text-muted">' .
+                                                <h5 class="fs-6 fst-italic">' . htmlspecialchars($experience['company']) . '</h5>
+                                                <p class="text-muted mb-1">' .
                                         date_format(date_create($experience['start_date']), "F Y") . ' - ' . ($experience['end_date'] ? date_format(date_create($experience['end_date']), "F Y") : 'Present') . '
                                                 </p>
                                                 <ul>';

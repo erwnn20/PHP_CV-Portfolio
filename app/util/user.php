@@ -29,8 +29,8 @@ class User
             mkdir($targetDirectory, 0755, true);
         }
 
-        $tmpName = $_FILES[$formName]['tmp_name'];
-        $imageError = $_FILES[$formName]['error'];
+        $tmpName = @$_FILES[$formName]['tmp_name'];
+        $imageError = @$_FILES[$formName]['error'];
 
         if ($imageError === UPLOAD_ERR_OK) {
             $uniqueName =  $id . '.png';
