@@ -1,5 +1,10 @@
-.list-group-item:not(:hover) .btn-close {
+.list-group-item:not(:hover) .btn-close,
+.task:not(:hover) .btn-close {
     display: none;
+}
+
+.task:not(:last-child) {
+    margin-bottom: 0.5rem;
 }
 
 .profile-image-preview {
@@ -14,4 +19,13 @@
 
 #languageName {
     width: 7rem;
+}
+
+.btn-close.btn-plus {
+    --bs-btn-close-bg: url(https://www.svgrepo.com/show/2087/plus.svg);
+}
+
+.tasks li {
+    font-size: 0.9rem;
+    color: var(--grey-0);
 }

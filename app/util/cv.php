@@ -83,25 +83,30 @@ class CV
             </li>';
     }
 
-    public static function displayExperienceCard_cvEdit($role, $company, $start_date, $end_date, int $index, bool $delBtn): void
+    public static function displayExperienceCard_cvEdit($role, $company, $tasks, $start_date, $end_date, int $index, bool $delBtn): void
     {
         echo '<div class="col">
                 <div class="card bg-dark shadow">
-                    <div class="card-body">
-                        <h5 class="card-title mb-3">' . htmlspecialchars($role) . '</h5>
+                    <div class="card-body">' .
+            ($delBtn ?
+                '     <div class="d-flex mb-2">
+                          <h5 class="card-title text-break mb-0">' . htmlspecialchars($role) . '</h5>
+                          <form method="post" class="ms-auto">
+                              <button type="submit" name="delExpIndex" value="' . $index . '" class="btn btn-sm btn-outline-danger ms-1">Supprimer</button>
+                          </form>
+                      </div>' : '') . '
                         <h6 class="card-subtitle mb-2 text-muted">' . htmlspecialchars($company) . '</h6>
-                        <div class="d-flex">' .
-                    ($start_date ?
-                            '<p class="mb-0">
-                                <small class="text-muted">
-                                    Du ' . date_format(date_create($start_date), "F Y") . ' au ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
-                                '</small>
-                            </p>' : '') .
-                    ($delBtn ?
-                            '<form method="post" class="ms-auto">
-                                <button type="submit" name="delExpIndex" value="' . $index . '" class="btn btn-outline-danger btn-sm">Supprimer</button>
-                            </form>' : '') .
-                        '</div>
+                        ' .
+            ($start_date ?
+                '       <p class="mb-0">
+                            <small class="text-muted">
+                                Du ' . date_format(date_create($start_date), "F Y") . ' au ' . ($end_date ? date_format(date_create($end_date), "F Y") : 'Present') .
+                '           </small>
+                        </p>' : '') .
+            '           <ul class="tasks mb-0">';
+        if ($tasks) foreach ($tasks as $task)
+            echo '          <li>' . htmlspecialchars($task) . '</li>';
+        echo '          </ul>
                     </div>
                 </div>
             </div>';

@@ -7,11 +7,6 @@
     object-fit: cover;
 }
 
-.carousel-inner {
-    border-top-left-radius: var(--bs-card-border-radius);
-    border-top-right-radius: var(--bs-card-border-radius);
-}
-
 #projectDescription {
     min-height: 10rem;
 }

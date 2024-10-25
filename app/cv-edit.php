@@ -124,11 +124,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         deleteData('interests', $_POST['delInterestIndex']);
     }
 
-    // experience, degree
+    // experience, certificate
     if (isset($_POST['experienceTitle'])) {
         appendData('experiences', array(
             'role' => $_POST['experienceTitle'],
             'company' => $_POST['experienceCompany'],
+            'tasks' => $_POST['task'],
             'start_date' => $_POST['experienceStartDate'],
             'end_date' => $_POST['experienceEndDate'] ?? ''
         ));
@@ -242,13 +243,13 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                                 <div class="form-floating mb-3">
                                     <input type="text" class="form-control form-control-lg" id="cvTitle" name="cvTitle"
                                            value="<?php echo htmlspecialchars($cvData['title'] ?? '') ?>" placeholder <?php echo $inputDisable?>>
-                                    <label for="cvTitle" class="form-label">Titre du CV</label>
+                                    <label for="cvTitle" class="form-label">Poste visé</label>
                                 </div>
                                 <div class="form-floating flex-grow-1 d-flex flex-column mb-3">
                                     <textarea class="form-control form-control-sm flex-grow-1" id="cvDescription"
                                               name="cvDescription" oninput="textAreaAdjust(this)" <?php echo $inputDisable?>
                                     ><?php echo htmlspecialchars($cvData['description'] ?? '') ?></textarea>
-                                    <label for="cvDescription" class="form-label">Description</label>
+                                    <label for="cvDescription" class="form-label">À propos de vous</label>
                                 </div>
                                 <div class="input-group mb-3">
                                     <label for="email" class="input-group-text">Adresse e-mail</label>
@@ -378,6 +379,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                                 CV::displayExperienceCard_cvEdit(
                                     $experience['role'],
                                     $experience['company'],
+                                    $experience['tasks'] ?? array(),
                                     $experience['start_date'],
                                     $experience['end_date'],
                                     $experience_i,
@@ -386,6 +388,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                         } else CV::displayExperienceCard_cvEdit(
                             'Pas d\'expérience enregistrée',
                             isset($_SESSION['user']['id']) ? 'Ajoutez vos experiances professionnelles ici !' : 'Connectez vous pour afficher vos experiences professionnelles',
+                            array(),
                             0,
                             0,
                             -1,
@@ -449,9 +452,20 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                             </label>
                             <input type="text" class="form-control form-control-lg" id="experienceTitle" name="experienceTitle" required>
                         </div>
-                        <div class="form-floating mb-4">
+                        <div class="form-floating mb-3">
                             <input type="text" class="form-control form-control-sm" id="experienceCompany" name="experienceCompany" required>
                             <label for="experienceCompany" class="form-label">Entreprise</label>
+                        </div>
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center gap-1 mb-2">
+                                <p class="mb-0">Taches<small class="text-muted ms-2">laisser vide si encore en cours</small></p>
+                                <button type="button" class="btn btn-sm btn-close btn-plus" onclick="addTask()"></button>
+                            </div>
+                            <ul id="taskList" class="list-group mb-3">
+                                <li class="task d-flex justify-content-between align-items-center">
+                                    <input type="text" class="form-control form-control-sm" name="task[]" placeholder="Nouvelle tâche" aria-label="Nouvelle tâche" required>
+                                </li>
+                            </ul>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="month" class="form-control" id="experienceStartDate" name="experienceStartDate" oninput="setMinExpDate()" required>
@@ -525,6 +539,31 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
             }
         }
 
+        function addTask() {
+            const newTask = document.createElement("li");
+            newTask.className = "task d-flex justify-content-between align-items-center";
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.className = "form-control form-control-sm";
+            input.name = "task[]";
+            input.placeholder = "Nouvelle tâche";
+            input.ariaLabel = "Nouvelle tâche";
+            input.required = true;
+
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.className = "btn btn-close ms-2";
+            removeButton.onclick = function() {
+                newTask.remove();
+            };
+
+            newTask.appendChild(input);
+            newTask.appendChild(removeButton);
+
+            document.getElementById("taskList").appendChild(newTask);
+        }
+
         document.getElementById('profileImage').addEventListener('change', function(event) {
             const reader = new FileReader();
             reader.onload = function() {
@@ -532,7 +571,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                 output.src = reader.result;
             }
             reader.readAsDataURL(event.target.files[0]);
-        }
+        });
     </script>
 </body>
 

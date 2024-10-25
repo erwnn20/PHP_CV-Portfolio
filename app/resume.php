@@ -186,7 +186,10 @@ $projectData = Projects::getData($userSelectID);
                                                 <p class="text-muted">' .
                                         date_format(date_create($experience['start_date']), "F Y") . ' - ' . ($experience['end_date'] ? date_format(date_create($experience['end_date']), "F Y") : 'Present') . '
                                                 </p>
-                                                <ul></ul>
+                                                <ul>';
+                                    if (isset($experience['tasks'])) foreach ($experience['tasks'] as $task)
+                                        echo '    <li>' . htmlspecialchars($task) . '</li>';
+                                    echo '      </ul>
                                             </div>';
                                 }
                                 echo '</div>';

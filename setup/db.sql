@@ -35,7 +35,7 @@ CREATE TABLE cv
     skills       JSON COMMENT 'Structure: skill (string), year_exp (int)',
     languages    JSON COMMENT 'Structure: lang (string), level (string)',
     interests    JSON COMMENT 'Type: string[]',
-    experiences  JSON COMMENT 'Structure: role (string), company (string), start_date (string: year-month), end_date (string: year-month)',
+    experiences  JSON COMMENT 'Structure: role (string), company (string), tasks (string[]), start_date (string: year-month), end_date (string: year-month)',
     certificates JSON COMMENT 'Structure: degree (string), school (string), date (string: year)'
 );
 
