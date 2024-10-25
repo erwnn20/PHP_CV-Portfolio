@@ -7,13 +7,13 @@ class Element
     public static function headerUser($userData, $id, bool $home = false) : string
     {
         if (isset($userData['first_name'], $userData['last_name']))
-            return '<li class="nav-item d-flex">
-                        <div class="nav-link d-flex align-items-center">
-                            <a class="nav-link fw-bold p-0" href="profile.php">
-                                <img src="img/profile/'.($userData['profile_picture'] ? 'user/'.$id.'.png' : 'default.png').'" alt="Photo de profil" class="profile-picture me-1" id="profileImage">
-                                ' . htmlspecialchars($userData['first_name']) . ' ' . htmlspecialchars($userData['last_name']) . '
+            return '<li class="nav-item">
+                        <div class="nav-link d-flex">
+                            <a class="nav-link fw-bold d-flex align-items-center p-0" href="profile.php">
+                                <img src="img/profile/'.($userData['profile_picture'] ? 'user/'.$id.'.png' : 'default.png').'" alt="Photo de profil" class="profile-picture me-2" id="profileImage">
+                                <span>' . htmlspecialchars($userData['first_name']) . ' ' . htmlspecialchars($userData['last_name']) . '</span>
                             </a>
-                            <a href="logout.php" class="nav-link align-content-center p-0 ms-2"><i class="bi bi-power"></i></a>
+                            <a href="logout.php" class="nav-link p-0 ms-2"><i class="bi bi-power"></i></a>
                         </div>
                     </li>';
         if (!$home)
