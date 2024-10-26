@@ -88,15 +88,6 @@ $projectsData = Projects::getData(forBan: true);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/admin.css">
-
-    <style>
-        .form-floating>.form-control-plaintext~label::after,
-        .form-floating>.form-control:focus~label::after,
-        .form-floating>.form-control:not(:placeholder-shown)~label::after,
-        .form-floating>.form-select~label::after {
-            background-color: transparent;
-        }
-    </style>
 </head>
 
 <body data-bs-theme="dark">
@@ -150,21 +141,21 @@ $projectsData = Projects::getData(forBan: true);
                             foreach ($usersData as $user) {
                                 echo '<tr>
                                         <td><img src="img/profile/'.($user['user_img'] ? 'user/'.$user['user_id'].'.png' : 'default.png').'" alt="" class="profile-picture"></td>
-                                        <td>'.$user['user_first_name'].'</td>
-                                        <td>'.$user['user_last_name'].'</td>
-                                        <td>'.$user['user_email'].'</td>
+                                        <td>'.htmlspecialchars($user['user_first_name']).'</td>
+                                        <td>'.htmlspecialchars($user['user_last_name']).'</td>
+                                        <td>'.htmlspecialchars($user['user_email']).'</td>
                                         <td>'.
                                     ($user['ban_cause'] ?
                                             '<form method="post">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" name="userUnban" value="'.$user['user_id'].'">
+                                                <button type="submit" class="btn btn-sm btn-outline-warning" name="userUnban" value="'.$user['user_id'].'">
                                                     Dé bannir
                                                 </button>
                                                 <span class="btn btn-sm btn-link"
                                                       data-bs-toggle="tooltip" data-bs-html="true" data-bs-custom-class="custom-tooltip"
                                                       title="
-                                                      <i class=\'admin\'>par '.$user['admin_first_name'].' '.$user['admin_last_name'].'</i><br>
-                                                      <span>Banni pour : <strong>'.$user['ban_cause'].'</strong></span><br>
-                                                      <i class=\'message\'>'.$user['ban_message'].'</i>">
+                                                      <i class=\'admin\'>par '.htmlspecialchars($user['admin_first_name']).' '.htmlspecialchars($user['admin_last_name']).'</i><br>
+                                                      <span>Banni pour : <strong>'.htmlspecialchars($user['ban_cause']).'</strong></span><br>
+                                                      <i class=\'message\'>'.htmlspecialchars($user['ban_message']).'</i>">
                                                       Voir
                                                 </span>
                                             </form>' :
@@ -208,29 +199,29 @@ $projectsData = Projects::getData(forBan: true);
                         if ($projectsData) {
                             foreach ($projectsData as $project) {
                                 echo '<tr>
-                                        <td>'.$project['project_title'].'</td>
-                                        <td>'.$project['creator_first_name'].' '.$project['creator_last_name'].'</td>
-                                        <td>'.$project['project_theme'].'</td>
+                                        <td>'.htmlspecialchars($project['project_title']).'</td>
+                                        <td>'.htmlspecialchars($project['creator_first_name']).' '.htmlspecialchars($project['creator_last_name']).'</td>
+                                        <td>'.htmlspecialchars($project['project_theme']).'</td>
                                         <td>'.($project['project_link'] ?
                                             '<a href="'.$project['project_link'].'" class="btn btn-sm btn-primary btn-custom">Voir projet</a>' : '').'
                                         </td>
                                         <td>'.
                                     ($project['ban_cause'] ?
                                             '<form method="post">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" name="projectUnban" value="'.$project['project_id'].'">
-                                                    Dé bannir
+                                                <button type="submit" class="btn btn-sm btn-outline-success" name="projectUnban" value="'.$project['project_id'].'">
+                                                    Afficher
                                                 </button>
                                                 <span class="btn btn-sm btn-link"
                                                       data-bs-toggle="tooltip" data-bs-html="true" data-bs-custom-class="custom-tooltip"
                                                       title="
-                                                      <i class=\'admin\'>par '.$project['admin_first_name'].' '.$project['admin_last_name'].'</i><br>
-                                                      <span>Banni pour : <strong>'.$project['ban_cause'].'</strong></span><br>
-                                                      <i class=\'message\'>'.$project['ban_message'].'</i>">
+                                                      <i class=\'admin\'>par '.htmlspecialchars($project['admin_first_name']).' '.htmlspecialchars($project['admin_last_name']).'</i><br>
+                                                      <span>Banni pour : <strong>'.htmlspecialchars($project['ban_cause']).'</strong></span><br>
+                                                      <i class=\'message\'>'.htmlspecialchars($project['ban_message']).'</i>">
                                                       Voir
                                                 </span>
                                             </form>' :
                                         '<button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                data-bs-target="#banModal" data-ban-type="project" data-ban-id="'.$project['project_id'].'">Bannir</button>'
+                                                data-bs-target="#banModal" data-ban-type="project" data-ban-id="'.$project['project_id'].'">Masquer</button>'
                                     ).
                                     '   </td>
                                     </tr>';
