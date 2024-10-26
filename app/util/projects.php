@@ -8,7 +8,7 @@ class Projects
     {
         global $pdo;
         if (isset($userID)) {
-            $stmt = $pdo->prepare('SELECT id, title, description, theme, link, images FROM project WHERE creator_id = :id');
+            $stmt = $pdo->prepare('SELECT id, title, description, theme, link, images, ban_id FROM project WHERE creator_id = :id');
             $stmt->execute(array(
                 'id' => $userID
             ));
@@ -96,12 +96,18 @@ class Projects
     }
 
     // on projects-edit.php
-    public static function displayCard_projectsEdit($id, $title, $description, $theme, $link, $images, int $index, bool $endBtn): void
+    public static function displayCard_projectsEdit($id, $title, $description, $theme, $link, $images, bool $ban, int $index, bool $endBtn): void
     {
         echo '<div class="col">
                 <div class="card project-card">';
         self::displayImg($images, $index, $id);
-        echo '      <div class="card-body d-flex flex-column">
+        echo '      <div class="card-body d-flex flex-column">'.
+            ($ban ?
+                        '<span id="loginEmailBan" class="text-danger fst-italic ms-1" style="font-size: .9rem;" role="alert">
+                            <i class="bi-exclamation-circle"></i>
+                            Ce projet a été masquer par un administateur, il n\'est donc visible que par vous.<br>
+                            Contactez-nous pour savoir pourquoi.
+                        </span>' : '').'
                         <div class="d-flex flex-wrap align-items-center mb-2">
                             <h5 class="card-title text-break p-2 ps-0 m-0">' . htmlspecialchars($title) . '</h5>
                             <span class="badge rounded-pill text-bg-primary ms-auto">' . htmlspecialchars($theme) . '</span>
@@ -124,14 +130,20 @@ class Projects
     }
 
     // on profile.php
-    public static function displayCard_profile($id, $title, $description, $theme, $link, array $images, int $index): void
+    public static function displayCard_profile($id, $title, $description, $theme, $link, array $images, bool $ban, int $index): void
     {
         echo '<div class="project-item row">
                 <div class="col-md-8 mb-2">
                     <div class="d-flex flex-wrap align-items-center mb-2">
                         <h4 class="card-title text-break py-2 pe-2 m-0">'.htmlspecialchars($title).'</h4>
                         <span class="badge rounded-pill text-bg-primary">'.htmlspecialchars($theme).'</span>
-                    </div>
+                    </div>'.
+            ($ban ?
+                    '<span id="loginEmailBan" class="text-danger fst-italic ms-1" style="font-size: .9rem;" role="alert">
+                        <i class="bi-exclamation-circle"></i>
+                        Ce projet a été masquer par un administateur, il n\'est donc visible que par vous.
+                        Contactez-nous pour savoir pourquoi.
+                    </span>' : '').'
                     <p class="mb-3">'.nl2br(htmlspecialchars($description)).'</p>'.
                 ($link ?
                     '<a href="#" class="btn btn-sm btn-primary btn-custom mt-auto" target="_blank">

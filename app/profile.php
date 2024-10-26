@@ -213,6 +213,7 @@ $projectsData = Projects::getData($_SESSION['user']['id']);
                                         $project['theme'],
                                         $project['link'],
                                         json_decode($project['images'] ?? '[]'),
+                                        (bool)$project['ban_id'],
                                         $project_i,
                                     );
                             } else Projects::displayCard_profile(
@@ -222,6 +223,7 @@ $projectsData = Projects::getData($_SESSION['user']['id']);
                                 '',
                                 '',
                                 array(),
+                                false,
                                 -1,
                             );
                             ?>

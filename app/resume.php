@@ -229,7 +229,7 @@ $projectData = Projects::getData($userSelectID);
                 <div id="userProjects" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
                     <?php
                     if ($projectData) {
-                        foreach ($projectData as $project_i => $project)
+                        foreach ($projectData as $project_i => $project) if (!$project['ban_id'])
                             Projects::displayCard_home(
                                 $project['id'],
                                 $project['title'],

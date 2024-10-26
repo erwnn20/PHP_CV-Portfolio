@@ -13,15 +13,20 @@ global $pdo;
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['loginEmail'])) {
         $loginEmail = $_POST['loginEmail'];
-        $stmt = $pdo->prepare('SELECT id, email, password  FROM user WHERE email = :email');
+        $stmt = $pdo->prepare('SELECT id, email, password, ban_id  FROM user WHERE email = :email');
         $stmt->execute(array('email' => $loginEmail));
         $data = $stmt->fetch();
 
         if (isset($data['password'])) {
-            if (password_verify($_POST['loginPassword'], $data['password'])) $_SESSION['user']['id'] = $data['id'];
-            else $_SESSION['loginError'] = array(
+            if (!$data['ban_id']) {
+                if (password_verify($_POST['loginPassword'], $data['password'])) $_SESSION['user']['id'] = $data['id'];
+                else $_SESSION['loginError'] = array(
+                    'loginEmail' => $loginEmail,
+                    'password' => true
+                );
+            } else $_SESSION['loginError'] = array(
                 'loginEmail' => $loginEmail,
-                'password' => true
+                'ban' => true
             );
         } else $_SESSION['loginError'] = array('email' => true);
     }
@@ -211,7 +216,7 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                     <?php
                     if ($projectData) {
                         foreach ($projectData as $project_i => $project)
-                            if ($project_i < 3)
+                            if (!$project['ban_id'] && $project_i < 3)
                                 Projects::displayCard_home(
                                     $project['id'],
                                     $project['title'],
@@ -299,11 +304,15 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                         <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
                             <form method="post" class="mt-3" id="loginForm">
                                 <div class="form-floating mb-3">
-                                    <input type="email" class="form-control" id="loginEmail" name="loginEmail" oninput="document.getElementById('loginEmailError').classList.add('d-none');" placeholder required>
+                                    <input type="email" class="form-control" id="loginEmail" name="loginEmail" oninput="resetLoginEmailErrorMsg();" placeholder required>
                                     <label for="loginEmail" class="form-label">Email</label>
                                     <span id="loginEmailError" class="text-danger fst-italic ms-1 d-none" style="font-size: .9rem;" role="alert">
                                         <i class="bi-exclamation-circle"></i>
-                                        L'adresse email n'est associée à aucun compte. Veuillez réessayer.
+                                        Cette adresse email n'est associée à aucun compte. Veuillez réessayer.
+                                    </span>
+                                    <span id="loginEmailBan" class="text-danger fst-italic ms-1 d-none" style="font-size: .9rem;" role="alert">
+                                        <i class="bi-exclamation-circle"></i>
+                                        Le compte associé a cette adresse mail a été banni. Contactez-nous pour savoir pourquoi.
                                     </span>
                                 </div>
                                 <div class="mb-3">
@@ -395,9 +404,15 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
         function resetForm(formId) {
             document.forms[formId].reset();
             document.getElementById('loginEmailError').classList.add('d-none');
+            document.getElementById('loginEmailBan').classList.add('d-none');
             document.getElementById('loginPasswordError').classList.add('d-none');
             document.getElementById('registerEmailError').classList.add('d-none');
             document.getElementById('registerError').classList.add('d-none');
+        }
+
+        function resetLoginEmailErrorMsg() {
+            document.getElementById('loginEmailError').classList.add('d-none');
+            document.getElementById('loginEmailBan').classList.add('d-none');
         }
 
         document.getElementById('registerForm').addEventListener('submit', function(e) {
@@ -438,6 +453,7 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                 (new bootstrap.Modal(document.getElementById("loginModal"))).show();
                 document.getElementById("loginEmail").value = "' . ($_SESSION['loginError']['loginEmail'] ?? '') . '";' .
             (isset($_SESSION['loginError']['email']) ? 'document.getElementById("loginEmailError").classList.remove("d-none");' : '') .
+            (isset($_SESSION['loginError']['ban']) ? 'document.getElementById("loginEmailBan").classList.remove("d-none");' : '') .
             (isset($_SESSION['loginError']['password']) ? 'document.getElementById("loginPasswordError").classList.remove("d-none");' : '') .
             '</script>';
         unset($_SESSION['loginError']);

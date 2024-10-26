@@ -166,6 +166,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                             $project['theme'],
                             $project['link'],
                             json_decode($project['images'] ?? '[]'),
+                            (bool)$project['ban_id'],
                             $project_i,
                             true
                         );
@@ -176,6 +177,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                     '',
                     '',
                     null,
+                    false,
                     -1,
                     false
                 );
