@@ -1,0 +1,20 @@
+﻿#banMessage {
+    min-height: 7rem;
+}
+
+.custom-tooltip {
+    --bs-tooltip-bg: var(--black-1);
+    --bs-tooltip-color: var(--white-1)
+}
+
+.tooltip-inner {
+    text-align: left;
+}
+
+.tooltip-inner .admin {
+    color: var(--grey-0);
+}
+
+.tooltip-inner .message {
+    color: var(--grey-1);
+}

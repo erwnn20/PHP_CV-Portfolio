@@ -36,7 +36,7 @@ class Element
                             <a href="#" target="_blank" class="text-light me-3"><i class="fab fa-linkedin-in"></i></a>
                             <a href="https://github.com/erwnn20" target="_blank" class="text-light me-3"><i class="fab fa-github"></i></a>
                             <a href="https://github.com/erwnn20/PHP-TP" target="_blank" class="text-light"><i class="fab bi-download"></i></a>'.
-                            (isset($userData['admin']) && $userData['admin'] ? '<a href="admin.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>' : '').'
+                            (isset($userData['admin']) && $userData['admin'] ? '<a href="admin-panel.php" class="text-light ms-3"><i class="fab bi-gear-fill"></i></a>' : '').'
                         </div>
                     </div>
                 </footer>';

@@ -128,7 +128,7 @@ $projectsData = Projects::getData($_SESSION['user']['id']);
                             <?php echo htmlspecialchars($_SESSION['user']['data']['first_name']) . ' ' . htmlspecialchars($_SESSION['user']['data']['last_name']) ?>
                         </h2>
                         <p class="card-text" id="userEmail"><?php echo $_SESSION['user']['data']['email'] ?></p>
-                        <?php if ($_SESSION['user']['data']['admin']) echo '<a href="admin.php" class="btn btn-sm btn-dark w-100">Admin Panel</a>' ?>
+                        <?php if ($_SESSION['user']['data']['admin']) echo '<a href="admin-panel.php" class="btn btn-sm btn-dark w-100">Admin Panel</a>' ?>
                     </div>
                 </div>
 

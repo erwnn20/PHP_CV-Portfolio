@@ -15,10 +15,27 @@ class User
         return array();
     }
 
-    public static function getList(): array|bool
+    public static function getList(bool $withAdmin = true): array|bool
     {
+        $sql = $withAdmin ?
+            'SELECT id, first_name, last_name FROM user' :
+            'SELECT 
+                user.id as user_id, 
+                user.first_name as user_first_name, 
+                user.last_name as user_last_name,
+                user.email as user_email,
+                user.profile_picture as user_img,
+                ban.cause as ban_cause,
+                ban.message as ban_message,
+                admin.first_name as admin_first_name,
+                admin.last_name as admin_last_name
+            FROM user
+                LEFT JOIN ban ON ban.id = user.ban_id
+                LEFT JOIN user admin ON admin.id = ban.admin_id
+            WHERE user.admin IS FALSE';
+
         global $pdo;
-        $stmt = $pdo->prepare('SELECT id, first_name, last_name FROM user');
+        $stmt = $pdo->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
     }
