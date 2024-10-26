@@ -15,7 +15,8 @@ CREATE TABLE user
     last_name       VARCHAR(100)        NOT NULL,
     profile_picture BOOLEAN                      DEFAULT false,
     password        VARCHAR(255)        NOT NULL,
-    admin           BOOLEAN             NOT NULL DEFAULT false
+    admin           BOOLEAN             NOT NULL DEFAULT false,
+    ban_id          UUID UNIQUE
 );
 
 INSERT INTO user (id, email, first_name, last_name, password, admin)
@@ -48,11 +49,27 @@ CREATE TABLE project
     description TEXT         NOT NULL,
     theme       VARCHAR(100),
     link        VARCHAR(255),
-    images      JSON COMMENT 'Type: string[]'
+    images      JSON COMMENT 'Type: string[]',
+    ban_id      UUID UNIQUE
+);
+
+-- Create table for banned user and projects
+CREATE TABLE ban
+(
+    id       UUID PRIMARY KEY,
+    admin_id UUID         NOT NULL,
+    cause    VARCHAR(255) NOT NULL,
+    message  TEXT
 );
 
 -- Create foreign keys
+ALTER TABLE user
+    ADD FOREIGN KEY (ban_id) REFERENCES ban (id) ON DELETE SET NULL;
 ALTER TABLE cv
     ADD FOREIGN KEY (creator_id) REFERENCES user (id);
 ALTER TABLE project
     ADD FOREIGN KEY (creator_id) REFERENCES user (id);
+ALTER TABLE project
+    ADD FOREIGN KEY (ban_id) REFERENCES ban (id) ON DELETE SET NULL;
+ALTER TABLE ban
+    ADD FOREIGN KEY (admin_id) REFERENCES user (id);
