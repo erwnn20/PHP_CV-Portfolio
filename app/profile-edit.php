@@ -2,12 +2,9 @@
 ob_start();
 session_start();
 
-require_once 'util/db.php';
 require_once 'util/elements.php';
-require_once 'util/user.php';
 require_once 'util/cv.php';
 require_once 'util/projects.php';
-global $pdo;
 
 if (!isset($_SESSION['user']['id'])) {
     $_SESSION['loginError'] = array('external' => true);
@@ -15,40 +12,6 @@ if (!isset($_SESSION['user']['id'])) {
     header("Location: /");
     exit;
 }
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['email'])) {
-        $newData = array(
-            'id' => $_SESSION['user']['id'],
-            'email' => $_POST['email'],
-            'first_name' => $_POST['firstName'],
-            'last_name' => $_POST['lastName'],
-        );
-        if (isset($_POST['newPassword'])) $newData['password'] = password_hash($_POST['newPassword'], PASSWORD_BCRYPT);
-        if (User::saveImg('img/profile/user/','profilePicture' , $_SESSION['user']['id'])) {
-            $newData['profile_picture'] = true;
-        }
-
-        $sql = 'UPDATE user SET email = :email, first_name = :first_name, last_name = :last_name'
-            .(isset($newData['password']) ? ', password = :password' : '')
-            .(isset($newData['profile_picture']) ? ', profile_picture = :profile_picture' : '')
-            .' WHERE id = :id;';
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($newData);
-    }
-
-    if (isset($_POST['deletePicture'])) {
-        $stmt = $pdo->prepare('UPDATE user SET profile_picture = FALSE WHERE id = :id;');
-        $stmt->execute(array('id' => $_SESSION['user']['id']));
-        User::deleteImg('img/profile/user/', $_SESSION['user']['id']);
-    }
-
-    $_SESSION['user']['data'] = User::getData($_SESSION['user']['id']);
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
-
 //
 
 $cvData = CV::getData($_SESSION['user']['id']);
@@ -67,8 +30,8 @@ $projectsData = Projects::getData($_SESSION['user']['id']);
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="styles/style.css">
-        <link rel="stylesheet" href="styles/profile.css">
+        <link rel="stylesheet" href="/styles/style.css">
+        <link rel="stylesheet" href="/styles/profile.css">
 
         <style>
             .form-floating>.form-control-plaintext~label::after,
@@ -116,7 +79,7 @@ $projectsData = Projects::getData($_SESSION['user']['id']);
                 <div class="card mb-4">
                     <div class="card-body d-flex flex-column align-items-center">
                         <div class="profile-image-container position-relative mb-3">
-                            <img src="img/profile/<?php echo $_SESSION['user']['data']['profile_picture'] ? 'user/'.$_SESSION['user']['id'].'.png' : 'default.png' ?>" alt="Photo de profil" class="profile-image" id="profileImage">'.
+                            <img src="/img/profile/<?php echo $_SESSION['user']['data']['profile_picture'] ? 'user/'.$_SESSION['user']['id'].'.png' : 'default.png' ?>" alt="Photo de profil" class="profile-image" id="profileImage">'.
                             <?php
                             if ($_SESSION['user']['data']['profile_picture'])
                                 echo '<form method="post" class="reset-profile-image-container">
@@ -128,7 +91,7 @@ $projectsData = Projects::getData($_SESSION['user']['id']);
                             <?php echo htmlspecialchars($_SESSION['user']['data']['first_name']) . ' ' . htmlspecialchars($_SESSION['user']['data']['last_name']) ?>
                         </h2>
                         <p class="card-text" id="userEmail"><?php echo $_SESSION['user']['data']['email'] ?></p>
-                        <?php if ($_SESSION['user']['data']['admin']) echo '<a href="admin-panel.php" class="btn btn-sm btn-dark w-100">Admin Panel</a>' ?>
+                        <?php if ($_SESSION['user']['data']['admin']) echo '<a href="/admin" class="btn btn-sm btn-dark w-100">Admin Panel</a>' ?>
                     </div>
                 </div>
 
@@ -199,7 +162,7 @@ $projectsData = Projects::getData($_SESSION['user']['id']);
                     <div class="card-body">
                         <div class="d-flex mb-3">
                             <h3 class="card-title m-0">Mes Projets</h3>
-                            <a href="projects-edit.php" class="btn btn-sm btn-primary btn-custom ms-auto">Modifier mes
+                            <a href="/projects/edit" class="btn btn-sm btn-primary btn-custom ms-auto">Modifier mes
                                 projets</a>
                         </div>
                         <div id="projectsList">
@@ -234,12 +197,13 @@ $projectsData = Projects::getData($_SESSION['user']['id']);
                     <div class="card-body">
                         <div class="d-flex mb-3">
                             <h3 class="card-title m-0">Mes Expériences</h3>
-                            <a href="cv-edit.php" class="btn btn-sm btn-primary btn-custom ms-auto">Modifier mon CV</a>
+                            <a href="/cv/edit" class="btn btn-sm btn-primary btn-custom ms-auto">Modifier mon CV</a>
                         </div>
                         <div id="experiencesList">
                             <?php
-                            if (isset($cvData['experiences'])) {
-                                foreach (json_decode($cvData['experiences'], true) as $experience_i => $experience)
+                            $experiences = json_decode($cvData['experiences'] ?? '[]', true);
+                            if ($experiences) {
+                                foreach ($experiences as $experience_i => $experience)
                                     CV::displayExperienceCard_profile(
                                         $experience['role'],
                                         $experience['company'],
@@ -263,7 +227,7 @@ $projectsData = Projects::getData($_SESSION['user']['id']);
     <?php echo Element::footer($_SESSION['user']['data']) ?>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts/togglePassword.js"></script>
+    <script src="/scripts/togglePassword.js"></script>
     <script>
         document.getElementById('profileForm').addEventListener('submit', function(e) {
             e.preventDefault();

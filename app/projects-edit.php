@@ -2,92 +2,8 @@
 ob_start();
 session_start();
 
-require_once 'util/db.php';
 require_once 'util/elements.php';
-require_once 'util/user.php';
 require_once 'util/projects.php';
-global $pdo;
-
-function saveProjectImg($projectID): array
-{
-    $files_name = array();
-
-    $targetDirectory = 'img/projects/' . $projectID . '/';
-    if (!is_dir($targetDirectory)) {
-        mkdir($targetDirectory, 0755, true);
-    }
-
-    foreach ($_FILES['projectImages']['name'] as $key => $imageName) {
-        $tmpName = $_FILES['projectImages']['tmp_name'][$key];
-        $imageError = $_FILES['projectImages']['error'][$key];
-
-        if ($imageError === UPLOAD_ERR_OK) {
-            $uniqueName = 'img-' . $key . '.png';
-            $files_name[] = $uniqueName;
-
-            move_uploaded_file($tmpName, $targetDirectory . $uniqueName);
-        }
-    }
-    return $files_name;
-}
-
-function deleteProjectImg($projectID): void
-{
-    $dir = 'img/projects/' . $projectID . '/';
-    $it = new RecursiveDirectoryIterator($dir, FilesystemIterator::SKIP_DOTS);
-    $files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-    foreach($files as $file) {
-        if ($file->isDir()) rmdir($file->getPathname());
-        else unlink($file->getPathname());
-    }
-    rmdir($dir);
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['projectTitle'])) {
-        $uuid = $_POST['projectId'] ?: uuid_v4();
-        $stmt = $pdo->prepare('INSERT INTO project (id, creator_id, title, description, theme, link, images)
-                                    VALUES (:id, :creator_id, :title, :description, :theme, :link, :images)
-                                    ON DUPLICATE KEY
-                                    UPDATE
-                                        title = VALUES(title),
-                                        description = VALUES(description),
-                                        theme = VALUES(theme),
-                                        link = VALUES(link),
-                                        images = VALUES(images);');
-        $stmt->execute(array(
-            'id' => $uuid,
-            'creator_id' => $_SESSION['user']['id'],
-            'title' => $_POST['projectTitle'],
-            'description' => $_POST['projectDescription'],
-            'theme' => $_POST['projectTheme'],
-            'link' => $_POST['projectLink'],
-            'images' => json_encode(saveProjectImg($uuid)),
-        ));
-    }
-
-    if (isset($_POST['editProjectId'])) {
-        $_SESSION['editProjectId'] = $_POST['editProjectId'];
-    }
-
-    if (isset($_POST['deleteProjectId'])) {
-        deleteProjectImg($_POST['deleteProjectId']);
-        $stmt = $pdo->prepare('DELETE FROM project WHERE id = :id;');
-        $stmt->execute(array(
-            'id' => $_POST['deleteProjectId']
-        ));
-    }
-
-    if (isset($_POST['connection'])) {
-        $_SESSION['loginError'] = array('external' => true);
-
-        header("Location: /");
-        exit;
-    }
-
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
 
 //
 
@@ -107,8 +23,8 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/projects.css">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/projects.css">
 
     <style>
         .form-floating>.form-control-plaintext~label::after,
@@ -244,7 +160,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts/textAreaAdjust.js"></script>
+    <script src="/scripts/textAreaAdjust.js"></script>
     <script>
         function resetForm(formId) {
             document.forms[formId].reset();

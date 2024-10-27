@@ -2,29 +2,10 @@
 ob_start();
 session_start();
 
-require_once 'util/db.php';
 require_once 'util/elements.php';
 require_once 'util/user.php';
 require_once 'util/cv.php';
 require_once 'util/projects.php';
-global $pdo;
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    my_print($_POST);
-    if (isset($_POST['userSelect'])) {
-        $_SESSION['user']['select'] = $_POST['userSelect'];
-    }
-
-    if (isset($_POST['connection'])) {
-        $_SESSION['loginError'] = array('external' => true);
-
-        header("Location: /");
-        exit;
-    }
-
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
 
 //
 
@@ -46,8 +27,8 @@ $projectData = Projects::getData($userSelectID);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/resume.css">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/resume.css">
 </head>
 
 <body data-bs-theme="dark">
@@ -109,7 +90,7 @@ $projectData = Projects::getData($userSelectID);
             <div id="cvContent">
                 <div class="row">
                     <div class="col-md-4 pt-4 text-center personal-info">
-                        <img src="<?php echo 'img/' . (isset($cvData['image']) ? 'cv/' . $cvData['id'] . '.png' : 'profile/default.png') ?>"
+                        <img src="<?php echo '/img/' . (isset($cvData['image']) && $cvData['image'] ? 'cv/' . $cvData['id'] . '.png' : 'profile/default.png') ?>"
                              alt="Photo de profil" class="profile-image mb-3">
                         <h2 id="userName"><?php echo htmlspecialchars($userData['first_name']) . ' ' . htmlspecialchars($userData['last_name']) ?></h2>
                         <p id="userTitle"><?php echo htmlspecialchars($cvData['title'] ?? '') ?></p>

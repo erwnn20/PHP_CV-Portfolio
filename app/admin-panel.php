@@ -2,69 +2,15 @@
 ob_start();
 session_start();
 
-require_once 'util/db.php';
 require_once 'util/elements.php';
 require_once 'util/user.php';
-//require_once 'util/cv.php';
 require_once 'util/projects.php';
-global $pdo;
 
 if (!isset($_SESSION['user']['id']) || !$_SESSION['user']['data']['admin']) {
     if (!isset($_SESSION['user']['id']))
         $_SESSION['loginError'] = array('external' => true);
 
     header("Location: /");
-    exit;
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    my_print($_POST);
-    if (isset($_POST['banType'])) {
-        $banData = array(
-            'banID' => uuid_v4(),
-            'adminID' => $_SESSION['user']['id'],
-            'banType' => $_POST['banType'],
-            'banCause' => $_POST['banCause'],
-            'banMessage' => $_POST['banMessage'],
-            'bannedID' => $_POST['banId']
-        );
-
-        $stmt = $pdo->prepare('INSERT INTO ban (id, admin_id, cause, message)
-                                    VALUES (:id, :admin_id, :cause, :message)
-                                    ON DUPLICATE KEY
-                                    UPDATE
-                                        admin_id = VALUES(admin_id),
-                                        cause = VALUES(cause),
-                                        message = VALUES(message);');
-        $stmt->execute(array(
-            'id' => $banData['banID'],
-            'admin_id' => $banData['adminID'],
-            'cause' => $banData['banCause'],
-            'message' => $banData['banMessage'],
-        ));
-
-        $stmt = $pdo->prepare('UPDATE '.$banData['banType'].' SET ban_id = :ban_id WHERE id = :id;');
-        $stmt->execute(array(
-            'id' => $banData['bannedID'],
-            'ban_id' => $banData['banID'],
-        ));
-    }
-
-    if (isset($_POST['userUnban'])) {
-        $stmt = $pdo->prepare('DELETE FROM ban WHERE id = (SELECT ban_id FROM user WHERE id = :id);');
-        $stmt->execute(array(
-            'id' => $_POST['userUnban'],
-        ));
-    }
-
-    if (isset($_POST['projectUnban'])) {
-        $stmt = $pdo->prepare('DELETE FROM ban WHERE id = (SELECT ban_id FROM project WHERE id = :id);');
-        $stmt->execute(array(
-            'id' => $_POST['projectUnban'],
-        ));
-    }
-
-    header("Location: " . $_SERVER['PHP_SELF']);
     exit;
 }
 
@@ -86,8 +32,8 @@ $projectsData = Projects::getData(forBan: true);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/admin.css">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/admin.css">
 </head>
 
 <body data-bs-theme="dark">
@@ -146,13 +92,13 @@ $projectsData = Projects::getData(forBan: true);
                         if ($usersData) {
                             foreach ($usersData as $user) {
                                 echo '<tr>
-                                        <td><img src="img/profile/'.($user['user_img'] ? 'user/'.$user['user_id'].'.png' : 'default.png').'" alt="" class="profile-picture"></td>
+                                        <td><img src="/img/profile/'.($user['user_img'] ? 'user/'.$user['user_id'].'.png' : 'default.png').'" alt="" class="profile-picture"></td>
                                         <td>'.htmlspecialchars($user['user_first_name']).'</td>
                                         <td>'.htmlspecialchars($user['user_last_name']).'</td>
                                         <td>'.htmlspecialchars($user['user_email']).'</td>
                                         <td>'.
                                     ($user['ban_cause'] ?
-                                            '<form method="post">
+                                            '<form method="post" action="/ban">
                                                 <button type="submit" class="btn btn-sm btn-outline-warning" name="userUnban" value="'.$user['user_id'].'">
                                                     Dé bannir
                                                 </button>
@@ -213,7 +159,7 @@ $projectsData = Projects::getData(forBan: true);
                                         </td>
                                         <td>'.
                                     ($project['ban_cause'] ?
-                                            '<form method="post">
+                                            '<form method="post" action="/ban">
                                                 <button type="submit" class="btn btn-sm btn-outline-success" name="projectUnban" value="'.$project['project_id'].'">
                                                     Afficher
                                                 </button>
@@ -257,7 +203,7 @@ $projectsData = Projects::getData(forBan: true);
                         <h5 class="modal-title" id="banModalLabel">Bannir l'utilisateur/projet</h5>
                         <button type="button" class="btn btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <form method="post" id="banForm">
+                    <form method="post" action="/ban" id="banForm">
                         <div class="mb-3">
                             <label for="banCause" class="form-label">Raison du bannissement</label>
                             <select class="form-select" id="banCause" name="banCause" required>
@@ -285,7 +231,7 @@ $projectsData = Projects::getData(forBan: true);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts/textAreaAdjust.js"></script>
+    <script src="/scripts/textAreaAdjust.js"></script>
     <script>
         function resetForm(formId) {
             document.forms[formId].reset();

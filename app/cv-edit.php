@@ -2,163 +2,8 @@
 ob_start();
 session_start();
 
-require_once 'util/db.php';
 require_once 'util/elements.php';
-require_once 'util/user.php';
 require_once 'util/cv.php';
-global $pdo;
-
-function appendData(string $dbDataID, array|string $newData): void
-{
-    global $pdo;
-    $data = json_decode(CV::getData($_SESSION['user']['id'])[$dbDataID] ?? '[]', true);
-    $data[] = $newData;
-
-    $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, '.$dbDataID.') VALUES (:id, :creator_id, :'.$dbDataID.') ON DUPLICATE KEY UPDATE '.$dbDataID.' = VALUES('.$dbDataID.')');
-    $stmt->execute(array(
-        'id' => uuid_v4(),
-        'creator_id' => $_SESSION['user']['id'],
-        $dbDataID => json_encode($data)
-    ));
-}
-
-function deleteData(string $dbDataID, int $delIndex): void
-{
-    global $pdo;
-    $data = array();
-    foreach (json_decode(CV::getData($_SESSION['user']['id'])[$dbDataID] ?? '[]', true) as $i => $element) {
-        if ($i != $delIndex)
-            $data[] = $element;
-    }
-
-    $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, '.$dbDataID.') VALUES (:id, :creator_id, :'.$dbDataID.') ON DUPLICATE KEY UPDATE '.$dbDataID.' = VALUES('.$dbDataID.')');
-    $stmt->execute(array(
-        'id' => uuid_v4(),
-        'creator_id' => $_SESSION['user']['id'],
-        $dbDataID => json_encode($data)
-    ));
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // global infos
-    if (isset($_POST['cvTitle'])) {
-        $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, title) VALUES (:id, :creator_id, :title) ON DUPLICATE KEY UPDATE title = VALUES(title)');
-        $stmt->execute(array(
-            'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user']['id'],
-            'title' => $_POST['cvTitle']
-        ));
-    }
-    if (isset($_POST['cvDescription'])) {
-        $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, description) VALUES (:id, :creator_id, :description) ON DUPLICATE KEY UPDATE description = VALUES(description)');
-        $stmt->execute(array(
-            'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user']['id'],
-            'description' => $_POST['cvDescription']
-        ));
-    }
-    if (isset($_POST['cvEmail'])) {
-        $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, email) VALUES (:id, :creator_id, :email) ON DUPLICATE KEY UPDATE email = VALUES(email)');
-        $stmt->execute(array(
-            'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user']['id'],
-            'email' => $_POST['cvEmail']
-        ));
-    }
-    if (isset($_POST['cvPhone'])) {
-        $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, phone_number) VALUES (:id, :creator_id, :phone_number) ON DUPLICATE KEY UPDATE phone_number = VALUES(phone_number)');
-        $stmt->execute(array(
-            'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user']['id'],
-            'phone_number' => $_POST['cvPhone']
-        ));
-    }
-    if (isset($_POST['cvAddress'])) {
-        $stmt = $pdo->prepare('INSERT INTO cv (id, creator_id, address) VALUES (:id, :creator_id, :address) ON DUPLICATE KEY UPDATE address = VALUES(address)');
-        $stmt->execute(array(
-            'id' => uuid_v4(),
-            'creator_id' => $_SESSION['user']['id'],
-            'address' => $_POST['cvAddress']
-        ));
-    }
-
-    if (User::saveImg('img/cv/', 'cvProfileImage', CV::getData($_SESSION['user']['id'] ?? 0)['id'])) {
-        $stmt = $pdo->prepare('UPDATE cv SET image = TRUE WHERE id = :id;');
-        $stmt->execute(array(
-            'id' => CV::getData($_SESSION['user']['id'] ?? 0)['id']
-        ));
-    }
-    if (isset($_POST['delCvProfileImage'])) {
-        $stmt = $pdo->prepare('UPDATE cv SET image = FALSE WHERE id = :id;');
-        $stmt->execute(array(
-            'id' => $_POST['delCvProfileImage']
-        ));
-        User::deleteImg('img/cv/', $_POST['delCvProfileImage']);
-    }
-
-    // skills, languages, interests infos
-    if (isset($_POST['newSkill'])) {
-        appendData('skills', array(
-            'skill' => $_POST['newSkill'],
-            'year_exp' => $_POST['skillExp'],
-        ));
-    }
-    if (isset($_POST['delSkillIndex'])) {
-        deleteData('skills', $_POST['delSkillIndex']);
-    }
-
-    if (isset($_POST['languageName'])) {
-        appendData('languages', array(
-            'lang' => $_POST['languageName'],
-            'level' => $_POST['languageLevel'],
-        ));
-    }
-    if (isset($_POST['delLangIndex'])) {
-        deleteData('languages', $_POST['delLangIndex']);
-    }
-
-    if (isset($_POST['interestName'])) {
-        appendData('interests', $_POST['interestName']);
-    }
-    if (isset($_POST['delInterestIndex'])) {
-        deleteData('interests', $_POST['delInterestIndex']);
-    }
-
-    // experience, certificate
-    if (isset($_POST['experienceTitle'])) {
-        appendData('experiences', array(
-            'role' => $_POST['experienceTitle'],
-            'company' => $_POST['experienceCompany'],
-            'tasks' => $_POST['task'],
-            'start_date' => $_POST['experienceStartDate'],
-            'end_date' => $_POST['experienceEndDate'] ?? ''
-        ));
-    }
-    if (isset($_POST['delExpIndex'])) {
-        deleteData('experiences', $_POST['delExpIndex']);
-    }
-
-    if (isset($_POST['certificateTitle'])) {
-        appendData('certificates', array(
-            'degree' => $_POST['certificateTitle'],
-            'school' => $_POST['certificateSchool'],
-            'date' => $_POST['certificateYear'],
-        ));
-    }
-    if (isset($_POST['delCertificateIndex'])) {
-        deleteData('certificates', $_POST['delCertificateIndex']);
-    }
-
-    if (isset($_POST['connection'])) {
-        $_SESSION['loginError'] = array('external' => true);
-
-        header("Location: /");
-        exit;
-    }
-
-    header("Location: " . $_SERVER['PHP_SELF']);
-    exit;
-}
 
 //
 
@@ -178,8 +23,8 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/cv.css">
+    <link rel="stylesheet" href="/styles/style.css">
+    <link rel="stylesheet" href="/styles/cv.css">
 
     <style>
         .form-floating>.form-control-plaintext~label::after,
@@ -232,7 +77,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                             <h2 class="card-title">Informations générales</h2>
                             <form method="post" id="cvInfoForm" class="flex-grow-1 d-flex flex-column mb-0" enctype="multipart/form-data">
                                 <div class="mb-3 text-center">
-                                    <img src="<?php echo 'img/' . (isset($cvData['image']) ? 'cv/'.$cvData['id'].'.png' : 'profile/default.png') ?>"
+                                    <img src="<?php echo '/img/' . (isset($cvData['image']) && $cvData['image'] ? 'cv/'.$cvData['id'].'.png' : 'profile/default.png') ?>"
                                          alt="Photo de profil" class="profile-image-preview mb-2" id="profileImagePreview">
                                     <div class="input-group mb-3">
                                         <input type="file" class="form-control" id="profileImage" name="cvProfileImage" accept="image/*" <?php echo $inputDisable?>>
@@ -523,7 +368,7 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="scripts/textAreaAdjust.js"></script>
+    <script src="/scripts/textAreaAdjust.js"></script>
     <script>
         function resetForm(formId) {
             document.forms[formId].reset();

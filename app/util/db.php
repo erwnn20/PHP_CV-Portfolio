@@ -1,9 +1,9 @@
-﻿<?php
+<?php
 // Database connection using PDO
 $host = 'db';
 $db = 'cv_db';
-$user = 'root'; // Update this with your MySQL username
-$pass = 'root';     // Update this with your MySQL password
+$user = 'root';
+$pass = 'root';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

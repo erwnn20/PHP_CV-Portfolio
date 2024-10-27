@@ -59,7 +59,7 @@ class Projects
                             <div class="carousel-inner">';
                 foreach ($images as $image_i => $image)
                     echo '      <div class="carousel-item ' . ($image_i == 0 ? ' active' : '') . '">
-                                    <img src="img/projects/' . $projectID . '/' . $image . '" class="project-image rounded-top w-100" alt="project_image-' . $image_i . '">
+                                    <img src="/img/projects/' . $projectID . '/' . $image . '" class="project-image rounded-top w-100" alt="project_image-' . $image_i . '">
                                 </div>';
                 echo '      </div>
                             <button class="carousel-control-prev" type="button" data-bs-target="#carouselProject-' . $index . '" data-bs-slide="prev">
@@ -71,9 +71,9 @@ class Projects
                                 <span class="visually-hidden">Next</span>
                             </button>
                         </div>';
-            } else echo '<img src="img/projects/' . $projectID . '/' . $images[0] . '" class="card-img-top project-image" alt="no image project">';
+            } else echo '<img src="/img/projects/' . $projectID . '/' . $images[0] . '" class="card-img-top project-image" alt="no image project">';
         } else if ($images !== null)
-            echo '<img src="img/projects/no_img.png" class="card-img-top project-image" alt="no image project">';
+            echo '<img src="/img/projects/no_img.png" class="card-img-top project-image" alt="no image project">';
     }
 
     // on index.php
@@ -146,7 +146,7 @@ class Projects
                     </span>' : '').'
                     <p class="mb-3">'.nl2br(htmlspecialchars($description)).'</p>'.
                 ($link ?
-                    '<a href="#" class="btn btn-sm btn-primary btn-custom mt-auto" target="_blank">
+                    '<a href="' . $link . '" class="btn btn-sm btn-primary btn-custom mt-auto" target="_blank">
                         Voir le projet
                     </a>' : '').'
                 </div>';
@@ -163,11 +163,11 @@ class Projects
                         <div class="carousel-inner rounded">';
                 foreach ($images as $image_i => $image)
                     echo '  <div class="carousel-item' . ($image_i === 0 ? ' active' : '') . '">
-                                <img src="img/projects/' . $id . '/' . $image . '" class="project-img" alt="project image">
+                                <img src="/img/projects/' . $id . '/' . $image . '" class="project-img" alt="project image">
                             </div>';
                 echo '  </div>
                     </div>';
-            } else echo '<img src="img/projects/' . $id . '/' . $images[0] . '" class="project-img rounded" alt="project image">';
+            } else echo '<img src="/img/projects/' . $id . '/' . $images[0] . '" class="project-img rounded" alt="project image">';
             echo '</div>';
         }
         echo '</div>';

@@ -87,16 +87,15 @@ class CV
     {
         echo '<div class="col">
                 <div class="card bg-dark shadow">
-                    <div class="card-body">' .
+                    <div class="card-body">
+                        <div class="d-flex mb-2">
+                            <h5 class="card-title text-break mb-0">' . htmlspecialchars($role) . '</h5>' .
             ($delBtn ?
-                '     <div class="d-flex mb-2">
-                          <h5 class="card-title text-break mb-0">' . htmlspecialchars($role) . '</h5>
-                          <form method="post" class="ms-auto">
-                              <button type="submit" name="delExpIndex" value="' . $index . '" class="btn btn-sm btn-outline-danger ms-1">Supprimer</button>
-                          </form>
-                      </div>' : '') . '
-                        <h6 class="card-subtitle mb-2 text-muted">' . htmlspecialchars($company) . '</h6>
-                        ' .
+                '            <form method="post" class="ms-auto">
+                                <button type="submit" name="delExpIndex" value="' . $index . '" class="btn btn-sm btn-outline-danger ms-1">Supprimer</button>
+                             </form>' : '') . '
+                        </div>
+                        <h6 class="card-subtitle mb-2 text-muted">' . htmlspecialchars($company) . '</h6>' .
             ($start_date ?
                 '       <p class="mb-0">
                             <small class="text-muted">
