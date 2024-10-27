@@ -119,7 +119,13 @@ $projectsData = Projects::getData(forBan: true);
     </nav>
 
     <main class="container my-5">
-        <h1 class="mb-4">Panel Administrateur</h1>
+        <div class="d-flex align-items-center gap-3 mb-4">
+            <h1 class="">Panel Administrateur</h1>
+            <a href="http://127.0.0.1:8080/" target="_blank" class="btn btn-primary btn-custom">
+                <i class="bi bi-database"></i>
+                Accès à la Base de donnée
+            </a>
+        </div>
 
         <div class="card mb-4">
             <div class="card-body">
