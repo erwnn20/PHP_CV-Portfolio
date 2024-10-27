@@ -112,16 +112,16 @@ $projectData = Projects::getData($userSelectID);
                         <img src="<?php echo 'img/' . (isset($cvData['image']) ? 'cv/' . $cvData['id'] . '.png' : 'profile/default.png') ?>"
                              alt="Photo de profil" class="profile-image mb-3">
                         <h2 id="userName"><?php echo htmlspecialchars($userData['first_name']) . ' ' . htmlspecialchars($userData['last_name']) ?></h2>
-                        <p id="userTitle"><?php echo htmlspecialchars($cvData['title']) ?></p>
+                        <p id="userTitle"><?php echo htmlspecialchars($cvData['title'] ?? '') ?></p>
 
                         <div class="cv-section">
                             <h2>Coordonnées</h2>
                             <p><i class="fas fa-envelope me-2"></i> <span
-                                        id="userEmail"><?php echo $cvData['email'] ?></span></p>
+                                        id="userEmail"><?php echo $cvData['email'] ?? 'Pas enregistré' ?></span></p>
                             <p><i class="fas fa-phone me-2"></i> <span
-                                        id="userPhone"><?php echo $cvData['phone_number'] ?></span></p>
+                                        id="userPhone"><?php echo $cvData['phone_number'] ?? 'Pas enregistré' ?></span></p>
                             <p><i class="fas fa-map-marker-alt me-2"></i> <span
-                                        id="userAddress"><?php echo htmlspecialchars($cvData['address']) ?></span></p>
+                                        id="userAddress"><?php echo htmlspecialchars($cvData['address'] ?? 'Pas enregistré') ?></span></p>
                         </div>
 
                         <div class="cv-section">
@@ -176,7 +176,7 @@ $projectData = Projects::getData($userSelectID);
                     <div class="col-md-8 pt-4 ps-4">
                         <div class="cv-section">
                             <h2>À propos de moi</h2>
-                            <p id="userDescription"><?php echo nl2br(htmlspecialchars($cvData['description'])) ?></p>
+                            <p id="userDescription"><?php echo nl2br(htmlspecialchars($cvData['description'] ?? 'Pas enregistré')) ?></p>
                         </div>
 
                         <div class="cv-section">
