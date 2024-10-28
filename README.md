@@ -46,8 +46,8 @@ Then, open a browser and go to ```127.0.0.1```
 ### Setup
 
 Before you can start browsing the site, you need to initialize the database.
-To do this, go to ```127.0.0.1:8080```, log in and execute the requests of ```setup/db.sql file``` there :
-![Adminer screenshot](setup/readme_img/sql_setup.png)
+To do this, go to ```127.0.0.1:8080```, log in and execute the requests of ```config/db.sql file``` there :
+![Adminer screenshot](docs/img/sql_setup.png)
 
 Also check that all ```.php``` files are encoded in ```UTF-8 without BOM```.
 
@@ -55,16 +55,16 @@ Once you've done all this, you're ready to go.
 # Welcome to our CV creation website
 
 ### Home Page
-![Home Page](setup/readme_img/homepage.png)
+![Home Page](docs/img/homepage.png)
 
 ### Resume Page
-![Resume Page](setup/readme_img/cv-resume-page.png)
+![Resume Page](docs/img/cv-resume-page.png)
 
 ### CV creation Page
-![CV creation Page](setup/readme_img/cv-edit-page.png)
+![CV creation Page](docs/img/cv-edit-page.png)
 
 ### Project creation Page
-![Project creation Page](setup/readme_img/project-edit-page.png)
+![Project creation Page](docs/img/project-edit-page.png)
 
 
 ## Authors

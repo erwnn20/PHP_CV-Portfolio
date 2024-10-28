@@ -1,12 +1,12 @@
 .env
 .idea
 
-app/img/projects/*
-!app/img/projects/no_img.png
+project/public/img/projects/*
+!project/public/img/projects/no_img.png
 
-app/img/profile/*
-!app/img/profile/default.png
+project/public/img/profile/*
+!project/public/img/profile/default.png
 
-app/img/cv/*
+project/public/img/cv/*
 
 test*
