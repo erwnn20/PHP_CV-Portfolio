@@ -17,29 +17,38 @@ if (!isset($_SESSION['user']['id'])) {
 
 $userData = User::getData($_SESSION['user']['id']);
 $cvData = CV::getData($_SESSION['user']['id']);
+$cvStyle = CV::getStyle(userID: $_SESSION['user']['id']);
 ?>
     <link rel="stylesheet" href="/public/styles/download.css">
     <style type="text/css">
-        body {
-            background-color: #e0e0e0;
-            color: #212529;
+        body,
+        .cv-info {
+            background-color: <?php echo $cvStyle['background'] ?? '#e0e0e0' ?>;
+            color: <?php echo $cvStyle['text_color'] ?? '#212529' ?>;
         }
 
-        .cv-section h2 {
-            border-color: #5c3ba4;
+        .cv-info h2,
+        .cv-info h4,
+        .cv-info h5 {
+            color: <?php echo $cvStyle['text_color'] ?? '#212529' ?>;
+        }
+
+        body .cv-section h2,
+        .cv-info .cv-section h2 {
+            border-color: <?php echo $cvStyle['background_2'] ?? '#5c3ba4' ?>;
         }
 
         .personal-info {
-            background-color: #5c3ba4;
-            color: #e0e0e0;
+            background-color: <?php echo $cvStyle['background_2'] ?? '#5c3ba4' ?>;
+            color: <?php echo $cvStyle['text_color_2'] ?? '#e0e0e0' ?>;
         }
 
         .personal-info h2 {
-            color: #e0e0e0;
+            color: <?php echo $cvStyle['text_color_2'] ?? '#e0e0e0' ?>;
         }
 
         .personal-info .cv-section h2 {
-            border-color: #212529;
+            border-color: <?php echo $cvStyle['text_color'] ?? '#212529' ?>;
         }
     </style>
 <?php
@@ -126,7 +135,7 @@ ob_start();
                 </div>
             </div>
 
-            <div class="col right-section p-4 ps-4">
+            <div class="col right-section p-4 cv-info">
                 <div class="cv-section">
                     <h2>À propos de moi</h2>
                     <p id="userDescription"><?php echo nl2br(htmlspecialchars($cvData['description'] ?? 'Pas enregistré')) ?></p>
@@ -142,7 +151,7 @@ ob_start();
                             echo '<div class="experience mb-3">
                                             <h4>' . htmlspecialchars($experience['role']) . '</h4>
                                             <h5 class="fs-6 fst-italic">' . htmlspecialchars($experience['company']) . '</h5>
-                                            <p class="text-muted mb-1">' .
+                                            <p class="mb-1">' .
                                 date_format(date_create($experience['start_date']), "F Y") . ' - ' . ($experience['end_date'] ? date_format(date_create($experience['end_date']), "F Y") : 'Present') . '
                                             </p>
                                             <ul>';
@@ -166,7 +175,7 @@ ob_start();
                             echo '<div class="mb-3">
                                             <h4>' . htmlspecialchars($certificate['degree']) . '</h4>
                                             <h5>' . htmlspecialchars($certificate['school']) . '</h5>
-                                            <p class="text-muted">' . date_format(date_create($certificate['date']), "Y") . '</p>
+                                            <p>' . date_format(date_create($certificate['date']), "Y") . '</p>
                                           </div>';
                         echo '  </div>';
                     }
