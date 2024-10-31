@@ -15,13 +15,7 @@
     border-radius: 5%;
 }
 
-.personal-info {
-    background-color: var(--purple-dark-0);
-}
 
-.personal-info .cv-section h2 {
-    border-color: var(--black-0);
-}
 
 #userProjects .card-text {
     font-size: 0.95rem;

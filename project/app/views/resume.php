@@ -14,6 +14,7 @@ session_start();
 $userSelectID = $_SESSION['user']['select'] ?? $_SESSION['user']['id'] ?? null;
 $userData = User::getData($userSelectID);
 $cvData = CV::getData($userSelectID);
+$cvStyle = CV::getStyle(cvID: $cvData['id'] ?? 0);
 $projectData = Projects::getData($userSelectID);
 ?>
 
@@ -31,6 +32,26 @@ $projectData = Projects::getData($userSelectID);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/public/styles/style.css">
     <link rel="stylesheet" href="/public/styles/resume.css">
+    <style>
+        .cv-info {
+            background-color: <?php echo $cvStyle['background'] ?? 'inherit' ?>;
+            color: <?php echo $cvStyle['text_color'] ?? 'inherit' ?>;
+        }
+
+        .cv-info .cv-section h2 {
+            border-color: <?php echo $cvStyle['background_2'] ?? 'var(--purple-dark-0)' ?>;
+        }
+
+        .personal-info {
+            background-color: <?php echo $cvStyle['background_2'] ?? 'var(--purple-dark-0)' ?>;
+            color: <?php echo $cvStyle['text_color_2'] ?? 'inherit' ?>;
+        }
+
+        .personal-info .cv-section h2 {
+            border-color: <?php echo $cvStyle['text_color'] ?? 'var(--black-0)' ?>;
+        }
+    </style>
+
 </head>
 
 <body data-bs-theme="dark">
@@ -91,7 +112,7 @@ $projectData = Projects::getData($userSelectID);
 
             <div id="cvContent">
                 <div class="row">
-                    <div class="col-md-4 pt-4 text-center personal-info">
+                    <div class="col-md-4 p-4 text-center personal-info">
                         <img src="/public/img/<?php echo isset($cvData['image']) && $cvData['image'] ? 'cv/' . $cvData['id'] . '.png' : 'profile/default.png' ?>"
                              alt="Photo de profil" class="profile-image mb-3">
                         <h2 id="userName"><?php echo htmlspecialchars($userData['first_name'] ?? '') . ' ' . htmlspecialchars($userData['last_name'] ?? '') ?></h2>
@@ -156,7 +177,7 @@ $projectData = Projects::getData($userSelectID);
                         </div>
                     </div>
 
-                    <div class="col-md-8 pt-4 ps-4">
+                    <div class="col-md-8 p-4 cv-info">
                         <div class="cv-section">
                             <h2>À propos de moi</h2>
                             <p id="userDescription"><?php echo nl2br(htmlspecialchars($cvData['description'] ?? 'Pas enregistré')) ?></p>
@@ -172,7 +193,7 @@ $projectData = Projects::getData($userSelectID);
                                     echo '<div class="experience mb-3">
                                                 <h4>' . htmlspecialchars($experience['role']) . '</h4>
                                                 <h5 class="fs-6 fst-italic">' . htmlspecialchars($experience['company']) . '</h5>
-                                                <p class="text-muted mb-1">' .
+                                                <p class="mb-1">' .
                                         date_format(date_create($experience['start_date']), "F Y") . ' - ' . ($experience['end_date'] ? date_format(date_create($experience['end_date']), "F Y") : 'Present') . '
                                                 </p>
                                                 <ul>';
@@ -196,7 +217,7 @@ $projectData = Projects::getData($userSelectID);
                                     echo '<div class="mb-3">
                                                 <h4>' . htmlspecialchars($certificate['degree']) . '</h4>
                                                 <h5>' . htmlspecialchars($certificate['school']) . '</h5>
-                                                <p class="text-muted">' . date_format(date_create($certificate['date']), "Y") . '</p>
+                                                <p>' . date_format(date_create($certificate['date']), "Y") . '</p>
                                             </div>';
                                 }
                                 echo '</div>';
