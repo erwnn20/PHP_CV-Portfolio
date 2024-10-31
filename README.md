@@ -16,7 +16,7 @@ This project is a CV/Portfolio website in PHP. Its objective is to allow users t
 - Docker
 - Bootstrap
 - mPDF - [![GitHub](https://img.shields.io/badge/GitHub-000?logo=github&logoColor=white)](https://github.com/mpdf/mpdf)
-- 
+
 ## Features
 
 - User creation and connection
