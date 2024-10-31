@@ -10,6 +10,7 @@ session_start();
 //
 
 $cvData = CV::getData($_SESSION['user']['id'] ?? 0);
+$cvStyle = CV::getStyle(userID: $_SESSION['user']['id'] ?? 0);
 $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
 ?>
 
@@ -79,8 +80,49 @@ $inputDisable = isset($_SESSION['user']['id']) ? '' : 'disabled';
                             <h2 class="card-title">Informations générales</h2>
                             <form method="post" id="cvInfoForm" class="flex-grow-1 d-flex flex-column mb-0" enctype="multipart/form-data">
                                 <div class="mb-3 text-center">
-                                    <img src="/public/img/<?php echo isset($cvData['image']) && $cvData['image'] ? 'cv/'.$cvData['id'].'.png' : 'profile/default.png' ?>"
-                                         alt="Photo de profil" class="profile-image-preview mb-2" id="profileImagePreview">
+                                    <div class="row mx-auto mb-2">
+                                        <img src="/public/img/<?php echo isset($cvData['image']) && $cvData['image'] ? 'cv/' . $cvData['id'] . '.png' : 'profile/default.png' ?>"
+                                             alt="Photo de profil" class="profile-image-preview col-4"
+                                             id="profileImagePreview">
+                                        <div class="col">
+                                            <div class="input-group mb-2">
+                                                <label for="background" class="input-group-text" style="font-size: small">Couleur du Fond</label>
+                                                <input type="color" class="form-control form-control-color" id="background" name="style_background"
+                                                       value="<?php echo $cvStyle['background'] ?? '#e0e0e0' ?>" <?php echo $inputDisable?>>
+                                                <button type="button" class="btn btn-sm btn-outline-primary btn-custom"
+                                                        onclick="document.getElementById('background').value = '#e0e0e0'">
+                                                    <i class="fas bi-arrow-counterclockwise"></i>
+                                                </button>
+                                            </div>
+                                            <div class="input-group mb-2">
+                                                <label for="text-color" class="input-group-text" style="font-size: small">Couleur de la Police</label>
+                                                <input type="color" class="form-control form-control-color" id="text-color" name="style_text"
+                                                       value="<?php echo $cvStyle['text_color'] ?? '#1e1e1e' ?>" <?php echo $inputDisable?>>
+                                                <button type="button" class="btn btn-sm btn-outline-primary btn-custom"
+                                                onclick="document.getElementById('text-color').value = '#1e1e1e'">
+                                                    <i class="fas bi-arrow-counterclockwise"></i>
+                                                </button>
+                                            </div>
+                                            <div class="input-group mb-2">
+                                                <label for="background-2" class="input-group-text" style="font-size: small">Couleur du Fond 2</label>
+                                                <input type="color" class="form-control form-control-color" id="background-2" name="style_background_2"
+                                                       value="<?php echo $cvStyle['background_2'] ?? '#5c3ba4' ?>" <?php echo $inputDisable?>>
+                                                <button type="button" class="btn btn-sm btn-outline-primary btn-custom"
+                                                        onclick="document.getElementById('background-2').value = '#5c3ba4'">
+                                                    <i class="fas bi-arrow-counterclockwise"></i>
+                                                </button>
+                                            </div>
+                                            <div class="input-group">
+                                                <label for="text-color-2" class="input-group-text" style="font-size: small">Couleur de la Police 2</label>
+                                                <input type="color" class="form-control form-control-color" id="text-color-2" name="style_text_2"
+                                                       value="<?php echo $cvStyle['text_color_2'] ?? '#e0e0e0' ?>" <?php echo $inputDisable?>>
+                                                <button type="button" class="btn btn-sm btn-outline-primary btn-custom"
+                                                        onclick="document.getElementById('text-color-2').value = '#e0e0e0'">
+                                                    <i class="fas bi-arrow-counterclockwise"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="input-group mb-3">
                                         <input type="file" class="form-control" id="profileImage" name="cvProfileImage" accept="image/*" <?php echo $inputDisable?>>
                                         <button type="submit" name="delCvProfileImage" value="<?php echo $cvData['id'] ?? '' ?>"

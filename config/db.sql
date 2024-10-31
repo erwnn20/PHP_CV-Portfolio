@@ -40,6 +40,15 @@ CREATE TABLE cv
     certificates JSON COMMENT 'Structure: degree (string), school (string), date (string: year)'
 );
 
+CREATE TABLE cv_style
+(
+    cv_id        UUID UNIQUE NOT NULL,
+    background   VARCHAR(255),
+    text_color   VARCHAR(255),
+    background_2 VARCHAR(255),
+    text_color_2 VARCHAR(255)
+);
+
 -- Create table for project for portfolio
 CREATE TABLE project
 (
@@ -67,6 +76,8 @@ ALTER TABLE user
     ADD FOREIGN KEY (ban_id) REFERENCES ban (id) ON DELETE SET NULL;
 ALTER TABLE cv
     ADD FOREIGN KEY (creator_id) REFERENCES user (id);
+ALTER TABLE cv_style
+    ADD FOREIGN KEY (cv_id) REFERENCES cv (id);
 ALTER TABLE project
     ADD FOREIGN KEY (creator_id) REFERENCES user (id);
 ALTER TABLE project

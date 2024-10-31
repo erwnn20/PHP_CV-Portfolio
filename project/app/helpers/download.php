@@ -39,7 +39,7 @@ $cvData = CV::getData($_SESSION['user']['id']);
         }
 
         .personal-info .cv-section h2 {
-            border-color: #121212;
+            border-color: #212529;
         }
     </style>
 <?php

@@ -2,6 +2,7 @@
 
 require_once 'app/models/cv-data.php';
 require_once 'app/models/img-data.php';
+require_once 'app/helpers/uuid.php';
 
 session_start();
 
@@ -30,6 +31,16 @@ if (isset($_POST['cvDescription'])) CV::update('description', $_SESSION['user'][
 if (isset($_POST['cvEmail'])) CV::update('email', $_SESSION['user']['id'], $_POST['cvEmail']);
 if (isset($_POST['cvPhone'])) CV::update('phone_number', $_SESSION['user']['id'], $_POST['cvPhone']);
 if (isset($_POST['cvAddress'])) CV::update('address', $_SESSION['user']['id'], $_POST['cvAddress']);
+
+if (isset($_POST['style_background']))
+    CV::updateStyle(
+        cvID: CV::getData($_SESSION['user']['id'])['id'],
+        style: array(
+            'background' => $_POST['style_background'],
+            'text_color' => $_POST['style_text'],
+            'background_2' => $_POST['style_background_2'],
+            'text_color_2' => $_POST['style_text_2']
+        ));
 
 if (Images::save('cv/', 'cvProfileImage', CV::getData($_SESSION['user']['id'] ?? 0)['id']))
     CV::setImg(true, CV::getData($_SESSION['user']['id'] ?? 0)['id']);
