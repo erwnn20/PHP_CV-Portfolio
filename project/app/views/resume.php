@@ -85,7 +85,7 @@ $projectData = Projects::getData($userSelectID);
                 </div>
                 <?php
                 if (isset($_SESSION['user']['id']) && $userSelectID === $_SESSION['user']['id'])
-                    echo '<button type="button" class="btn btn-outline-success ms-2 mt-auto" disabled><i class="fab bi-download"></i></button>';
+                    echo '<a href="/download" class="btn btn-outline-success ms-2 mt-auto"><i class="fab bi-download"></i></a>';
                 ?>
             </form>
 

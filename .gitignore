@@ -9,4 +9,6 @@ project/public/img/profile/*
 
 project/public/img/cv/*
 
+vendor/
+
 test*

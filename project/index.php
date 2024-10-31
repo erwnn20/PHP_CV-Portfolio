@@ -13,6 +13,7 @@ $router->addRoute('GET', '/cv/edit', 'CvController', 'edit');
 $router->addRoute('GET', '/projects/edit', 'ProjectController', 'edit');
 $router->addRoute('GET', '/admin', 'AdminController', 'index');
 $router->addRoute('GET', '/logout', 'HomeController', 'logout');
+$router->addRoute('GET', '/download', 'CvController', 'download');
 
 $router->addRoute('POST', '/profile', 'ProfileController', 'post');
 $router->addRoute('POST', '/cv', 'CvController', 'select');

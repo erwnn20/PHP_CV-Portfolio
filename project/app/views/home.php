@@ -153,7 +153,7 @@ $_SESSION['user']['data'] = User::getData($_SESSION['user']['id'] ?? 0);
                 </div>
                 <div class="text-center mt-4">
                     <a href="/cv/edit" class="btn btn-primary btn-custom me-3">Modifier mon CV</a>
-                    <a href="#" class="btn btn-primary btn-custom disabled">Télécharger le CV en PDF</a>
+                    <a href="/download" class="btn btn-primary btn-custom <?php echo isset($_SESSION['user']['id']) ? '' : 'disabled' ?>">Télécharger le CV en PDF</a>
                 </div>
             </div>
         </section>

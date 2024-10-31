@@ -21,4 +21,9 @@ class CvController
     {
         require 'app/helpers/post/cv-post.php';
     }
+
+    public function download(): void
+    {
+        require 'app/helpers/download.php';
+    }
 }

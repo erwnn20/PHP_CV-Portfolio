@@ -15,6 +15,8 @@ This project is a CV/Portfolio website in PHP. Its objective is to allow users t
 - PHP 8.0 or higher ![Version](https://img.shields.io/badge/php->=_8.0-blue)
 - Docker
 - Bootstrap
+- mPDF - [![GitHub](https://img.shields.io/badge/GitHub-000?logo=github&logoColor=white)](https://github.com/mpdf/mpdf)
+- 
 ## Features
 
 - User creation and connection
@@ -28,17 +30,22 @@ This project is a CV/Portfolio website in PHP. Its objective is to allow users t
 Clone project on Git
 
 ```bash
-  git clone https://github.com/erwnn20/PHP-TP.git
-  cd PHP-TP/
+git clone https://github.com/erwnn20/PHP-TP.git
+cd PHP-TP/
 ```
+#### Install php dependencies
+```bash
+composer require mpdf/mpdf
+```
+
 
 ## Deployment
 
 To deploy this project run
 
 ```bash
-  cd Docker/
-  docker-compose up
+cd Docker/
+docker-compose up
 ```
 
 Then, open a browser and go to ```127.0.0.1```
