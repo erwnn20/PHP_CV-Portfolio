@@ -33,11 +33,20 @@ Clone project on Git
 git clone https://github.com/erwnn20/PHP-TP.git
 cd PHP-TP/
 ```
+
 #### Install php dependencies
 ```bash
 composer require mpdf/mpdf
 ```
 
+#### Environment variables
+Create a `.env` file in `PHP-TP/` and put this variables in it
+```dotenv
+## DB
+MYSQL_DATABASE: "cv_db"
+MYSQL_ROOT_PASSWORD: "" # choose db access password (user root). 
+# If the chosen password doesn't work, try 'root'.
+```
 
 ## Deployment
 
